@@ -7,8 +7,8 @@ import { trashO } from 'react-icons-kit/fa/trashO';
 import { ic_remove_red_eye } from 'react-icons-kit/md/ic_remove_red_eye'
 import Swal from 'sweetalert2';
 import {  Link, useNavigate } from 'react-router-dom';
-import { ic_add_box } from 'react-icons-kit/md/ic_add_box';
 import UserDetailModal from './UserModal';
+import { SquarePlus } from 'lucide-react';
 
 
 const Users = () => {
@@ -151,7 +151,7 @@ const Users = () => {
     return (
         Loading ? (<div className='card m-4 border rounded-md  overflow-hidden'>
             <div className="header px-4 py-2 text-white font-semibold flex items-center border-b border-gray-400">
-                <h1 className='text-xl'>
+                <h1 className='text-2xl'>
                 Users
                 </h1>
                 <div className='flex justify-end gap-3 w-full mb-1 p-3 border-green-900'>
@@ -164,7 +164,7 @@ const Users = () => {
                                 <Link to={'/dashboard/users/create'}
                                 className='d-flex align-items-center'
                                 style={{ borderRadius: '25%' }}>
-                                <Icon icon={ic_add_box} size={40}></Icon>
+                                <SquarePlus size={40}/>
                               </Link>
                                 </div>
             </div>

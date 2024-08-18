@@ -14,7 +14,7 @@ const COLORSGENDER = ['#214440', '#A8C5DA'];
 const COLORSAGE = ['#A8C5DA', '#1C1C1CCC'];
 const SalesCharts = () => {
   return (
-    <div className='flex lg:flex-row flex-col items-center justify-around'>
+    <div className='flex mt-5 lg:flex-row flex-col items-center justify-around'>
     <div className="chart-container relative">
     <ResponsiveContainer width={400} height={350}>
         <h1 className='absolute font-semibold top-10 left-10'>Sales by Gender</h1>

@@ -3,7 +3,7 @@ import { ChartLine, Package2, TrendingDown, TrendingUp, UsersRound } from 'lucid
 const SalesTotals = () => {
   return (
     <div className='totals mt-8 px-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10'>
-    <div className='total-card shadow-md min-h-40 p-4 rounded-lg bg-white min-w-[150px]'>
+    <div className='total-card hover:shadow-xl shadow-md min-h-40 p-4 rounded-lg bg-white min-w-[150px]'>
       <div className='flex flex-col h-full justify-between'>
         <div className='flex items-center justify-between'>
           <div className='flex flex-col gap-5'>
@@ -18,7 +18,7 @@ const SalesTotals = () => {
         </div>
       </div>
     </div>
-    <div className='total-card shadow-md min-h-40 p-4 rounded-lg bg-white min-w-[150px]'>
+    <div className='total-card  hover:shadow-xl shadow-md min-h-40 p-4 rounded-lg bg-white min-w-[150px]'>
       <div className='flex flex-col h-full justify-between'>
         <div className='flex items-center justify-between'>
           <div className='flex flex-col gap-5'>
@@ -32,7 +32,7 @@ const SalesTotals = () => {
         </div>
       </div>
     </div>
-    <div className='total-card shadow-md min-h-40 p-4 rounded-lg bg-white min-w-[150px]'>
+    <div className='total-card  hover:shadow-xl shadow-md min-h-40 p-4 rounded-lg bg-white min-w-[150px]'>
       <div className='flex flex-col h-full justify-between'>
         <div className='flex items-center justify-between'>
           <div className='flex flex-col gap-5'>
