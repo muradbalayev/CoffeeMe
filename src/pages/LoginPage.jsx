@@ -18,7 +18,7 @@ function LoginPage() {
 
 
     return (
-        <div className="bg-green-950 w-full h-screen flex items-center justify-center flex-col">
+        <div className="loginpage w-full h-screen flex items-center justify-center flex-col">
             <h1 className="text-white text-2xl font-semibold mb-20">COFFEE SHOP</h1>
             <form className=" flex flex-col items-center" onSubmit={handleLogin}>
                 <div className="flex flex-col gap-1 mt-3 w-80">

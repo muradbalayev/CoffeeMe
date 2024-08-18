@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --coffee-green: #214440;
+  --text-gray: #4e4d4d;
+  --bg-color: rgb(251, 251, 251);
+}
+
+* {
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 0.6px;
+}
+
+.wrapper{
+width: 100%;
+height: 100vh;
+display: flex;
+flex-direction: column;
+padding: 2rem;
+}
+
+.title{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 2.4rem;
+  color: black;
+}
+/* LoginForm */
+
+.loginpage {
+  background-color: #0a2320;
+}
+
+.eye_icon {
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+  right: 10px;
+  cursor: pointer;
+}
+
+// Sidebar //
+
+.sidebar {
+  background-color: #214440;
+
+  .links a {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: 0.2s ease;
+    font-weight: 500;
+  }
+  
+  .links a:hover {
+    background-color: gray;
+  }
+  
+  .logout {
+    transition: 0.1s ease;
+    padding: 0.6rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .logout:hover {
+    background-color: red;
+  }
+}
+
+
+
+// Dashboard Header Color  //
+.header {
+  background-color: var(--coffee-green);
+}
+
+/* Users */
+
+.card {
+  background-color: var(--coffee-green);
+}
+
+/* table header */
+.cvdizt {
+  padding: 0 !important;
+}
+
+/* Table header */
+.hsGprm {
+  background-color: var(--coffee-green)!important;
+  color: white;
+  font-weight: bold!important;
+  font-size: 0.9rem!important;
+}
+
+
+/* table row */
+.dFsSgh:last-child {
+  min-width: 200px !important;
+}
+
+.form-group {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group input {
+  padding: 5px 10px;
+  outline: none;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+
+//Sales Report
+
+.sales-report{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  background-color: var(--bg-color);
+
+  .text-gray{
+    color: var(--text-gray);
+  }
+
+  .balance{
+    padding: 1rem 1rem;
+    background-color: var(--coffee-green);
+    color: white;
+    font-weight: 700;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    border-radius: 1rem;
+  }
+
+
+}

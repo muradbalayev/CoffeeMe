@@ -13,26 +13,30 @@ function Sidebar() {
             <div className="profile-img bg-slate-400 rounded-full p-3">
                 <Icon icon={user} size={60} />
             </div>
-            <span className="text-xs">Coffee shop name</span>
-            <div className="links w-full mt-10 flex flex-col">
-                <NavLink to={"/dashboard"} >
+            <span className="text-xs font-semibold text-center">Coffee shop name</span>
+            <nav className="links w-full mt-10 flex flex-col">
+                <NavLink to={"/dashboard"} className="lg:text-base text-sm md:py-3 md:px-8 py-3 px-3" >
+                    <Icon icon={statsBars} size={20} />
+                    Sales Report
+                </NavLink>
+                <NavLink to={"/dashboard/users"} className='lg:text-base text-sm md:py-3 md:px-8 py-3 px-3'>
                     <Icon icon={users} size={20} />
                     Users
                 </NavLink>
-                <NavLink to={"/dashboard/partner"} >
+                <NavLink to={"/dashboard/partner"} className="lg:text-base text-sm md:py-3 md:px-8 py-3 px-3">
                     <Icon icon={coffee} size={20} />
-                    Partner
+                    Partners
                 </NavLink>
-                <NavLink to={"/dashboard/support"} >
+                <NavLink to={"/dashboard/support"} className="lg:text-base text-sm md:py-3 md:px-8 py-3 px-3" >
                     <Icon icon={chat} size={20} />
                     Support Chat
                 </NavLink>
-                <NavLink to={"/dashboard/support"} >
-                    <Icon icon={statsBars} size={20} />
-                    Statictics
-                </NavLink>
-            </div>
-            <Link className="logout mt-auto flex gap-2 justify-center" to={'/'}><Icon size={20} icon={ic_logout} /> Logout </Link>
+
+            </nav>
+            <Link className="logout mt-auto flex gap-2 justify-center lg:text-base text-sm" to={'/'}>
+                <Icon size={20} icon={ic_logout} />
+                Log Out
+            </Link>
         </div>
     )
 }
