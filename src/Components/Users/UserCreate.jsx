@@ -61,13 +61,13 @@ const UserCreate = () => {
     const isFormValid = newData.firstName && newData.lastName && newData.age;
 
     return (
-        <div className='card flex flex-col border rounded-md w-full pb-3 h-full'>
+        <div className='card overflow-hidden m-4 flex flex-col border rounded-lg pb-3 min-h-[670px]'>
             <div className="header px-4 py-3 border-b text-white font-semibold">
                 Yarat
             </div>
             <form className='flex flex-col flex-grow'>
 
-                <div className='card-body flex-grow'>
+                <div className='card-body bg-white flex-grow'>
                     <div className='form-group'>
                         <label>Ad<span className='text-red-600'>*</span></label>
                         <input type="text"

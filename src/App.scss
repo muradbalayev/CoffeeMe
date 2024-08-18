@@ -1,10 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 :root {
   --coffee-green: #214440;
   --text-gray: #4e4d4d;
   --bg-color: rgb(251, 251, 251);
+  --inter-font: 'Inter', sans-serif;
 }
 
 * {
@@ -18,7 +20,7 @@
 
 .wrapper{
 width: 100%;
-height: 100vh;
+min-height: 100vh;
 display: flex;
 flex-direction: column;
 padding: 2rem;
@@ -72,7 +74,9 @@ padding: 2rem;
   }
 }
 
-
+.active{
+  background-color: gray;
+}
 
 // Dashboard Header Color  //
 .header {
@@ -80,10 +84,6 @@ padding: 2rem;
 }
 
 /* Users */
-
-.card {
-  background-color: var(--coffee-green);
-}
 
 /* table header */
 .cvdizt {
@@ -140,6 +140,16 @@ padding: 2rem;
     gap: 10px;
     justify-content: center;
     border-radius: 1rem;
+  }
+
+  .total-card{
+    overflow: hidden;
+  }
+
+  .chart-container{
+    h1{
+      font-family: var(--inter-font);
+    }
   }
 
 

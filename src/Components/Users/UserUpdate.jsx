@@ -78,7 +78,7 @@ const UserUpdate = () => {
     const isFormValid = newData.firstName && newData.lastName && newData.age;
 
     return (
-        <div className='card flex flex-col border rounded-md w-full pb-3 h-full'>
+        <div className='card m-4 overflow-hidden flex flex-col border rounded-lg pb-3 min-h-[670px]'>
             <div className="header px-4 py-3 border-b text-white font-semibold">
                 Dəyişiklik Et
             </div>
