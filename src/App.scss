@@ -15,8 +15,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
-  letter-spacing: 0.6px;
+  // letter-spacing: 0.6px;
 }
 
 .wrapper {
@@ -24,25 +23,30 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 2rem .8rem 6rem .8rem;
+ overflow: hidden;
+}
+
+.custom-toast{
+ max-width: 500px!important;
 }
 
 .text-gray {
   color: var(--text-gray);
 }
 
-.text-green{
-  color: var(--text-green)
+.text-green {
+  color: var(--text-green);
 }
 
-.bg-green{
+.bg-green {
   background-color: var(--coffee-green);
 }
 
 .title {
   font-family: "Poppins", sans-serif;
   font-weight: 800;
-  font-size: 2.4rem;
+  // font-size: 2.4rem;
   color: black;
 
   &:after {
@@ -76,10 +80,11 @@
 // Sidebar //
 
 .sidebar {
-  background-color: #214440;
+  background-color: var(--coffee-green);
 
   .links a {
     display: flex;
+    font-family: Poppins, 'sans-serif';
     align-items: center;
     gap: 0.4rem;
     transition: 0.2s ease;
@@ -92,8 +97,7 @@
 
   .logout {
     transition: 0.1s ease;
-    padding: 0.6rem 1rem;
-    border-radius: 20px;
+    border-radius: 5px;
     font-weight: 600;
   }
   .logout:hover {
@@ -106,9 +110,9 @@
 }
 
 // Dashboard Header Color  //
-  .header {
-    background-color: var(--coffee-green);
-  }
+.header {
+  background-color: var(--coffee-green);
+}
 
 /* Users */
 
@@ -150,10 +154,8 @@
   font-weight: 500;
   background-color: var(--bg-color);
 
- 
-
   .balance {
-    padding: 1rem 1rem;
+    padding: 1rem 0.5rem;
     background-color: var(--coffee-green);
     color: white;
     font-weight: 700;
@@ -183,5 +185,38 @@
     h1 {
       font-family: var(--inter-font);
     }
+  }
+
+  // Sales Tables
+
+  .table {
+    h3 {
+      position: relative;
+    }
+
+    h3:after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 4px;
+      bottom: -5px;
+      left: 0;
+      background-color: var(--coffee-green);
+      transition: width 0.5s ease;
+    }
+
+    &:hover h3:after {
+      width: 100%;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .balance {
+    padding: 1rem 1rem;
+  }
+
+  .wrapper{
+    padding: 2rem 2rem 6rem 2rem;
   }
 }

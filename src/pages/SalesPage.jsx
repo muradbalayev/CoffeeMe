@@ -1,7 +1,7 @@
-import SalesBestSellers from './SalesBestSellers'
-import SalesCharts from './SalesCharts'
-import SalesTotals from './SalesTotals'
 import { Wallet } from 'lucide-react'
+import SalesTotals from '../Components/SalesReport/SalesTotals'
+import SalesCharts from '../Components/SalesReport/SalesCharts'
+import SalesTable from '../Components/SalesReport/SalesTable'
 
 
 function SalesReport() {
@@ -9,19 +9,19 @@ function SalesReport() {
     <div className="wrapper sales-report">
       <div className="sales-header  flex justify-between items-center">
         <div className='relative p-2'>
-          <h1 className="title">
+          <h1 className="title md:text-4xl text-2xl">
             Sales Report
           </h1>
 
         </div>
-        <div className="balance hover:shadow-xl shadow-md whitespace-nowrap">
-          <Wallet size={25} />
+        <div className="balance md:text-base text-xs hover:shadow-xl shadow-md whitespace-nowrap">
+          <Wallet/>
           1000 $
         </div>
       </div>
       <SalesTotals />
       <SalesCharts />
-      <SalesBestSellers />
+      <SalesTable />
     </div>
   )
 }

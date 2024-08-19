@@ -1,5 +1,5 @@
 
-const SalesBestSellers = () => {
+const SalesTable = () => {
     const userData = [
         { id: 1, name: "John Doe", sales: 20 },
         { id: 2, name: "John Doe", sales: 20 },
@@ -8,16 +8,16 @@ const SalesBestSellers = () => {
     ]
 
     return (
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-40 px-8">
-            <div className="table-1 p-2">
-                <h3 className="my-3 font-semibold lg:text-2xl md:text-xl text-lg whitespace-nowrap">Best Performing Member&apos;s</h3>
+        <div className="tables grid lg:grid-cols-2 grid-cols-1 gap-40 md:px-8 px-2">
+            <div className="table">
+                <h3 className="my-3 font-semibold lg:text-2xl md:text-xl text-lg ">Best Performing Member&apos;s</h3>
                 <table className="w-full">
                     <thead className="rounded-t-lg text-white bg-green border-gray-200">
                         <tr>
-                            <th className='px-6 py-5 text-left font-medium rounded-tl-lg tracking-wider'>
+                            <th className='px-6 md:py-5 py-3 text-left font-medium rounded-tl-lg tracking-wider'>
                                 Name
                             </th>
-                            <th className='px-6 py-5 text-left font-medium rounded-tr-lg tracking-wider'>
+                            <th className='md:px-6 px-3 md:py-5 py-3 text-left font-medium rounded-tr-lg tracking-wider'>
                                 Sales
                             </th>
                         </tr>
@@ -46,15 +46,15 @@ const SalesBestSellers = () => {
                     </tbody>
                 </table>
             </div>
-            <div className="table-2 p-2">
-                <h3 className="my-3 font-semibold lg:text-2xl md:text-xl text-lg whitespace-nowrap">Best Seller&apos;s Product Member&apos;s</h3>
+            <div className="table">
+                <h3 className="my-3 font-semibold lg:text-2xl md:text-xl text-lg">Best Seller&apos;s Product</h3>
                 <table className="w-full">
                     <thead className="rounded-t-lg text-white bg-green border-gray-200">
                         <tr>
-                            <th className='px-6 py-5 text-left font-medium rounded-tl-lg tracking-wider'>
+                            <th className='px-6 md:py-5 py-3 text-left font-medium rounded-tl-lg tracking-wider'>
                                 Name
                             </th>
-                            <th className='px-6 py-5 text-left font-medium rounded-tr-lg tracking-wider'>
+                            <th className='md:px-6 px-3 md:py-5 py-3 text-left font-medium rounded-tr-lg tracking-wider'>
                                 Sales
                             </th>
                         </tr>
@@ -88,4 +88,4 @@ const SalesBestSellers = () => {
     )
 }
 
-export default SalesBestSellers
+export default SalesTable

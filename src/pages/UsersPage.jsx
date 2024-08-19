@@ -7,11 +7,11 @@ import { trashO } from 'react-icons-kit/fa/trashO';
 import { ic_remove_red_eye } from 'react-icons-kit/md/ic_remove_red_eye'
 import Swal from 'sweetalert2';
 import {  Link, useNavigate } from 'react-router-dom';
-import UserDetailModal from './UserModal';
 import { SquarePlus } from 'lucide-react';
+import UserModal from '../Components/Users/UserModal';
 
 
-const Users = () => {
+const UsersPage = () => {
     const [users, setUsers] = useState([]);
     const [Loading, setLoading] = useState(false);
     const [search, setSearch] = useState('')
@@ -122,13 +122,14 @@ const Users = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 axios.delete(`https://dummyjson.com/users/${id}`)
-                    .then(response => {
+                    .then(() => {
                         console.log('Məhsul Silindi!');
                         Swal.fire({
                             title: "Silindi!",
                             text: `Məhsul No:${id} müvəffəqiyyətlə silindi!`,
                             icon: "success"
-                        })
+                        });
+                        setUsers(users.filter(user => user.id !== id));
                     })
                     .catch(error => {
                         console.error(`Error deleting product:`, error);
@@ -151,12 +152,12 @@ const Users = () => {
     return (
         Loading ? (<div className='card m-4 border rounded-md  overflow-hidden'>
             <div className="header px-4 py-2 text-white font-semibold flex items-center border-b border-gray-400">
-                <h1 className='text-2xl'>
+                <h1 className='lg:text-2xl md:text-xl text-lg'>
                 Users
                 </h1>
                 <div className='flex justify-end gap-3 w-full mb-1 p-3 border-green-900'>
                                 <input
-                                    className='form-control w-50 p-2 border outline-none rounded-md'
+                                    className='form-control md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md'
                                     placeholder='Search'
                                     value={search}
                                     onChange={(event) => setSearch(event.target.value)}
@@ -181,7 +182,7 @@ const Users = () => {
                         </DataTable> 
                 
             </div>
-            <UserDetailModal
+            <UserModal
                     userid={userid}
                     isOpen={modalShow}
                     onClose={() => setModalShow(false)}
@@ -190,4 +191,4 @@ const Users = () => {
     )
 }
 
-export default Users
+export default UsersPage

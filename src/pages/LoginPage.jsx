@@ -3,6 +3,7 @@ import { basic_eye } from 'react-icons-kit/linea/basic_eye';
 import { basic_eye_closed } from 'react-icons-kit/linea/basic_eye_closed';
 import Icon from "react-icons-kit";
 import { useState } from "react";
+import toast from "react-hot-toast";
 function LoginPage() {
 
     const navigate = useNavigate()
@@ -11,9 +12,10 @@ function LoginPage() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
+        toast.success("Murad Balayev Coffeeshop'a daxil oldu")
         navigate('/dashboard')
     }
+
 
 
 
@@ -30,15 +32,15 @@ function LoginPage() {
                 <div className="flex flex-col gap-1 mt-3 w-80">
                     <label className="text-white text-sm">Password</label>
                     <div className="relative">
-                    <input
-                        type={type ? "text" : "password"}
-                        required
-                        className="p-2 w-full text-white outline-none text-sm rounded-lg bg-transparent border border-white" placeholder="Enter password" />
+                        <input
+                            type={type ? "text" : "password"}
+                            required
+                            className="p-2 w-full text-white outline-none text-sm rounded-lg bg-transparent border border-white" placeholder="Enter password" />
 
-                    <span className='eye_icon absolute text-white' onClick={() => setType(!type)}>
-                        {type ? <Icon icon={basic_eye} size={20} /> : <Icon icon={basic_eye_closed} size={20} />}
-                    </span>
-                        </div>
+                        <span className='eye_icon absolute text-white' onClick={() => setType(!type)}>
+                            {type ? <Icon icon={basic_eye} size={20} /> : <Icon icon={basic_eye_closed} size={20} />}
+                        </span>
+                    </div>
                 </div>
                 <button
                     type="submit"

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 
-const UserDetailModal = ({ userid, isOpen, onClose }) => {
+const UserModal = ({ userid, isOpen, onClose }) => {
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
@@ -43,4 +43,4 @@ const UserDetailModal = ({ userid, isOpen, onClose }) => {
     );
 };
 
-export default UserDetailModal;
+export default UserModal;
