@@ -48,21 +48,6 @@
   font-weight: 800;
   // font-size: 2.4rem;
   color: black;
-
-  &:after {
-    content: "";
-    position: absolute;
-    bottom: 0px;
-    width: 0%;
-    height: 4px;
-    display: block;
-    transition: all 0.5s ease;
-  }
-  &:hover::after {
-    width: 100%;
-    height: 4px;
-    background-color: black;
-  }
 }
 /* LoginForm */
 
@@ -150,6 +135,10 @@
   min-width: 200px!important;
 }
 
+.dFsSgh:nth-child(8){
+  min-width: 200px!important;
+}
+
 .dFsSgh:last-child {
   min-width: 200px !important;
 }
@@ -174,25 +163,6 @@
   font-weight: 500;
   background-color: var(--bg-color);
 
-  .balance {
-    padding: 1rem 0.5rem;
-    background-color: var(--coffee-green);
-    color: white;
-    font-weight: 700;
-    border: 1px solid black;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: 0.2s ease;
-    justify-content: center;
-    border-radius: 1rem;
-    cursor: pointer;
-
-    &:hover {
-      scale: 1.05;
-    }
-  }
-
   .total-card {
     overflow: hidden;
     transition: 0.2s ease;
@@ -200,6 +170,7 @@
       scale: 1.05;
     }
   }
+  
 
   .chart-container {
     h1 {
@@ -228,6 +199,25 @@
     &:hover h3:after {
       width: 100%;
     }
+  }
+}
+
+.balance {
+  padding: 1rem 0.5rem;
+  background-color: var(--coffee-green);
+  color: white;
+  font-weight: 700;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.2s ease;
+  justify-content: center;
+  border-radius: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    scale: 1.05;
   }
 }
 

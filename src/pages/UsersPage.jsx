@@ -6,8 +6,8 @@ import { ic_create } from 'react-icons-kit/md/ic_create';
 import { trashO } from 'react-icons-kit/fa/trashO';
 import { ic_remove_red_eye } from 'react-icons-kit/md/ic_remove_red_eye'
 import Swal from 'sweetalert2';
-import {  Link, useNavigate } from 'react-router-dom';
-import {  Flame, SquarePlus } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Flame, SquarePlus } from 'lucide-react';
 import UserModal from '../Components/Users/UserModal';
 
 
@@ -30,7 +30,7 @@ const UsersPage = () => {
             name: "Ad Soyad",
             selector: row => row.firstName + ' ' + row.lastName,
         },
-        
+
         {
             name: "Yaş",
             selector: row => row.age,
@@ -54,14 +54,14 @@ const UsersPage = () => {
         },
         {
             name: "Most Going Coffee Shop",
-            selector: row => row.age,
+            selector: row => row.firstName + ' ' + row.lastName,
         },
         {
             name: "Streak",
-            selector: row =>(
+            selector: row => (
                 <div className="flex items-center gap-1">
                     <span>{row.age}</span>
-                    <Flame size={20} color='orange'/>
+                    <Flame size={20} color='orange' />
                 </div>
             ),
         },
@@ -74,7 +74,7 @@ const UsersPage = () => {
                         <Icon className='d-flex' icon={ic_create} />
                     </button>
                     <button className='px-3 py-2 bg-red-600 text-white rounded-md'
-                     onClick={() => handleDelete(row.id)}>
+                        onClick={() => handleDelete(row.id)}>
                         <Icon className='d-flex' icon={trashO} />
                     </button>
                     <button className='px-3 py-2 bg-blue-600 text-white rounded-md'
@@ -167,41 +167,44 @@ const UsersPage = () => {
         Loading ? (<div className='card m-4 border rounded-md  overflow-hidden'>
             <div className="header px-4 py-2 text-white font-semibold flex items-center border-b border-gray-400">
                 <h1 className='lg:text-2xl md:text-xl text-lg'>
-                Users
+                    Users
                 </h1>
                 <div className='flex justify-end gap-3 w-full mb-1 p-3 border-green-900'>
-                                <input
-                                    className='form-control text-black md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md'
-                                    placeholder='Search'
-                                    value={search}
-                                    onChange={(event) => setSearch(event.target.value)}
-                                />
-                                <Link to={'/dashboard/users/create'}
-                                className='d-flex align-items-center'
-                                style={{ borderRadius: '25%' }}>
-                                <SquarePlus size={40}/>
-                              </Link>
-                                </div>
+                    <input
+                        className='form-control text-black md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md'
+                        placeholder='Search'
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                    />
+                    <Link to={'/dashboard/users/create'}
+                        className='d-flex align-items-center'
+                        style={{ borderRadius: '25%' }}>
+                        <SquarePlus size={40} />
+                    </Link>
+                </div>
             </div>
-            
+
             <div className='card-body'>
-                   
-                        <DataTable
-                            columns={columns}
-                            data={filter}
-                            pagination
-                            highlightOnHover
-                            responsive
-                        >
-                        </DataTable> 
-                
+
+                <DataTable
+                    columns={columns}
+                    data={filter}
+                    pagination
+                    highlightOnHover
+                    responsive
+                >
+                </DataTable>
+
             </div>
             <UserModal
-                    userid={userid}
-                    isOpen={modalShow}
-                    onClose={() => setModalShow(false)}
-                />
-        </div> ) : null
+                userid={userid}
+                isOpen={modalShow}
+                onClose={() => setModalShow(false)}
+            />
+        </div>) :
+            <div className="mx-auto h-screen w-full flex items-center justify-center">
+                <h1 className="title text-2xl">Loading...</h1>
+            </div>
     )
 }
 

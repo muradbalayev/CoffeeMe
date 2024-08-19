@@ -1,4 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Wallet as WalletIcon }  from "lucide-react"
+
 import {
   ChartLine,
   Handshake,
@@ -37,6 +39,13 @@ const SIDEBAR_ITEMS = [
     icon: <MessageSquareWarning size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/support",
   },
+  {
+    id: 5,
+    title: "Wallet",
+    icon: <WalletIcon size={20} style={{ minWidth: "20px" }} />,
+    path: "/dashboard/wallet",
+  },
+
 ];
 
 function Sidebar() {
@@ -82,7 +91,7 @@ function Sidebar() {
           )}
         </AnimatePresence>
       </div>
-      <nav className="links w-full mt-8 flex flex-col">
+      <nav className="links w-full mt-8 flex flex-col overflow-y-scroll">
         {SIDEBAR_ITEMS.map((item) => (
           <NavLink
             key={item.id}

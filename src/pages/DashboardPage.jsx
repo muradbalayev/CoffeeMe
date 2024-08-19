@@ -6,6 +6,7 @@ import UserCreate from "../Components/Users/UserCreate"
 import UserUpdate from "../Components/Users/UserUpdate"
 import SalesReport from "./SalesPage"
 import UsersPage from "./UsersPage"
+import WalletPage from "./WalletPage"
 
 function DashboardPage() {
     return (
@@ -14,6 +15,8 @@ function DashboardPage() {
             <div className="w-full overflow-y-scroll">
                 <Routes>
                     <Route path='/' element={<SalesReport />} />
+
+                    <Route path="/wallet" element={<WalletPage/>} />
                     
                     <Route path='/users' element={<UsersPage />} />
                     <Route path='/users/create' element={<UserCreate />} />
