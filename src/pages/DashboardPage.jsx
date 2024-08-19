@@ -9,11 +9,9 @@ import UsersPage from "./UsersPage"
 
 function DashboardPage() {
     return (
-        <div className="grid grid-cols-12 h-screen w-full overflow-hidden max-w-[1920px] mx-auto">
-            <div className="lg:col-span-2 col-span-3 w-full">
+        <div className="flex h-screen w-full overflow-hidden max-w-[1920px] mx-auto">
                 <Sidebar />
-            </div>
-            <div className="lg:col-span-10 col-span-9 w-full overflow-y-scroll">
+            <div className="w-full overflow-y-scroll">
                 <Routes>
                     <Route path='/' element={<SalesReport />} />
                     

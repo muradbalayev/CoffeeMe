@@ -5,6 +5,7 @@ import {
   TrendingUp,
   UsersRound,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const SalesTotals = () => {
   const totalData = [
@@ -16,6 +17,7 @@ const SalesTotals = () => {
       exchange: "",
       arrowicon: <TrendingUp color="#00B69B" />,
       percentage: "8.5% Up from yesterday",
+      path: '/dashboard/users'
     },
     {
       id: 2,
@@ -28,19 +30,21 @@ const SalesTotals = () => {
     },
     {
       id: 3,
-      name: "Total Users",
-      sales: "40,689",
+      name: "Total Sales",
+      sales: "$80,600",
       icon: <ChartLine size={45} color="green" />,
       exchange: "",
       arrowicon: <TrendingDown />,
       percentage: "4.3% Down from yesterday",
+      path: '/dashboard/wallet'
+
     },
   ];
 
   return (
     <div className="totals mt-8 px-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
       {totalData.map((total) => (
-        <div
+        <Link to={total.path}
           key={total.id}
           className="total-card hover:shadow-xl shadow-md min-h-40 p-4 rounded-lg bg-white min-w-[150px]">
           <div className="flex flex-col h-full justify-between">
@@ -56,7 +60,7 @@ const SalesTotals = () => {
               {total.percentage}
             </div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

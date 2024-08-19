@@ -52,6 +52,7 @@
   &:after {
     content: "";
     position: absolute;
+    bottom: 0px;
     width: 0%;
     height: 4px;
     display: block;
@@ -81,6 +82,8 @@
 
 .sidebar {
   background-color: var(--coffee-green);
+  transition: .6s ease all;
+  position: relative;
 
   .links a {
     display: flex;
@@ -130,6 +133,23 @@
 }
 
 /* table row */
+.dFsSgh:nth-child(1){
+  max-width: 70px!important;
+  min-width: 30px!important;
+}
+
+.dFsSgh:nth-child(2){
+  min-width: 200px!important;
+}
+
+.dFsSgh:nth-child(4){
+  min-width: 200px!important;
+}
+
+.dFsSgh:nth-child(6){
+  min-width: 200px!important;
+}
+
 .dFsSgh:last-child {
   min-width: 200px !important;
 }

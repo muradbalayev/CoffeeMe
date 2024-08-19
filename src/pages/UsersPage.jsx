@@ -7,7 +7,7 @@ import { trashO } from 'react-icons-kit/fa/trashO';
 import { ic_remove_red_eye } from 'react-icons-kit/md/ic_remove_red_eye'
 import Swal from 'sweetalert2';
 import {  Link, useNavigate } from 'react-router-dom';
-import { SquarePlus } from 'lucide-react';
+import {  Flame, SquarePlus } from 'lucide-react';
 import UserModal from '../Components/Users/UserModal';
 
 
@@ -27,29 +27,43 @@ const UsersPage = () => {
             sortable: true
         },
         {
-            name: "Ad",
-            selector: row => row.firstName,
+            name: "Ad Soyad",
+            selector: row => row.firstName + ' ' + row.lastName,
         },
+        
         {
-            name: "Soyad",
-            selector: row => row.lastName,
-        },
-        {
-            name: "Şəkil",
+            name: "Yaş",
             selector: row => row.age,
         },
         {
-            name: "Balans",
-            selector: row => row.age,
+            name: "Adres",
+            selector: row => row.firstName + ' ' + row.lastName,
             sortable: true
         },
         {
-            name: "Tarixçə",
+            name: "Nömrə",
+            selector: row => row.age,
+        },
+        {
+            name: "Email",
+            selector: row => row.firstName + ' ' + row.lastName,
+        },
+        {
+            name: "Gender",
+            selector: row => row.age,
+        },
+        {
+            name: "Most Going Coffee Shop",
             selector: row => row.age,
         },
         {
             name: "Streak",
-            selector: row => row.age,
+            selector: row =>(
+                <div className="flex items-center gap-1">
+                    <span>{row.age}</span>
+                    <Flame size={20} color='orange'/>
+                </div>
+            ),
         },
         {
             name: "Actions",
@@ -157,7 +171,7 @@ const UsersPage = () => {
                 </h1>
                 <div className='flex justify-end gap-3 w-full mb-1 p-3 border-green-900'>
                                 <input
-                                    className='form-control md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md'
+                                    className='form-control text-black md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md'
                                     placeholder='Search'
                                     value={search}
                                     onChange={(event) => setSearch(event.target.value)}
