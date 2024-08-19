@@ -5,8 +5,11 @@ import Support from "../Components/Support"
 import UserCreate from "../Components/Users/UserCreate"
 import UserUpdate from "../Components/Users/UserUpdate"
 import SalesReport from "./SalesPage"
-import UsersPage from "./UsersPage"
 import WalletPage from "./WalletPage"
+import WithdrawPage from "./WithdrawPage"
+import WhtCreate from "../Components/Withdraw/WthCreate"
+import AllUsersPage from "./AllUsersPage"
+import PremiumUsersPage from "./PremiumUsersPage"
 
 function DashboardPage() {
     return (
@@ -17,8 +20,12 @@ function DashboardPage() {
                     <Route path='/' element={<SalesReport />} />
 
                     <Route path="/wallet" element={<WalletPage/>} />
+
+                    <Route path="/withdraw" element={<WithdrawPage/>} />
+                    <Route path="/withdraw/create" element={<WhtCreate/>} />
                     
-                    <Route path='/users' element={<UsersPage />} />
+                    <Route path='/users' element={<AllUsersPage />} />
+                    <Route path='/premiumusers' element={<PremiumUsersPage/>} />
                     <Route path='/users/create' element={<UserCreate />} />
                     <Route path='/users/update/:userid' element={<UserUpdate />} />
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Wallet as WalletIcon }  from "lucide-react"
+import { Coffee, Wallet as WalletIcon }  from "lucide-react"
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component"
 
@@ -70,7 +70,7 @@ const columns = [
       </div>
       <h1 className="mt-8 title text-xl">Recent transaction&apos;s</h1>
 
-      <div className='mt-8'>
+      <div className='mt-4'>
                    
                    <DataTable
                        columns={columns}
@@ -83,9 +83,10 @@ const columns = [
            
        </div>
     </div> : 
-    <div className="mx-auto h-screen w-full flex items-center justify-center">
-    <h1 className="title text-2xl">Loading...</h1>
-    </div>
+   <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
+   <Coffee size={30} stroke='#214440'/>
+   <h1 className="title text-2xl">Loading...</h1>
+</div>
   )
 }
 

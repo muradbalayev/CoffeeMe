@@ -1,17 +1,13 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component'
-import Icon from 'react-icons-kit';
-import { ic_create } from 'react-icons-kit/md/ic_create';
-import { trashO } from 'react-icons-kit/fa/trashO';
-import { ic_remove_red_eye } from 'react-icons-kit/md/ic_remove_red_eye'
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
-import { Flame, SquarePlus } from 'lucide-react';
+import { Coffee, Eye, Flame, Pencil, SquarePlus, Trash2 } from 'lucide-react';
 import UserModal from '../Components/Users/UserModal';
 
 
-const UsersPage = () => {
+const AllUsersPage = () => {
     const [users, setUsers] = useState([]);
     const [Loading, setLoading] = useState(false);
     const [search, setSearch] = useState('')
@@ -71,15 +67,15 @@ const UsersPage = () => {
                 <div className='flex justify-start items-center gap-2'>
                     <button onClick={() => handleUpdateClick(row.id)}
                         className='px-3 py-2 bg-green-600 text-white rounded-md'>
-                        <Icon className='d-flex' icon={ic_create} />
+                        <Pencil size={18} />
                     </button>
                     <button className='px-3 py-2 bg-red-600 text-white rounded-md'
                         onClick={() => handleDelete(row.id)}>
-                        <Icon className='d-flex' icon={trashO} />
+                        <Trash2 size={18} />
                     </button>
                     <button className='px-3 py-2 bg-blue-600 text-white rounded-md'
                         onClick={() => handleModal(row.id)}>
-                        <Icon className='d-flex' icon={ic_remove_red_eye} />
+                        <Eye size={18} />
                     </button>
                 </div>
             )
@@ -164,7 +160,8 @@ const UsersPage = () => {
     };
 
     return (
-        Loading ? (<div className='card m-4 border rounded-md  overflow-hidden'>
+        Loading ? (
+        <div className='card m-4 border rounded-md  overflow-hidden'>
             <div className="header px-4 py-2 text-white font-semibold flex items-center border-b border-gray-400">
                 <h1 className='lg:text-2xl md:text-xl text-lg'>
                     Users
@@ -202,10 +199,11 @@ const UsersPage = () => {
                 onClose={() => setModalShow(false)}
             />
         </div>) :
-            <div className="mx-auto h-screen w-full flex items-center justify-center">
+            <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
+                <Coffee size={30} stroke='#214440'/>
                 <h1 className="title text-2xl">Loading...</h1>
             </div>
     )
 }
 
-export default UsersPage
+export default AllUsersPage

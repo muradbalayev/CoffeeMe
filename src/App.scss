@@ -46,8 +46,7 @@
 .title {
   font-family: "Poppins", sans-serif;
   font-weight: 800;
-  // font-size: 2.4rem;
-  color: black;
+  color: var(--coffee-green);
 }
 /* LoginForm */
 
@@ -69,6 +68,16 @@
   background-color: var(--coffee-green);
   transition: .6s ease all;
   position: relative;
+  max-height: 850px;
+
+  .dropdown{
+    transition: .3s ease;
+
+    &:hover{
+scale: 1.2;
+color: var(--coffee-green);
+    }
+  }
 
   .links a {
     display: flex;
@@ -94,7 +103,7 @@
 }
 
 .active {
-  background-color: gray;
+  background-color: rgb(88, 88, 88)!important;
 }
 
 // Dashboard Header Color  //
@@ -147,13 +156,20 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
-}
+  
+  input {
+    padding: 5px 10px;
+    outline: none;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+  }
 
-.form-group input {
-  padding: 5px 10px;
-  outline: none;
-  border: 1px solid lightgray;
-  border-radius: 5px;
+  label{
+    font-weight: 600;
+    font-size: .9rem;
+    margin: 5px;
+    font-family: var(--inter-font);
+  }
 }
 
 //Sales Report

@@ -1,5 +1,5 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Wallet as WalletIcon }  from "lucide-react"
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { ChevronDown, ChevronUp, Crown, NotebookText, Wallet as WalletIcon } from "lucide-react";
 
 import {
   ChartLine,
@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const SIDEBAR_ITEMS = [
   {
@@ -23,21 +23,21 @@ const SIDEBAR_ITEMS = [
   },
   {
     id: 2,
-    title: "Users",
-    icon: <Users size={20} style={{ minWidth: "20px" }} />,
-    path: "/dashboard/users",
-  },
-  {
-    id: 3,
     title: "Partners",
     icon: <Handshake size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/partner",
   },
   {
-    id: 4,
+    id: 3,
     title: "Support Chat",
     icon: <MessageSquareWarning size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/support",
+  },
+  {
+    id: 4,
+    title: "Withdraw",
+    icon: <NotebookText size={20} style={{ minWidth: "20px" }} />,
+    path: "/dashboard/withdraw",
   },
   {
     id: 5,
@@ -45,12 +45,16 @@ const SIDEBAR_ITEMS = [
     icon: <WalletIcon size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/wallet",
   },
-
 ];
 
 function Sidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [dropdown, setDropDown] = useState(false);
+  const dropdownRef = useRef(null);
+
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -58,11 +62,31 @@ function Sidebar() {
     navigate("/");
   };
 
+  const dropdownToggle = () => {
+    setDropDown(!dropdown);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropDown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const isUsersActive =
+    location.pathname.startsWith("/dashboard/users") ||
+    location.pathname.startsWith("/dashboard/premiumusers");
+
   return (
     <div
-      className={`sidebar h-screen flex flex-col items-center gap-4 pb-10 pt-3 text-white ${
-        isSidebarOpen ? "w-64" : "w-20"
-      }`}
+      className={`sidebar h-screen flex flex-col items-center gap-4 pb-10 pt-3 text-white ${isSidebarOpen ? "w-64" : "w-20"
+        }`}
     >
       <motion.button
         whileHover={{ scale: 1.1 }}
@@ -73,11 +97,10 @@ function Sidebar() {
         <Menu size={24} />
       </motion.button>
       <div className="w-full flex flex-col gap-3 items-center justify-center h-32">
-
-      <div className="profile-img bg-gray-300 rounded-full transition duration-300 md:p-5 p-3">
-      <User size={isSidebarOpen ? 40 : 25} />
-      </div>
-      <AnimatePresence>
+        <div className="profile-img bg-gray-300 rounded-full transition duration-300 md:p-5 p-3">
+          <User size={isSidebarOpen ? 40 : 25} />
+        </div>
+        <AnimatePresence>
           {isSidebarOpen && (
             <motion.span
               className="whitespace-nowrap font-medium text-md"
@@ -91,7 +114,81 @@ function Sidebar() {
           )}
         </AnimatePresence>
       </div>
-      <nav className="links w-full mt-8 flex flex-col overflow-y-scroll">
+      <nav className="links w-full mt-8 flex flex-col">
+        <Link ref={dropdownRef} onClick={dropdownToggle} end
+          className={`lg:text-sm text-xs px-8 py-3 relative ${isUsersActive ? "active" : ""}`}>
+          <User size={20} style={{ minWidth: "20px" }} />
+          <AnimatePresence>
+            {isSidebarOpen && (
+              <motion.span
+                className="whitespace-nowrap flex items-center justify-between"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.1, delay: 0.2 }}
+              >
+                Users
+                {dropdown ?
+                  <ChevronUp
+                    className="dropdown"
+                    style={{ position: "absolute", right: "10px" }}
+                  /> :
+                  <ChevronDown
+                    className="dropdown"
+                    style={{ position: "absolute", right: "10px" }}
+                  />}
+
+              </motion.span>
+            )}
+          </AnimatePresence>
+          {dropdown && (
+            //DropDown links
+            <div className="absolute w-full left-0 top-11">
+              <NavLink
+                to="/dashboard/users"
+                style={{ backgroundColor: "gray" }}
+                className=" px-8 py-3 text-xs"
+
+              >
+                <Users size={15} style={{ minWidth: "20px" }} />
+                <AnimatePresence>
+              {isSidebarOpen && (
+                <motion.span
+                  className="whitespace-nowrap"
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.1, delay: 0.2 }}
+                >
+                  All Users
+                </motion.span>
+              )}
+            </AnimatePresence>
+              </NavLink>
+              <NavLink
+                to="/dashboard/premiumusers"
+                style={{ backgroundColor: "gray" }}
+                className=" px-8 py-3 text-xs rounded-b-lg"
+
+              >
+                <Crown size={15} style={{ minWidth: "20px" }} />
+                <AnimatePresence>
+              {isSidebarOpen && (
+                <motion.span
+                  className="whitespace-nowrap"
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.1, delay: 0.2 }}
+                >
+                  Premium Users
+                </motion.span>
+              )}
+            </AnimatePresence>
+              </NavLink>
+            </div>
+          )}
+        </Link>
         {SIDEBAR_ITEMS.map((item) => (
           <NavLink
             key={item.id}
