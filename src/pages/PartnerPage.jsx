@@ -29,6 +29,10 @@ const PartnerPage = () => {
       selector: row => row.firstName
     },
     {
+      name: "Username",
+      selector: row => row.firstName
+    },
+    {
       name: "Adres",
       selector: row => row.age,
     },

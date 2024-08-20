@@ -68,7 +68,10 @@
   background-color: var(--coffee-green);
   transition: 0.6s ease all;
   position: relative;
-  max-height: 850px;
+
+.menu-icon{
+  position: absolute;
+}
 
   .profile-img {
     transition: 0.3s ease;

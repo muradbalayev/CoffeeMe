@@ -80,14 +80,16 @@ function Sidebar() {
     <div
       className={`sidebar h-screen flex flex-col items-center gap-4 pb-10 pt-3 text-white ${isSidebarOpen ? "w-60" : "w-20"}`}
     >
+      <div className='w-full relative flex items-center px-5'>
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         className="p-2 rounded-full hover:bg-gray-500 transition-colors max-w-fit"
-      >
+        >
         <Menu size={24} />
       </motion.button>
+        </div>
       <div className="w-full flex flex-col gap-3 items-center justify-start h-32">
         <div className={`profile-img bg-gray-300 rounded-full transition duration-300 md:p-5 p-3 ${isSidebarOpen ? 'scale-100' : 'scale-75'}`}>
           <User size={40} />
