@@ -110,7 +110,7 @@ function Sidebar() {
       </div>
       <nav className="links w-full mt-8 flex flex-col">
         <Link ref={dropdownRef} onClick={dropdownToggle} end
-          className={`lg:text-sm text-xs px-8 py-3 relative ${isUsersActive ? "active" : ""}`}>
+          className={`lg:text-sm text-xs px-8 py-3 relative group ${isUsersActive ? "active" : ""}`}>
           <User size={20} style={{ minWidth: "20px" }} />
           <AnimatePresence>
             {isSidebarOpen && (
@@ -124,11 +124,11 @@ function Sidebar() {
                 Users
                 {dropdown ?
                   <ChevronUp
-                    className="dropdown"
+                    className="dropdown group-hover:scale-110"
                     style={{ position: "absolute", right: "10px" }}
                   /> :
                   <ChevronDown
-                    className="dropdown"
+                    className="dropdown group-hover:scale-110"
                     style={{ position: "absolute", right: "10px" }}
                   />}
 

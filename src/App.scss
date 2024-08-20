@@ -79,11 +79,6 @@
   }
   .dropdown {
     transition: 0.3s ease;
-
-    &:hover {
-      scale: 1.2;
-      color: var(--coffee-green);
-    }
   }
 
   .links a {
@@ -216,6 +211,8 @@
   // Sales Tables
 
   .table {
+// max-width: 450px;
+
     h3 {
       position: relative;
     }

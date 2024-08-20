@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Flame } from 'lucide-react';
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2';
@@ -74,7 +75,7 @@ const UserCreate = () => {
 
                 <div className='card-body bg-white flex-grow'>
                     <div className='form-group'>
-                        <label>Ad<span className='text-red-600'>*</span></label>
+                        <label>Name<span className='text-red-600'>*</span></label>
                         <input type="text"
                             name='firstName'
                             value={newData.firstName}
@@ -82,13 +83,43 @@ const UserCreate = () => {
                             className="border rounded" />
                     </div>
                     <div className='form-group'>
-                        <label>Soyad<span className='text-red-600'>*</span></label>
+                        <label>Surname<span className='text-red-600'>*</span></label>
                         <input
                             name='lastName'
                             value={newData.lastName}
                             onChange={handleChange}
                             type="text"
                             className="form-control" />
+                    </div>
+                    <div className='form-group'>
+                        <label>Age<span className='text-red-600'>*</span></label>
+                        <input
+                            name='age'
+                            value={newData.age}
+                            onChange={handleChange}
+                            type="number"
+                            className="form-control"
+                        />
+                    </div>
+                    <div className='form-group'>
+                        <label>Adres<span className='text-red-600'>*</span></label>
+                        <input
+                            name='age'
+                            value={newData.age}
+                            onChange={handleChange}
+                            type="text"
+                            className="form-control"
+                        />
+                    </div>
+                    <div className='form-group'>
+                        <label>Number<span className='text-red-600'>*</span></label>
+                        <input
+                            name='age'
+                            value={newData.age}
+                            onChange={handleChange}
+                            type="number"
+                            className="form-control"
+                        />
                     </div>
                     <div className='form-group'>
                         <label>Email<span className='text-red-600'>*</span></label>
@@ -101,17 +132,60 @@ const UserCreate = () => {
                         />
                     </div>
                     <div className='form-group'>
-                        <label>Nömrə<span className='text-red-600'>*</span></label>
+                        <label>Gender<span className='text-red-600'>*</span></label>
+                        <select className='outline-none text-gray border border-gray-300 py-2 ps-4 rounded-md'>
+                            <option selected disabled>
+                                Gender
+                            </option>
+                            <option>
+                                Male
+                            </option>
+                            <option>
+                                Female
+                            </option>
+                        </select>
+                    </div>
+                    <div className='form-group'>
+                        <label>Most Going Coffee Shop<span className='text-red-600'>  *</span></label>
+                        <select className='outline-none text-gray border border-gray-300 py-2 ps-4 rounded-md'>
+                            <option selected disabled>
+                                Most Going Coffee Shop
+                            </option>
+                            <option>
+                                Coffee Shop 1
+                            </option>
+                            <option>
+                                Coffee Shop 2
+                            </option>
+                        </select>
+                    </div>
+                    <div className='form-group'>
+                        <label className='flex items-center'><Flame size={18} color='red' />Streak <span className='text-red-600'> *</span></label>
                         <input
                             name='age'
                             value={newData.age}
                             onChange={handleChange}
-                            type="text"
+                            type="number"
                             className="form-control"
                         />
                     </div>
+                    <div className='form-group'>
+                        <label>User Plan<span className='text-red-600'>  *</span></label>
+                        <select className='outline-none text-gray border border-gray-300 py-2 ps-4 rounded-md'>
+                            <option selected disabled>
+                                User Plan
+                            </option>
+                            <option>
+                                Standart
+                            </option>
+                            <option>
+                                Premium
+                            </option>
+                        </select>
+                    </div>
+
                 </div>
-                <div className='card-footer flex justify-between px-4'>
+                <div className='card-footer flex justify-between px-4 mt-8'>
                     <button onClick={handleBack}
                         className='border rounded px-4 py-2 bg-red-600 text-white font-semibold'>
                         Geri
