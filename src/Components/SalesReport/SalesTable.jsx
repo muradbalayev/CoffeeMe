@@ -9,7 +9,7 @@ const SalesTable = () => {
     ]
 
     return (
-        <div className="tables grid lg:grid-cols-2 grid-cols-1 gap-40 md:px-8 px-2">
+        <div className="tables grid mt-8 lg:grid-cols-2 grid-cols-1 gap-40 md:px-8 px-2">
             <div className="table">
                 <h3 className="my-3 font-semibold lg:text-2xl md:text-xl text-lg ">New Members</h3>
                 <table className="w-full">

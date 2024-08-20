@@ -7,7 +7,7 @@ function App() {
 
 
   return (
-    <div className='w-full h-screen relative'>
+    <div className='w-full h-screen overflow-hidden relative'>
      <Toaster
      containerClassName='toast'
         position='top-center'
