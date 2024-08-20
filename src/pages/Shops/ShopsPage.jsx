@@ -11,8 +11,11 @@ import {
   SquarePlus,
   Trash2,
 } from "lucide-react";
+// console.log(`public/uploads/${shop._id}/shop.photo`)
+// console.log(`public/uploads/${shop._id}/shop.logo`)
+
 const fetchShops = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_LOCAL_URL}/api/shop`);
+  const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shop`);
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }
@@ -47,7 +50,7 @@ const AddShopModal = ({ setShowAddModal }) => {
   const mutation = useMutation(
     async (formData) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_LOCAL_URL}/api/shop/add`,
+        `${import.meta.env.VITE_API_GLOBAL_URL}/api/shop/add`,
         {
           method: "POST",
           body: formData,
