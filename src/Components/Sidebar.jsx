@@ -35,16 +35,16 @@ const SIDEBAR_ITEMS = [
   },
   {
     id: 4,
-    title: "Withdraw",
-    icon: <NotebookText size={20} style={{ minWidth: "20px" }} />,
-    path: "/dashboard/withdraw",
-  },
-  {
-    id: 5,
     title: "Wallet",
     icon: <WalletIcon size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/wallet",
   },
+  {
+    id: 5,
+    title: "Withdraw",
+    icon: <NotebookText size={20} style={{ minWidth: "20px" }} />,
+    path: "/dashboard/withdraw",
+  }
 ];
 
 function Sidebar() {
@@ -85,8 +85,7 @@ function Sidebar() {
 
   return (
     <div
-      className={`sidebar h-screen flex flex-col items-center gap-4 pb-10 pt-3 text-white ${isSidebarOpen ? "w-64" : "w-20"
-        }`}
+      className={`sidebar h-screen flex flex-col items-center gap-4 pb-10 pt-3 text-white ${isSidebarOpen ? "w-60" : "w-20"}`}
     >
       <motion.button
         whileHover={{ scale: 1.1 }}
@@ -96,9 +95,9 @@ function Sidebar() {
       >
         <Menu size={24} />
       </motion.button>
-      <div className="w-full flex flex-col gap-3 items-center justify-center h-32">
-        <div className="profile-img bg-gray-300 rounded-full transition duration-300 md:p-5 p-3">
-          <User size={isSidebarOpen ? 40 : 25} />
+      <div className="w-full flex flex-col gap-3 items-center justify-start h-32">
+        <div className={`profile-img bg-gray-300 rounded-full transition duration-300 md:p-5 p-3 ${isSidebarOpen ? 'scale-100' : 'scale-75'}`}>
+          <User size={40} />
         </div>
         <AnimatePresence>
           {isSidebarOpen && (
@@ -121,7 +120,7 @@ function Sidebar() {
           <AnimatePresence>
             {isSidebarOpen && (
               <motion.span
-                className="whitespace-nowrap flex items-center justify-between"
+                className='whitespace-nowrap flex items-center justify-between'
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: "auto" }}
                 exit={{ opacity: 0, width: 0 }}
@@ -143,49 +142,47 @@ function Sidebar() {
           </AnimatePresence>
           {dropdown && (
             //DropDown links
-            <div className="absolute w-full left-0 top-11">
-              <NavLink
+            <div className="absolute w-full left-0 top-11 border-b border-s border-e rounded-b-xl border-black backdrop-blur-lg">
+              <Link
                 to="/dashboard/users"
-                style={{ backgroundColor: "gray" }}
-                className=" px-8 py-3 text-xs"
-
+                // style={{ backgroundColor: "gray" }}
+                className=" px-8 py-3 text-xs dropdown-link"
               >
                 <Users size={15} style={{ minWidth: "20px" }} />
                 <AnimatePresence>
-              {isSidebarOpen && (
-                <motion.span
-                  className="whitespace-nowrap"
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: "auto" }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={{ duration: 0.1, delay: 0.2 }}
-                >
-                  All Users
-                </motion.span>
-              )}
-            </AnimatePresence>
-              </NavLink>
-              <NavLink
+                  {isSidebarOpen && (
+                    <motion.span
+                      className="whitespace-nowrap"
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      transition={{ duration: 0.1, delay: 0.2 }}
+                    >
+                      All Users
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </Link>
+              <Link
                 to="/dashboard/premiumusers"
-                style={{ backgroundColor: "gray" }}
-                className=" px-8 py-3 text-xs rounded-b-lg"
-
+                // style={{ backgroundColor: "gray" }}
+                className=" px-8 py-3 text-xs rounded-b-lg dropdown-link"
               >
                 <Crown size={15} style={{ minWidth: "20px" }} />
                 <AnimatePresence>
-              {isSidebarOpen && (
-                <motion.span
-                  className="whitespace-nowrap"
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: "auto" }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={{ duration: 0.1, delay: 0.2 }}
-                >
-                  Premium Users
-                </motion.span>
-              )}
-            </AnimatePresence>
-              </NavLink>
+                  {isSidebarOpen && (
+                    <motion.span
+                      className="whitespace-nowrap"
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      transition={{ duration: 0.1, delay: 0.2 }}
+                    >
+                      Premium Users
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </Link>
             </div>
           )}
         </Link>

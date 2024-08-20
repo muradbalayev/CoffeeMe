@@ -2,17 +2,19 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component"
 import WthModal from "../Components/Withdraw/WthModal";
-import { Coffee, Eye, Plus } from "lucide-react";
+import { Coffee, Eye, Plus, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 
 
 
 const WithdrawPage = () => {
 
-    const [transactions, setTransactions] = useState([]);
+    const [requests, setRequests] = useState([]);
     const [Loading, setLoading] = useState(false);
-    const [userid, setUserid] = useState(null)
+    const [requestId, setRequestId] = useState(null)
     const [modalShow, setModalShow] = useState(false);
+    const [search, setSearch] = useState('')
+    const [filter, setFilter] = useState("");
 
     const columns = [
         {
@@ -48,7 +50,7 @@ const WithdrawPage = () => {
                     </Link>
                     <button className='px-2 py-1 bg-blue-600 text-white rounded-md'
                         onClick={() => handleModal(row.id)}>
-                      <Eye/>
+                        <Eye />
                     </button>
                 </div>
             )
@@ -62,13 +64,14 @@ const WithdrawPage = () => {
             .then(response => {
                 // console.log("Data from API:", response.data);
                 if (response.data && response.data.users && Array.isArray(response.data.users)) {
-                    const TransactionDatas = response.data.users.map(data => ({
+                    const RequestDatas = response.data.users.map(data => ({
                         id: data.id,
                         firstName: data.firstName,
                         lastName: data.lastName,
                         age: data.age
                     }));
-                    setTransactions(TransactionDatas);
+                    setRequests(RequestDatas);
+                    setFilter(RequestDatas)
                     setLoading(true);
                 }
             })
@@ -77,8 +80,15 @@ const WithdrawPage = () => {
             });
     }, []);
 
+    useEffect(() => {
+        const result = requests.filter((partner) => {
+            return partner.firstName.toLowerCase().includes(search.toLowerCase());
+        });
+        setFilter(result);
+    }, [requests, search]);
+
     function handleModal(id) {
-        setUserid(id)
+        setRequestId(id)
         setModalShow(true)
     }
 
@@ -92,14 +102,26 @@ const WithdrawPage = () => {
                             Withdraw
                         </h1>
                     </div>
+
                 </div>
-                <h1 className="mt-8 title text-xl">Request&apos;s table</h1>
+                <div className="w-full flex justify-between items-center mt-8">
+                    <h1 className="title text-xl">Request&apos;s table</h1>
+                    <div className='flex relative gap-3 mb-1 p-3 border-green-900'>
+                        <input
+                            className='form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md'
+                            placeholder='Search'
+                            value={search}
+                            onChange={(event) => setSearch(event.target.value)}
+                        />
+                        <Search className="search-icon"/>
+                    </div>
+                </div>
 
                 <div className='mt-4'>
 
                     <DataTable
                         columns={columns}
-                        data={transactions}
+                        data={filter}
                         pagination
                         highlightOnHover
                         responsive
@@ -107,15 +129,15 @@ const WithdrawPage = () => {
                     </DataTable>
                 </div>
                 <WthModal
-                    userid={userid}
+                    userid={requestId}
                     isOpen={modalShow}
                     onClose={() => setModalShow(false)}
                 />
             </div> :
-           <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
-           <Coffee size={30} stroke='#214440'/>
-           <h1 className="title text-2xl">Loading...</h1>
-       </div>
+            <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
+                <Coffee size={30} stroke='#214440' />
+                <h1 className="title text-2xl">Loading...</h1>
+            </div>
     )
 }
 
