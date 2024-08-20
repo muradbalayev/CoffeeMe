@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import "./ShopPage.css";
-
-console.log(`${import.meta.env.VITE_API_URL}/api/shop/`);
 const fetchShops = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/shop`);
-  console.log(res);
+  const res = await fetch(`${import.meta.env.VITE_API_LOCAL_URL}/api/shop`);
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }
   return res.json();
 };
 const AddShopModal = ({ setShowAddModal }) => {
+  const queryClient = useQueryClient();
   const [data, setData] = useState({
     name: "",
     address: "",
@@ -37,10 +35,13 @@ const AddShopModal = ({ setShowAddModal }) => {
   };
   const mutation = useMutation(
     async (formData) => {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/shop/add`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_LOCAL_URL}/api/shop/add`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       return response.json();
     },
     {
@@ -50,6 +51,7 @@ const AddShopModal = ({ setShowAddModal }) => {
         console.log("Shop added successfully:", data);
       },
       onError: (error) => {
+        console.log(error);
         console.error("Error adding shop:", error);
       },
     }
@@ -62,9 +64,6 @@ const AddShopModal = ({ setShowAddModal }) => {
         formData.append(key, data[key]);
       }
     });
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
-    }
     mutation.mutate(formData); // Submit formData using useMutation
   };
   return (
