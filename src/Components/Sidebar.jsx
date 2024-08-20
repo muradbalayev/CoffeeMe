@@ -84,7 +84,7 @@ function Sidebar() {
 
   return (
     <div
-      className={`sidebar h-screen flex flex-col items-center gap-4 pb-10 pt-3 text-white ${isSidebarOpen ? "w-60" : "w-20"}`}
+      className={`sidebar h-screen flex flex-col items-center gap-4 pb-10 pt-3 text-white ${isSidebarOpen ? `md:w-60 w-40 ` : "w-20"}`}
     >
       <div className='w-full relative flex items-center px-5'>
         <motion.button
@@ -103,11 +103,11 @@ function Sidebar() {
         <AnimatePresence>
           {isSidebarOpen && (
             <motion.span
-              className="whitespace-nowrap font-medium text-md"
-              initial={{ opacity: 0, width: 0 }}
-              animate={{ opacity: 1, width: "auto" }}
-              exit={{ opacity: 0, width: 0 }}
-              transition={{ duration: 0.1, delay: 0.1 }}
+              className="whitespace-nowrap font-medium md:text-md text-sm"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
             >
               Coffee Shop Name
             </motion.span>
@@ -116,7 +116,7 @@ function Sidebar() {
       </div>
       <nav className="links w-full mt-8 flex flex-col">
         <Link ref={dropdownRef} onClick={dropdownToggle} end
-          className={`lg:text-sm text-xs px-8 py-3 relative ${isUsersActive ? "active" : ""}`}>
+          className={`lg:text-sm text-xs px-8 py-3 relative group ${isUsersActive ? "active" : ""}`}>
           <User size={20} style={{ minWidth: "20px" }} />
           <AnimatePresence>
             {isSidebarOpen && (
@@ -130,11 +130,11 @@ function Sidebar() {
                 Users
                 {dropdown ?
                   <ChevronUp
-                    className="dropdown"
+                    className="dropdown group-hover:scale-110"
                     style={{ position: "absolute", right: "10px" }}
                   /> :
                   <ChevronDown
-                    className="dropdown"
+                    className="dropdown group-hover:scale-110"
                     style={{ position: "absolute", right: "10px" }}
                   />}
 

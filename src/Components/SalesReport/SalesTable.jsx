@@ -9,7 +9,7 @@ const SalesTable = () => {
     ]
 
     return (
-        <div className="tables grid mt-8 lg:grid-cols-2 grid-cols-1 gap-40 md:px-8 px-2">
+        <div className="tables grid mt-8 lg:grid-cols-2 grid-cols-1 gap-20 md:px-8 px-2">
             <div className="table">
                 <h3 className="my-3 font-semibold lg:text-2xl md:text-xl text-lg ">New Members</h3>
                 <table className="w-full">
@@ -26,7 +26,7 @@ const SalesTable = () => {
                     <tbody className=' w-full divide-gray-700'>
                         {userData.map((user) => (
                             <tr key={user.id} className="border-b border-gray-700">
-                                <td className='px-6 py-4 whitespace-nowrap w-full'>
+                                <td className='px-2 py-2 whitespace-nowrap w-full'>
                                     <div className='flex items-center'>
                                         <div className='flex-shrink-0 h-10 w-10'>
                                             <div className='h-10 w-10 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 flex items-center justify-center text-white font-semibold'>
@@ -63,7 +63,7 @@ const SalesTable = () => {
                     <tbody className=' w-full divide-gray-700'>
                         {userData.map((user) => (
                             <tr key={user.id} className="border-b border-gray-700">
-                                <td className='px-6 py-4 whitespace-nowrap w-full'>
+                                <td className='px-2 py-2 whitespace-nowrap w-full'>
                                     <div className='flex items-center'>
                                         <div className='flex-shrink-0 h-10 w-10'>
                                             <div className='h-10 w-10 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 flex items-center justify-center text-white font-semibold'>
@@ -100,7 +100,7 @@ const SalesTable = () => {
                     <tbody className=' w-full divide-gray-700'>
                         {userData.map((user) => (
                             <tr key={user.id} className="border-b border-gray-700">
-                                <td className='px-6 py-4 whitespace-nowrap w-full'>
+                                <td className='px-2 py-2 whitespace-nowrap w-full'>
                                     <div className='flex items-center'>
                                         <div className='flex-shrink-0 h-10 w-10'>
                                             <div className='h-10 w-10 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 flex items-center justify-center text-white font-semibold'>

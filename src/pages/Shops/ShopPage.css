@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+
+
 .addModalContainer {
     background-color: rgba(0, 0, 0, 0.5);
 }
@@ -21,3 +24,42 @@
 .inputRow {
     flex: 1 1 1;
 }
+
+.title {
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+    color: #214440;
+  }
+
+  .create-button{
+    background-color: #214440;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+  }
+
+  .form-label{
+    font-weight: 600;
+    color: black;
+    font-family: Inter, 'sans-serif';
+  }
+
+  .form-control{
+    padding: 5px 10px;
+    outline: none;
+    border-radius: 10px;
+    border: 3px solid #214440;
+    transition: .3s ease;
+    font-family: Montserrat, 'sans-serif';
+  }
+
+  th{
+    padding: 10px 10px;
+  }
+
+  td{
+    padding: 6px 0px;
+    border-bottom: 1px solid lightgray;
+    text-align: center;
+  }
+

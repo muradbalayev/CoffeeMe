@@ -34,10 +34,9 @@ const SalesTotals = () => {
       sales: "$80,600",
       icon: <ChartLine size={45} color="green" />,
       exchange: "",
-      arrowicon: <TrendingDown />,
+      arrowicon: <TrendingDown color="red"/>,
       percentage: "4.3% Down from yesterday",
       path: '/dashboard/wallet'
-
     },
   ];
 
@@ -46,7 +45,7 @@ const SalesTotals = () => {
       {totalData.map((total) => (
         <Link to={total.path}
           key={total.id}
-          className="total-card cursor-pointer hover:shadow-xl shadow-md min-h-40 p-4 rounded-lg bg-white min-w-[150px]">
+          className="total-card cursor-pointer hover:shadow-xl shadow-md min-h-48 p-4 rounded-lg bg-white min-w-[150px]">
           <div className="flex flex-col h-full justify-between">
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-5  ">
