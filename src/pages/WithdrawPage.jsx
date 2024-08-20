@@ -104,7 +104,7 @@ const WithdrawPage = () => {
                     </div>
 
                 </div>
-                <div className="w-full flex justify-between items-center mt-8">
+                <div className="w-full flex justify-between items-center mt-4">
                     <h1 className="title text-xl">Request&apos;s table</h1>
                     <div className='flex relative gap-3 mb-1 p-3 border-green-900'>
                         <input
@@ -113,21 +113,18 @@ const WithdrawPage = () => {
                             value={search}
                             onChange={(event) => setSearch(event.target.value)}
                         />
-                        <Search className="search-icon"/>
+                        <Search className="search-icon" />
                     </div>
                 </div>
 
-                <div className='mt-4'>
-
-                    <DataTable
-                        columns={columns}
-                        data={filter}
-                        pagination
-                        highlightOnHover
-                        responsive
-                    >
-                    </DataTable>
-                </div>
+                <DataTable
+                    columns={columns}
+                    data={filter}
+                    pagination
+                    highlightOnHover
+                    responsive
+                >
+                </DataTable>
                 <WthModal
                     userid={requestId}
                     isOpen={modalShow}

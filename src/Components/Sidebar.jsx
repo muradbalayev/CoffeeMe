@@ -6,7 +6,6 @@ import {
   Handshake,
   LogOut,
   Menu,
-  MessageSquareWarning,
   User,
   Users,
 } from "lucide-react";
@@ -29,18 +28,12 @@ const SIDEBAR_ITEMS = [
   },
   {
     id: 3,
-    title: "Support Chat",
-    icon: <MessageSquareWarning size={20} style={{ minWidth: "20px" }} />,
-    path: "/dashboard/support",
-  },
-  {
-    id: 4,
     title: "Wallet",
     icon: <WalletIcon size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/wallet",
   },
   {
-    id: 5,
+    id: 4,
     title: "Withdraw",
     icon: <NotebookText size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/withdraw",
