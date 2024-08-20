@@ -1,0 +1,23 @@
+.addModalContainer {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.addModalForm {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.inputContainer>.form-control {
+    width: 100%;
+}
+
+.inputRow {
+    flex: 1 1 1;
+}

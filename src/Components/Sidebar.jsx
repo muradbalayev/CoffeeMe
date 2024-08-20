@@ -1,5 +1,5 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, ChevronUp, Crown, NotebookText, Wallet as WalletIcon } from "lucide-react";
+import { ChevronDown, ChevronUp, Crown, NotebookText,ShoppingCart, Wallet as WalletIcon } from "lucide-react";
 
 import {
   ChartLine,
@@ -37,7 +37,13 @@ const SIDEBAR_ITEMS = [
     title: "Withdraw",
     icon: <NotebookText size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/withdraw",
-  }
+  },
+  {
+    id: 5,
+    title: "Shops",
+    icon: <ShoppingCart size={20} style={{ minWidth: "20px" }} />,
+    path: "/dashboard/shops",
+  },
 ];
 
 function Sidebar() {
