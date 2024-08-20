@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Sidebar from "../Components/Sidebar";
 import PartnerPage from "./PartnerPage";
-import Support from "../Components/Support";
 import UserCreate from "../Components/Users/UserCreate";
 import UserUpdate from "../Components/Users/UserUpdate";
 import SalesReport from "./SalesPage";
@@ -25,21 +24,21 @@ function DashboardPage() {
         <div className="w-full overflow-y-scroll">
           <Routes>
             <Route path="/" element={<SalesReport />} />
+
             <Route path="/wallet" element={<WalletPage />} />
             <Route path="/withdraw" element={<WithdrawPage />} />
             <Route path="/withdraw/create" element={<WhtCreate />} />
+
             <Route path="/users" element={<AllUsersPage />} />
             <Route path="/premiumusers" element={<PremiumUsersPage />} />
             <Route path="/:users/create" element={<UserCreate />} />
             <Route path="/:users/update/:userid" element={<UserUpdate />} />
+
             <Route path="/partner" element={<PartnerPage />} />
             <Route path="/partner/create" element={<PartnerCreate />} />
-            <Route
-              path="/partner/update/:partnerid"
-              element={<PartnerUpdate />}
-            />
+            <Route path="/partner/update/:partnerid" element={<PartnerUpdate />} />
+
             <Route path="/shops" element={<ShopsPage />} />
-            <Route path="/support" element={<Support />} />
           </Routes>
         </div>
       </QueryClientProvider>

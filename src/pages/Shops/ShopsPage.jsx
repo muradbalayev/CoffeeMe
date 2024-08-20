@@ -188,7 +188,7 @@ function ShopsPage() {
   if (isLoading)
     return (
       <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
-        <Coffee size={30} stroke="#214440" />
+        <Coffee size={30} color="#214440" />
         <h1 className="title text-2xl">Loading...</h1>
       </div>
     );
