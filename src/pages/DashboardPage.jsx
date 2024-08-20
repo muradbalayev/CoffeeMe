@@ -26,8 +26,8 @@ function DashboardPage() {
                     
                     <Route path='/users' element={<AllUsersPage />} />
                     <Route path='/premiumusers' element={<PremiumUsersPage/>} />
-                    <Route path='/users/create' element={<UserCreate />} />
-                    <Route path='/users/update/:userid' element={<UserUpdate />} />
+                    <Route path='/:users/create' element={<UserCreate />} />
+                    <Route path='/:users/update/:userid' element={<UserUpdate />} />
 
                     <Route path='/partner' element={<Partner />} />
                     <Route path='/support' element={<Support />} />

@@ -1,10 +1,16 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import  { useEffect, useState } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2';
 const UserUpdate = () => {
 
-    const { userid } = useParams();
+    const { userid  } = useParams();
+    const location = useLocation();
+    const { usertype } = location.state || {};
+
+
+    console.log(usertype)
+    
 
     const [newData, setNewData] = useState({
         firstName: '',
@@ -15,7 +21,7 @@ const UserUpdate = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`https://dummyjson.com/users/${userid}`)
+        axios.get(`https://dummyjson.com/${usertype}/${userid}`)
             .then(response => {
                 const data = response.data;
                 setNewData({
@@ -28,7 +34,7 @@ const UserUpdate = () => {
             .catch(error => {
                 console.error('Error fetching product data:', error);
             });
-    }, [userid]);
+    }, [userid, usertype]);
 
     const handleChange = (e) => {
         setNewData({ ...newData, [e.target.name]: e.target.value })
@@ -50,7 +56,7 @@ const UserUpdate = () => {
     };
 
     const handleBack = () => {
-        navigate('/dashboard/users')
+        navigate(`/dashboard/${usertype}`)
     }
 
     const saveData = () => {
@@ -59,10 +65,10 @@ const UserUpdate = () => {
             return;
         }
 
-        axios.put(`https://dummyjson.com/users/${userid}`, newData)
+        axios.put(`https://dummyjson.com/${usertype}/${userid}`, newData)
             .then(response => {
                 console.log('Product changed successfully:', response.data);
-                navigate('/dashboard/users');
+                navigate(`/dashboard/${usertype}`);
                 Swal.fire({
                     title: "Yadda Saxlanıldı!",
                     icon: "success"

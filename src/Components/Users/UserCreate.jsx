@@ -1,8 +1,13 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2';
 const UserCreate = () => {
+
+    const location = useLocation();
+    const { usertype } = location.state || {};
+    console.log(usertype)
+
     const [newData, setNewData] = useState({
         firstName: '',
         lastName: '',
@@ -37,7 +42,7 @@ const UserCreate = () => {
             return;
         }
 
-        axios.post('https://dummyjson.com/users/add', newData)
+        axios.post(`https://dummyjson.com/${usertype}/add`, newData)
             .then(response => {
                 console.log('User added successfully:', response.data);
                 navigate('/dashboard/users');
@@ -54,7 +59,7 @@ const UserCreate = () => {
 
 
     const handleBack = () => {
-        navigate('/dashboard/users')
+        navigate(`/dashboard/${usertype}`)
     }
 
 
