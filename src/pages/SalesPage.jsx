@@ -1,6 +1,6 @@
 import { Wallet } from 'lucide-react'
 import SalesTotals from '../Components/SalesReport/SalesTotals'
-import SalesCharts from '../Components/SalesReport/SalesCharts'
+// import SalesCharts from '../Components/SalesReport/SalesCharts'
 import SalesTable from '../Components/SalesReport/SalesTable'
 
 
@@ -20,7 +20,7 @@ function SalesReport() {
         </div>
       </div>
       <SalesTotals />
-      <SalesCharts />
+      {/* <SalesCharts /> */}
       <SalesTable />
     </div>
   )

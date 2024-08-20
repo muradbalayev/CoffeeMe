@@ -87,15 +87,15 @@ function Sidebar() {
       className={`sidebar h-screen flex flex-col items-center gap-4 pb-10 pt-3 text-white ${isSidebarOpen ? "w-60" : "w-20"}`}
     >
       <div className='w-full relative flex items-center px-5'>
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="p-2 rounded-full hover:bg-gray-500 transition-colors max-w-fit"
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="p-2 rounded-full hover:bg-gray-500 transition-colors max-w-fit"
         >
-        <Menu size={24} />
-      </motion.button>
-        </div>
+          <Menu size={24} />
+        </motion.button>
+      </div>
       <div className="w-full flex flex-col gap-3 items-center justify-start h-32">
         <div className={`profile-img bg-gray-300 rounded-full transition duration-300 md:p-6 p-3 ${isSidebarOpen ? 'scale-100' : 'scale-50'}`}>
           <User size={45} />
@@ -141,9 +141,15 @@ function Sidebar() {
               </motion.span>
             )}
           </AnimatePresence>
+          <AnimatePresence>
           {dropdown && (
             //DropDown links
-            <div className="absolute w-full left-0 top-11 border-b border-s border-e rounded-b-xl border-slate-900 backdrop-blur-lg">
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="absolute w-full left-0 top-11 border-b border-s border-e rounded-b-xl border-slate-900 backdrop-blur-lg">
               <Link
                 to="/dashboard/users"
                 // style={{ backgroundColor: "gray" }}
@@ -184,8 +190,9 @@ function Sidebar() {
                   )}
                 </AnimatePresence>
               </Link>
-            </div>
+            </motion.div>
           )}
+          </AnimatePresence>
         </Link>
         {SIDEBAR_ITEMS.map((item) => (
           <NavLink
@@ -212,7 +219,7 @@ function Sidebar() {
         ))}
       </nav>
       <Link
-        className="logout w-full px-8 py-2 mt-auto flex md:flex-row flex-col gap-2 items-center md:text-base text-sm"
+        className="logout w-full px-8 min-h-10 py-2 mt-auto flex md:flex-row flex-col gap-2 items-center md:text-base text-sm"
         onClick={handleLogout}
       >
         <LogOut size={20} style={{ minWidth: "20px" }} />
