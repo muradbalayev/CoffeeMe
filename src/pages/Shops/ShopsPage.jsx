@@ -44,6 +44,7 @@ const AddShopModal = ({ setShowAddModal }) => {
       [name]: file,
     });
   };
+  
   const mutation = useMutation(
     async (formData) => {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/shop/add`, {
@@ -234,7 +235,7 @@ function ShopsPage() {
               <td className="col-1">{shop._id}</td>
               <td className="col-2">{shop.name}</td>
               <td className="col-1">
-              <button className="px-3 py-2 border rounded bg-blue-600">
+                <button className="px-3 py-2 border rounded bg-blue-600">
                   <Eye size={18} color="white"></Eye>
                 </button>
               </td>
@@ -249,7 +250,7 @@ function ShopsPage() {
                 </button>
               </td>
               <td className="col-1">
-              <button className="px-3 py-2 border rounded bg-blue-600">
+                <button className="px-3 py-2 border rounded bg-blue-600">
                   <Eye size={18} color="white"></Eye>
                 </button>
               </td>
@@ -265,6 +266,7 @@ function ShopsPage() {
           ))}
         </tbody>
       </table>
+     
     </div>
   );
 }

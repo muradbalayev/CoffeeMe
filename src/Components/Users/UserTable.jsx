@@ -207,7 +207,7 @@ const UserTable = ({ title, path, icon, usertype }) => {
                 <DataTable
                     columns={columns}
                     data={filter}
-                    pagination
+                    // pagination
                     highlightOnHover
                     responsive
                 ></DataTable>
