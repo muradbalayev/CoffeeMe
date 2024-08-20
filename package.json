@@ -24,7 +24,8 @@
     "recharts": "^2.12.7",
     "recoil": "^0.7.7",
     "sass": "^1.77.8",
-    "sweetalert2": "^11.12.4"
+    "sweetalert2": "^11.12.4",
+    "yet-another-react-lightbox": "^3.21.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

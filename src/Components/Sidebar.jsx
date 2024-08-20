@@ -115,7 +115,7 @@ function Sidebar() {
         </AnimatePresence>
       </div>
       <nav className="links w-full mt-8 flex flex-col">
-        <Link ref={dropdownRef} onClick={dropdownToggle} end
+        <Link ref={dropdownRef} onClick={dropdownToggle} end='true'
           className={`lg:text-sm text-xs px-8 py-3 relative group ${isUsersActive ? "active" : ""}`}>
           <User size={20} style={{ minWidth: "20px" }} />
           <AnimatePresence>

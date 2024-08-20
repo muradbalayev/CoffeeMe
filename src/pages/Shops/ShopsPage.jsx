@@ -1,6 +1,13 @@
 
 import { useState } from "react";
-import { useQuery, useMutation,useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import Lightbox from "yet-another-react-lightbox";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+
+
+import "yet-another-react-lightbox/styles.css";
 import "./ShopPage.css";
 import {
   Coffee,
@@ -10,6 +17,7 @@ import {
   ShoppingCart,
   SquarePlus,
   Trash2,
+  X,
 } from "lucide-react";
 // console.log(`public/uploads/${shop._id}/shop.photo`)
 // console.log(`public/uploads/${shop._id}/shop.logo`)
@@ -31,7 +39,12 @@ const fetchShops = async () => {
     throw new Error("Network response was not ok");
   }
   return res.json();
+
 };
+
+
+
+
 const AddShopModal = ({ setShowAddModal }) => {
   const queryClient = useQueryClient();
   const [data, setData] = useState({
@@ -42,6 +55,7 @@ const AddShopModal = ({ setShowAddModal }) => {
     photo: null,
     logo: null,
   });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData({
@@ -49,6 +63,7 @@ const AddShopModal = ({ setShowAddModal }) => {
       [name]: value,
     });
   };
+
   const handleFileChange = (e) => {
     const { name } = e.target;
     const file = e.target.files[0];
@@ -58,8 +73,6 @@ const AddShopModal = ({ setShowAddModal }) => {
     });
   };
 
-  
-  
   const mutation = useMutation(
     async (formData) => {
       const response = await fetch(
@@ -93,6 +106,7 @@ const AddShopModal = ({ setShowAddModal }) => {
     });
     mutation.mutate(formData); // Submit formData using useMutation
   };
+
   return (
     <div
       data-name="form-container"
@@ -102,9 +116,11 @@ const AddShopModal = ({ setShowAddModal }) => {
       className="addModalContainer items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
     >
       <form
-        className="addModalForm w-3/4 items-center justify-center flex-col flex"
+        className="addModalForm w-3/4 items-center justify-center flex-col flex relative"
         onSubmit={handleSubmit}
       >
+        <X color="red" size={30} className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
+          onClick={() => setShowAddModal(false)} />
         <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
           Add Shop
         </h2>
@@ -209,24 +225,36 @@ function ShopsPage() {
       console.error('Error deleting shop:', error.message);
     }
   });
-  
+
+  const [open, setOpen] = useState(false);
+  const [imageSrc, setImageSrc] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
 
   const { isLoading, isError, isSuccess, data, error } = useQuery(
     "shops",
     fetchShops
   );
 
+  const handleLogoClick = (logo) => {
+    const url = `https://coffeeme.vercel.app/public/uploads/${logo}`
+    setImageSrc(url);
+    setOpen(true);
+  };
+
+  
   if (isLoading)
     return (
-      <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
+  <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
         <Coffee size={30} color="#214440" />
         <h1 className="title text-2xl">Loading...</h1>
       </div>
     );
-  if (isError) return <div>An error occurred: {error.message}</div>;
-
-  return (
-    <div className="wrapper relative flex flex-col items-center gap-5">
+    if (isError) return <div>An error occurred: {error.message}</div>;
+    
+    console.log(data.shops)
+    
+    return (
+    <div className="wrapper relative flex flex-col items-center gap-5 ">
       {showAddModal && <AddShopModal setShowAddModal={setShowAddModal} />}
       <div className="flex justify-between w-full items-center p-2">
         <h1 className="title md:text-4xl text-2xl">Shops</h1>
@@ -243,7 +271,9 @@ function ShopsPage() {
           </button>
         </div>
       </div>
-      <table className="w-full">
+      <div className="overflow-y-scroll overflow-x-auto w-full">
+
+      <table className="w-full overflow-y-auto overflow-x-auto">
         <thead className="text-white" style={{ backgroundColor: "#214440" }}>
           <tr>
             <th scope="col">#</th>
@@ -275,16 +305,20 @@ function ShopsPage() {
                   parseInt(shop.location.coordinates[1])}
               </td>
               <td className="col-1">
-                <button className="px-3 py-2 border rounded bg-blue-600">
+                <button className="px-3 py-2 border rounded bg-blue-600"
+                  onClick={() => handleLogoClick(shop.logo)}
+                >
                   <Eye size={18} color="white"></Eye>
                 </button>
               </td>
               <td className="col-1">
-                <button className="px-3 py-2 border rounded bg-blue-600">
+                <button className="px-3 py-2 border rounded bg-blue-600 "
+                  onClick={() => handleLogoClick(shop.photo)}
+                >
                   <Eye size={18} color="white"></Eye>
                 </button>
               </td>
-              <td className="col-2">
+              <td className="col-2 min-w-20">
                 <button className="px-3 py-2 bg-green-600 text-white rounded-md">
                   <Pencil size={18} />
                 </button>
@@ -296,7 +330,14 @@ function ShopsPage() {
           ))}
         </tbody>
       </table>
-     
+      </div>
+
+      <Lightbox
+        open={open}
+        close={() => setOpen(false)}
+        slides={[{ src: imageSrc }]}
+        plugins={[Thumbnails], [Fullscreen]}
+      />
     </div>
   );
 }
