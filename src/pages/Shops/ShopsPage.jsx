@@ -1,11 +1,9 @@
-
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
-
 
 import "yet-another-react-lightbox/styles.css";
 import "./ShopPage.css";
@@ -19,19 +17,19 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-// console.log(`public/uploads/${shop._id}/shop.photo`)
-// console.log(`public/uploads/${shop._id}/shop.logo`)
 
-const deleteShop = async (id) =>{
-  try{
-    const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shop/delete?id=${id}`,{
-      method:"DELETE",
-    });
-
-  }catch(error){
+const deleteShop = async (id) => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_GLOBAL_URL}/api/shop/delete?id=${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+  } catch (error) {
     console.error(error);
   }
-}
+};
 
 const fetchShops = async () => {
   const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shop`);
@@ -39,11 +37,7 @@ const fetchShops = async () => {
     throw new Error("Network response was not ok");
   }
   return res.json();
-
 };
-
-
-
 
 const AddShopModal = ({ setShowAddModal }) => {
   const queryClient = useQueryClient();
@@ -82,16 +76,15 @@ const AddShopModal = ({ setShowAddModal }) => {
           body: formData,
         }
       );
-      return response.json();
+      return await response.json();
     },
     {
       onSuccess: (data) => {
-        queryClient.invalidateQueries("shops"); // Veri güncellemelerini yenile
-        setShowAddModal(false); // Modal'ı kapat
+        queryClient.invalidateQueries("shops"); 
+        setShowAddModal(false);
         console.log("Shop added successfully:", data);
       },
       onError: (error) => {
-        console.log(error);
         console.error("Error adding shop:", error);
       },
     }
@@ -119,8 +112,12 @@ const AddShopModal = ({ setShowAddModal }) => {
         className="addModalForm w-3/4 items-center justify-center flex-col flex relative"
         onSubmit={handleSubmit}
       >
-        <X color="red" size={30} className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
-          onClick={() => setShowAddModal(false)} />
+        <X
+          color="red"
+          size={30}
+          className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
+          onClick={() => setShowAddModal(false)}
+        />
         <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
           Add Shop
         </h2>
@@ -210,20 +207,18 @@ const AddShopModal = ({ setShowAddModal }) => {
   );
 };
 
-
 function ShopsPage() {
   const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
   const deleteMutation = useMutation({
     mutationFn: deleteShop,
     onSuccess: () => {
-      queryClient.invalidateQueries(['shops']);
-      console.log('Shop deleted successfully');
+      queryClient.invalidateQueries(["shops"]);
+      console.log("Shop deleted successfully");
     },
     onError: (error) => {
-      // Hata oluştuğunda yapılacak işlemler
-      console.error('Error deleting shop:', error.message);
-    }
+      console.error("Error deleting shop:", error);
+    },
   });
 
   const [open, setOpen] = useState(false);
@@ -236,24 +231,22 @@ function ShopsPage() {
   );
 
   const handleLogoClick = (logo) => {
-    const url = `https://coffeeme.vercel.app/public/uploads/${logo}`
+    const url = `https://coffeeme.vercel.app/public/uploads/${logo}`;
     setImageSrc(url);
     setOpen(true);
   };
 
-  
   if (isLoading)
     return (
-  <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
+      <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
         <Coffee size={30} color="#214440" />
         <h1 className="title text-2xl">Loading...</h1>
       </div>
     );
-    if (isError) return <div>An error occurred: {error.message}</div>;
-    
-    console.log(data.shops)
-    
-    return (
+  if (isError) return <div>An error occurred: {error.message}</div>;
+
+
+  return (
     <div className="wrapper relative flex flex-col items-center gap-5 ">
       {showAddModal && <AddShopModal setShowAddModal={setShowAddModal} />}
       <div className="flex justify-between w-full items-center p-2">
@@ -272,71 +265,75 @@ function ShopsPage() {
         </div>
       </div>
       <div className="overflow-y-scroll overflow-x-auto w-full">
-
-      <table className="w-full overflow-y-auto overflow-x-auto">
-        <thead className="text-white" style={{ backgroundColor: "#214440" }}>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Products</th>
-            <th scope="col">Location</th>
-            <th scope="col">Logo</th>
-            <th scope="col">Photo</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="w-full">
-          {data.shops.map((shop, index) => (
-            <tr key={index}>
-              <th scope="row" className="col-1 border-b border-gray-300">
-                {index + 1}
-              </th>
-              <td className="col-1">{shop._id}</td>
-              <td className="col-2">{shop.name}</td>
-              <td className="col-1">
-                <button className="px-3 py-2 border rounded bg-blue-600">
-                  <Eye size={18} color="white"></Eye>
-                </button>
-              </td>
-              <td className="col-1">
-                {parseInt(shop.location.coordinates[0]) +
-                  "," +
-                  parseInt(shop.location.coordinates[1])}
-              </td>
-              <td className="col-1">
-                <button className="px-3 py-2 border rounded bg-blue-600"
-                  onClick={() => handleLogoClick(shop.logo)}
-                >
-                  <Eye size={18} color="white"></Eye>
-                </button>
-              </td>
-              <td className="col-1">
-                <button className="px-3 py-2 border rounded bg-blue-600 "
-                  onClick={() => handleLogoClick(shop.photo)}
-                >
-                  <Eye size={18} color="white"></Eye>
-                </button>
-              </td>
-              <td className="col-2 min-w-20">
-                <button className="px-3 py-2 bg-green-600 text-white rounded-md">
-                  <Pencil size={18} />
-                </button>
-                <button onClick={() => deleteMutation.mutate(shop._id)} className="px-3 ms-2 py-2 bg-red-600 text-white rounded-md">
-                  <Trash2 size={18} />
-                </button>
-              </td>
+        <table className="w-full overflow-y-auto overflow-x-auto">
+          <thead className="text-white" style={{ backgroundColor: "#214440" }}>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Products</th>
+              <th scope="col">Location</th>
+              <th scope="col">Logo</th>
+              <th scope="col">Photo</th>
+              <th scope="col">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="w-full">
+            {data.shops.map((shop, index) => (
+              <tr key={index}>
+                <th scope="row" className="col-1 border-b border-gray-300">
+                  {index + 1}
+                </th>
+                <td className="col-1">{shop._id}</td>
+                <td className="col-2">{shop.name}</td>
+                <td className="col-1">
+                  <button className="px-3 py-2 border rounded bg-blue-600">
+                    <Eye size={18} color="white"></Eye>
+                  </button>
+                </td>
+                <td className="col-1">
+                  {parseInt(shop.location.coordinates[0]) +
+                    "," +
+                    parseInt(shop.location.coordinates[1])}
+                </td>
+                <td className="col-1">
+                  <button
+                    className="px-3 py-2 border rounded bg-blue-600"
+                    onClick={() => handleLogoClick(shop.logo)}
+                  >
+                    <Eye size={18} color="white"></Eye>
+                  </button>
+                </td>
+                <td className="col-1">
+                  <button
+                    className="px-3 py-2 border rounded bg-blue-600 "
+                    onClick={() => handleLogoClick(shop.photo)}
+                  >
+                    <Eye size={18} color="white"></Eye>
+                  </button>
+                </td>
+                <td className="col-2 min-w-20">
+                  <button className="px-3 py-2 bg-green-600 text-white rounded-md">
+                    <Pencil size={18} />
+                  </button>
+                  <button
+                    onClick={() => deleteMutation.mutate(shop._id)}
+                    className="px-3 ms-2 py-2 bg-red-600 text-white rounded-md"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <Lightbox
         open={open}
         close={() => setOpen(false)}
         slides={[{ src: imageSrc }]}
-        plugins={[Thumbnails], [Fullscreen]}
+        plugins={[Thumbnails][Fullscreen]}
       />
     </div>
   );
