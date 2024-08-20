@@ -91,8 +91,8 @@ function Sidebar() {
       </motion.button>
         </div>
       <div className="w-full flex flex-col gap-3 items-center justify-start h-32">
-        <div className={`profile-img bg-gray-300 rounded-full transition duration-300 md:p-5 p-3 ${isSidebarOpen ? 'scale-100' : 'scale-75'}`}>
-          <User size={40} />
+        <div className={`profile-img bg-gray-300 rounded-full transition duration-300 md:p-6 p-3 ${isSidebarOpen ? 'scale-100' : 'scale-50'}`}>
+          <User size={45} />
         </div>
         <AnimatePresence>
           {isSidebarOpen && (
@@ -206,7 +206,7 @@ function Sidebar() {
         ))}
       </nav>
       <Link
-        className="logout px-4 py-2 mt-auto flex md:flex-row flex-col gap-2 justify-center items-center md:text-base text-sm"
+        className="logout w-full px-8 py-2 mt-auto flex md:flex-row flex-col gap-2 items-center md:text-base text-sm"
         onClick={handleLogout}
       >
         <LogOut size={20} style={{ minWidth: "20px" }} />
