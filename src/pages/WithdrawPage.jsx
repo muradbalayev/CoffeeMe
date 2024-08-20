@@ -126,7 +126,7 @@ const WithdrawPage = () => {
                 >
                 </DataTable>
                 <WthModal
-                    userid={requestId}
+                    requestId={requestId}
                     isOpen={modalShow}
                     onClose={() => setModalShow(false)}
                 />

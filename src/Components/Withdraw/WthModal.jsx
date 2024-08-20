@@ -3,12 +3,12 @@ import axios from 'axios';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 
-const WthModal = ({ userid, isOpen, onClose }) => {
+const WthModal = ({ requestId, isOpen, onClose }) => {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        if (userid) {
-            axios.get(`https://dummyjson.com/users/${userid}`)
+        if (requestId) {
+            axios.get(`https://dummyjson.com/users/${requestId}`)
                 .then(response => {
                     setData(response.data);
                 })
@@ -16,7 +16,7 @@ const WthModal = ({ userid, isOpen, onClose }) => {
                     console.error('Error fetching user data:', error);
                 });
         }
-    }, [userid]);
+    }, [requestId]);
 
     return (
         <Modal open={isOpen} onClose={onClose} center>

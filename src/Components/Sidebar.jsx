@@ -135,7 +135,7 @@ function Sidebar() {
           </AnimatePresence>
           {dropdown && (
             //DropDown links
-            <div className="absolute w-full left-0 top-11 border-b border-s border-e rounded-b-xl border-black backdrop-blur-lg">
+            <div className="absolute w-full left-0 top-11 border-b border-s border-e rounded-b-xl border-slate-900 backdrop-blur-lg">
               <Link
                 to="/dashboard/users"
                 // style={{ backgroundColor: "gray" }}
