@@ -5,8 +5,6 @@ import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
-import Swal from 'sweetalert2';
-
 
 
 import "yet-another-react-lightbox/styles.css";
@@ -22,8 +20,19 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-// console.log(`public/uploads/${shop._id}/shop.photo`)
-// console.log(`public/uploads/${shop._id}/shop.logo`)
+
+const deleteShop = async (id) => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_GLOBAL_URL}/api/shop/delete?id=${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const fetchShops = async () => {
   const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shop`);
@@ -31,11 +40,7 @@ const fetchShops = async () => {
     throw new Error("Network response was not ok");
   }
   return res.json();
-
 };
-
-
-
 
 const AddShopModal = ({ setShowAddModal }) => {
   const fileRef = useRef(null);
@@ -77,16 +82,15 @@ const AddShopModal = ({ setShowAddModal }) => {
           body: formData,
         }
       );
-      return response.json();
+      return await response.json();
     },
     {
       onSuccess: (data) => {
-        queryClient.invalidateQueries("shops"); // Veri güncellemelerini yenile
-        setShowAddModal(false); // Modal'ı kapat
+        queryClient.invalidateQueries("shops"); 
+        setShowAddModal(false);
         console.log("Shop added successfully:", data);
       },
       onError: (error) => {
-        console.log(error);
         console.error("Error adding shop:", error);
       },
     }
@@ -114,8 +118,12 @@ const AddShopModal = ({ setShowAddModal }) => {
         className="addModalForm w-3/4 items-center justify-center flex-col flex relative"
         onSubmit={handleSubmit}
       >
-        <X color="red" size={30} className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
-          onClick={() => setShowAddModal(false)} />
+        <X
+          color="red"
+          size={30}
+          className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
+          onClick={() => setShowAddModal(false)}
+        />
         <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
           Add Shop
         </h2>
@@ -217,7 +225,6 @@ const AddShopModal = ({ setShowAddModal }) => {
 
 const EditShopModal = ({ data, setShowEditModal }) => {
   const fileRef = useRef(null);
-
 
   return (
     <div
@@ -334,8 +341,20 @@ const EditShopModal = ({ data, setShowEditModal }) => {
 
 
 
+
 function ShopsPage() {
+  const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
+  const deleteMutation = useMutation({
+    mutationFn: deleteShop,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["shops"]);
+      console.log("Shop deleted successfully");
+    },
+    onError: (error) => {
+      console.error("Error deleting shop:", error);
+    },
+  });
   const [editedItem, setEditedItem] = useState(null);
   const [open, setOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("");
@@ -346,12 +365,10 @@ function ShopsPage() {
   );
 
   const handleLogoClick = (logo) => {
-    const url = `https://coffeeme.vercel.app/public/uploads/${logo}`
+    const url = `https://coffeeme.vercel.app/public/uploads/${logo}`;
     setImageSrc(url);
     setOpen(true);
   };
-
-
 
   if (isLoading)
     return (
@@ -385,7 +402,6 @@ function ShopsPage() {
         </div>
       </div>
       <div className="overflow-y-scroll overflow-x-auto w-full">
-
         <table className="w-full overflow-y-auto overflow-x-auto">
           <thead className="text-white" style={{ backgroundColor: "#214440" }}>
             <tr>
@@ -436,7 +452,11 @@ function ShopsPage() {
                     className="px-3 py-2 bg-green-600 text-white rounded-md">
                     <Pencil size={18} />
                   </button>
-                  <button className="px-3 ms-2 py-2 bg-red-600 text-white rounded-md">
+                 
+                  <button
+                    onClick={() => deleteMutation.mutate(shop._id)}
+                    className="px-3 ms-2 py-2 bg-red-600 text-white rounded-md"
+                  >
                     <Trash2 size={18} />
                   </button>
                 </td>
@@ -446,13 +466,11 @@ function ShopsPage() {
         </table>
       </div>
 
-
       <Lightbox
         open={open}
         close={() => setOpen(false)}
         slides={[{ src: imageSrc }]}
         plugins={[Thumbnails][Fullscreen]}
-
       />
     </div>
   );
