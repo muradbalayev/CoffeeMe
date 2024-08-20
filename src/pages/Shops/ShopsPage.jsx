@@ -5,6 +5,8 @@ import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
+import Swal from 'sweetalert2';
+
 
 
 import "yet-another-react-lightbox/styles.css";
@@ -199,12 +201,119 @@ const AddShopModal = ({ setShowAddModal }) => {
   );
 };
 
+const EditShopModal = ({ data, setShowEditModal }) => {
+
+
+  return (
+    <div
+      data-name="form-container"
+      onClick={(e) => {
+        e.target.dataset.name && setShowEditModal(false);
+      }}
+      className="addModalContainer items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
+    >
+      <form
+        className="addModalForm w-3/4 items-center justify-center flex-col flex relative"
+        // onSubmit={handleSubmit}
+      >
+        <X color="red" size={30} className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
+          onClick={() => setShowEditModal(false)} />
+        <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
+          Edit Shop
+        </h2>
+        <div className="w-full gap-3 flex flex-col">
+          <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
+              <label className="form-label">Name</label>
+              <input
+                className="form-control"
+                type="text"
+                name="name"
+                placeholder="Name"
+                value={data.name}
+                // onChange={handleChange}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label">Address</label>
+              <input
+                className="form-control"
+                type="text"
+                name="address"
+                placeholder="Address"
+                value={data.address}
+                // onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
+              <label className="form-label">Longitude</label>
+              <input
+                className="form-control"
+                type="text"
+                name="longitude"
+                placeholder="Longitude"
+                value={data.location.coordinates[0]}
+                // onChange={handleChange}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label">Latitude</label>
+              <input
+                className="form-control"
+                type="text"
+                name="latitude"
+                placeholder="Latitude"
+                value={data.location.coordinates[1]}
+                // onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
+              <label className="form-label">Photo</label>
+              <input
+                className="form-control"
+                type="file"
+                name="photo"
+                // onChange={handleFileChange}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label">Logo</label>
+              <input
+                className="form-control"
+                type="file"
+                name="logo"
+                // onChange={handleFileChange}
+              />
+            </div>
+          </div>
+          <div className="flex gap-5 justify-center">
+            <div>
+              <button
+                style={{ backgroundColor: "#214440" }}
+                type="submit"
+                className="title px-4 py-2 flex items-center rounded text-white font-bold gap-2"
+              >
+                Edit Shop <ShoppingCart color="white" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+
 
 function ShopsPage() {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editedItem, setEditedItem] = useState(null);
   const [open, setOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("");
-  const [logoUrl, setLogoUrl] = useState("");
 
   const { isLoading, isError, isSuccess, data, error } = useQuery(
     "shops",
@@ -217,6 +326,7 @@ function ShopsPage() {
     setOpen(true);
   };
 
+ 
   
   if (isLoading)
     return (
@@ -232,6 +342,8 @@ function ShopsPage() {
     return (
     <div className="wrapper relative flex flex-col items-center gap-5 ">
       {showAddModal && <AddShopModal setShowAddModal={setShowAddModal} />}
+      {editedItem && <EditShopModal data={editedItem} setShowEditModal={setEditedItem} />}
+
       <div className="flex justify-between w-full items-center p-2">
         <h1 className="title md:text-4xl text-2xl">Shops</h1>
         <div className="gap-3 flex items-center">
@@ -295,7 +407,8 @@ function ShopsPage() {
                 </button>
               </td>
               <td className="col-2 min-w-20">
-                <button className="px-3 py-2 bg-green-600 text-white rounded-md">
+                <button onClick={() => setEditedItem(shop)}
+                className="px-3 py-2 bg-green-600 text-white rounded-md">
                   <Pencil size={18} />
                 </button>
                 <button className="px-3 ms-2 py-2 bg-red-600 text-white rounded-md">
@@ -313,7 +426,7 @@ function ShopsPage() {
         open={open}
         close={() => setOpen(false)}
         slides={[{ src: imageSrc }]}
-        plugins={[Thumbnails], [Fullscreen]}
+        plugins={[Thumbnails] [Fullscreen]}
 
       />
     </div>
