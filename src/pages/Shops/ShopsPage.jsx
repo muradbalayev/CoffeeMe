@@ -1,10 +1,10 @@
-import { useState } from "react";
+
+import { useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
-import Swal from 'sweetalert2';
 
 
 import "yet-another-react-lightbox/styles.css";
@@ -12,6 +12,7 @@ import "./ShopPage.css";
 import {
   Coffee,
   Eye,
+  Image,
   Pencil,
   Search,
   ShoppingCart,
@@ -42,6 +43,8 @@ const fetchShops = async () => {
 };
 
 const AddShopModal = ({ setShowAddModal }) => {
+  const fileRef = useRef(null);
+
   const queryClient = useQueryClient();
   const [data, setData] = useState({
     name: "",
@@ -61,6 +64,7 @@ const AddShopModal = ({ setShowAddModal }) => {
   };
 
   const handleFileChange = (e) => {
+
     const { name } = e.target;
     const file = e.target.files[0];
     setData({
@@ -175,21 +179,31 @@ const AddShopModal = ({ setShowAddModal }) => {
           <div className="w-full flex inputRow gap-5 justify-between">
             <div className="inputContainer">
               <label className="form-label">Photo</label>
-              <input
-                className="form-control"
-                type="file"
-                name="photo"
-                onChange={handleFileChange}
-              />
+              <div 
+              className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
+                <p className="select-none">Choose File </p>
+                <Image color="#214440"/>
+                <input
+                  type="file"
+                  name="photo"
+                  hidden ref={fileRef}
+                  onChange={handleFileChange}
+                />
+              </div>
             </div>
             <div className="inputContainer">
               <label className="form-label">Logo</label>
-              <input
-                className="form-control"
-                type="file"
-                name="logo"
-                onChange={handleFileChange}
-              />
+              <div 
+              className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
+                <p className="select-none">Choose File </p>
+                <Image color="#214440"/>
+                <input
+                  type="file"
+                  name="logo"
+                  hidden ref={fileRef}
+                  onChange={handleFileChange}
+                />
+              </div>
             </div>
           </div>
           <div className="flex gap-5 justify-center">
@@ -210,6 +224,7 @@ const AddShopModal = ({ setShowAddModal }) => {
 };
 
 const EditShopModal = ({ data, setShowEditModal }) => {
+  const fileRef = useRef(null);
 
   return (
     <div
@@ -221,7 +236,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
     >
       <form
         className="addModalForm w-3/4 items-center justify-center flex-col flex relative"
-        // onSubmit={handleSubmit}
+      // onSubmit={handleSubmit}
       >
         <X color="red" size={30} className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
           onClick={() => setShowEditModal(false)} />
@@ -238,7 +253,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 name="name"
                 placeholder="Name"
                 value={data.name}
-                // onChange={handleChange}
+              // onChange={handleChange}
               />
             </div>
             <div className="inputContainer">
@@ -249,7 +264,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 name="address"
                 placeholder="Address"
                 value={data.address}
-                // onChange={handleChange}
+              // onChange={handleChange}
               />
             </div>
           </div>
@@ -262,7 +277,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 name="longitude"
                 placeholder="Longitude"
                 value={data.location.coordinates[0]}
-                // onChange={handleChange}
+              // onChange={handleChange}
               />
             </div>
             <div className="inputContainer">
@@ -273,28 +288,38 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 name="latitude"
                 placeholder="Latitude"
                 value={data.location.coordinates[1]}
-                // onChange={handleChange}
+              // onChange={handleChange}
               />
             </div>
           </div>
           <div className="w-full flex inputRow gap-5 justify-between">
-            <div className="inputContainer">
+          <div className="inputContainer">
               <label className="form-label">Photo</label>
-              <input
-                className="form-control"
-                type="file"
-                name="photo"
-                // onChange={handleFileChange}
-              />
+              <div 
+              className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
+                <p className="select-none">Choose File </p>
+                <Image color="#214440"/>
+                <input
+                  type="file"
+                  name="photo"
+                  hidden ref={fileRef}
+                  // onChange={handleFileChange}
+                />
+              </div>
             </div>
             <div className="inputContainer">
               <label className="form-label">Logo</label>
-              <input
-                className="form-control"
-                type="file"
-                name="logo"
-                // onChange={handleFileChange}
-              />
+              <div 
+              className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
+                <p className="select-none">Choose File </p>
+                <Image color="#214440"/>
+                <input
+                  type="file"
+                  name="logo"
+                  hidden ref={fileRef}
+                  // onChange={handleFileChange}
+                />
+              </div>
             </div>
           </div>
           <div className="flex gap-5 justify-center">
@@ -354,6 +379,7 @@ function ShopsPage() {
     );
   if (isError) return <div>An error occurred: {error.message}</div>;
 
+  console.log(data.shops)
 
   return (
     <div className="wrapper relative flex flex-col items-center gap-5 ">
@@ -408,25 +434,25 @@ function ShopsPage() {
                     parseInt(shop.location.coordinates[1])}
                 </td>
                 <td className="col-1">
-                  <button
-                    className="px-3 py-2 border rounded bg-blue-600"
+                  <button className="px-3 py-2 border rounded bg-blue-600"
                     onClick={() => handleLogoClick(shop.logo)}
                   >
                     <Eye size={18} color="white"></Eye>
                   </button>
                 </td>
                 <td className="col-1">
-                  <button
-                    className="px-3 py-2 border rounded bg-blue-600 "
+                  <button className="px-3 py-2 border rounded bg-blue-600 "
                     onClick={() => handleLogoClick(shop.photo)}
                   >
                     <Eye size={18} color="white"></Eye>
                   </button>
                 </td>
                 <td className="col-2 min-w-20">
-                  <button className="px-3 py-2 bg-green-600 text-white rounded-md">
+                  <button onClick={() => setEditedItem(shop)}
+                    className="px-3 py-2 bg-green-600 text-white rounded-md">
                     <Pencil size={18} />
                   </button>
+                 
                   <button
                     onClick={() => deleteMutation.mutate(shop._id)}
                     className="px-3 ms-2 py-2 bg-red-600 text-white rounded-md"
@@ -444,7 +470,7 @@ function ShopsPage() {
         open={open}
         close={() => setOpen(false)}
         slides={[{ src: imageSrc }]}
-        plugins={[Thumbnails] [Fullscreen]}
+        plugins={[Thumbnails][Fullscreen]}
       />
     </div>
   );
