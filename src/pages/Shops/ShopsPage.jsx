@@ -1,11 +1,9 @@
-
 import { useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
-
 
 import "yet-another-react-lightbox/styles.css";
 import "./ShopPage.css";
@@ -48,7 +46,6 @@ const AddShopModal = ({ setShowAddModal }) => {
   const LogoFileRef = useRef(null);
   const PhotoFileRef = useRef(null);
 
-
   const queryClient = useQueryClient();
   const [data, setData] = useState({
     name: "",
@@ -74,14 +71,12 @@ const AddShopModal = ({ setShowAddModal }) => {
   const [logoFileName, setLogoFileName] = useState("Choose File");
 
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [lightboxImage, setLightboxImage] = useState(null)
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   const handleFileChange = (e) => {
-
     const { name } = e.target;
     const file = e.target.files[0];
     const fileURL = file ? URL.createObjectURL(file) : null;
-
 
     if (name === "photo") {
       setPhotoFileName(file ? file.name : "Choose File");
@@ -132,7 +127,7 @@ const AddShopModal = ({ setShowAddModal }) => {
         formData.append(key, data[key]);
       }
     });
-    mutation.mutate(formData); 
+    mutation.mutate(formData);
     toast.success("Shop Created Successfully!");
     // Submit formData using useMutation
   };
@@ -211,14 +206,17 @@ const AddShopModal = ({ setShowAddModal }) => {
             <div className="inputContainer">
               <label className="form-label">Photo</label>
               <div
-                className="form-control cursor-pointer flex  justify-between items-center gap-2" onClick={() => PhotoFileRef.current.click()}>
+                className="form-control cursor-pointer flex  justify-between items-center gap-2"
+                onClick={() => PhotoFileRef.current.click()}
+              >
                 <div className="flex items-center gap-2">
                   <p className="select-none">{photoFileName}</p>
                   <Image color="#214440" />
                   <input
                     type="file"
                     name="photo"
-                    hidden ref={PhotoFileRef}
+                    hidden
+                    ref={PhotoFileRef}
                     onChange={handleFileChange}
                   />
                 </div>
@@ -237,14 +235,17 @@ const AddShopModal = ({ setShowAddModal }) => {
             <div className="inputContainer">
               <label className="form-label">Logo</label>
               <div
-                className="form-control cursor-pointer flex justify-between items-center gap-2" onClick={() => LogoFileRef.current.click()}>
+                className="form-control cursor-pointer flex justify-between items-center gap-2"
+                onClick={() => LogoFileRef.current.click()}
+              >
                 <div className="flex items-center gap-2">
                   <p className="select-none">{logoFileName}</p>
                   <Image color="#214440" />
                   <input
                     type="file"
                     name="logo"
-                    hidden ref={LogoFileRef}
+                    hidden
+                    ref={LogoFileRef}
                     onChange={handleFileChange}
                   />
                 </div>
@@ -294,14 +295,18 @@ const EditShopModal = ({ data, setShowEditModal }) => {
       onClick={(e) => {
         e.target.dataset.name && setShowEditModal(false);
       }}
-      className="addModalContainer items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
+      className="addModalContainer z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
     >
       <form
         className="addModalForm w-3/4 items-center justify-center flex-col flex relative"
-      // onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
       >
-        <X color="red" size={30} className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
-          onClick={() => setShowEditModal(false)} />
+        <X
+          color="red"
+          size={30}
+          className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
+          onClick={() => setShowEditModal(false)}
+        />
         <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
           Edit Shop
         </h2>
@@ -315,7 +320,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 name="name"
                 placeholder="Name"
                 value={data.name}
-              // onChange={handleChange}
+                // onChange={handleChange}
               />
             </div>
             <div className="inputContainer">
@@ -326,7 +331,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 name="address"
                 placeholder="Address"
                 value={data.address}
-              // onChange={handleChange}
+                // onChange={handleChange}
               />
             </div>
           </div>
@@ -339,7 +344,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 name="longitude"
                 placeholder="Longitude"
                 value={data.location.coordinates[0]}
-              // onChange={handleChange}
+                // onChange={handleChange}
               />
             </div>
             <div className="inputContainer">
@@ -350,7 +355,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 name="latitude"
                 placeholder="Latitude"
                 value={data.location.coordinates[1]}
-              // onChange={handleChange}
+                // onChange={handleChange}
               />
             </div>
           </div>
@@ -358,28 +363,34 @@ const EditShopModal = ({ data, setShowEditModal }) => {
             <div className="inputContainer">
               <label className="form-label">Photo</label>
               <div
-                className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
+                className="form-control cursor-pointer flex items-center gap-2"
+                onClick={() => fileRef.current.click()}
+              >
                 <p className="select-none">Choose File </p>
                 <Image color="#214440" />
                 <input
                   type="file"
                   name="photo"
-                  hidden ref={fileRef}
-                // onChange={handleFileChange}
+                  hidden
+                  ref={fileRef}
+                  // onChange={handleFileChange}
                 />
               </div>
             </div>
             <div className="inputContainer">
               <label className="form-label">Logo</label>
               <div
-                className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
+                className="form-control cursor-pointer flex items-center gap-2"
+                onClick={() => fileRef.current.click()}
+              >
                 <p className="select-none">Choose File </p>
                 <Image color="#214440" />
                 <input
                   type="file"
                   name="logo"
-                  hidden ref={fileRef}
-                // onChange={handleFileChange}
+                  hidden
+                  ref={fileRef}
+                  // onChange={handleFileChange}
                 />
               </div>
             </div>
@@ -399,10 +410,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
       </form>
     </div>
   );
-}
-
-
-
+};
 
 function ShopsPage() {
   const queryClient = useQueryClient();
@@ -420,22 +428,18 @@ function ShopsPage() {
 
   const handleDelete = async (shopId) => {
     const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'This action cannot be undone!',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "This action cannot be undone!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     });
 
     if (result.isConfirmed) {
       deleteMutation.mutate(shopId);
-      Swal.fire(
-        'Deleted!',
-        'Your shop has been deleted.',
-        'success'
-      );
+      Swal.fire("Deleted!", "Your shop has been deleted.", "success");
     }
   };
 
@@ -463,12 +467,16 @@ function ShopsPage() {
     );
   if (isError) return <div>An error occurred: {error.message}</div>;
 
-  console.log(data.shops)
+  console.log(data.shops);
+
+  const imgUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads`;
 
   return (
     <div className="wrapper relative flex flex-col items-center gap-5 ">
       {showAddModal && <AddShopModal setShowAddModal={setShowAddModal} />}
-      {editedItem && <EditShopModal data={editedItem} setShowEditModal={setEditedItem} />}
+      {editedItem && (
+        <EditShopModal data={editedItem} setShowEditModal={setEditedItem} />
+      )}
 
       <div className="flex justify-between w-full items-center p-2">
         <h1 className="title md:text-4xl text-2xl">Shops</h1>
@@ -489,7 +497,9 @@ function ShopsPage() {
         <table className="w-full overflow-y-auto overflow-x-auto">
           <thead className="text-white" style={{ backgroundColor: "#214440" }}>
             <tr>
-              <th scope="col">#</th>
+              <th className="id" scope="col">
+                #
+              </th>
               <th scope="col">Id</th>
               <th scope="col">Name</th>
               <th scope="col">Products</th>
@@ -502,14 +512,15 @@ function ShopsPage() {
           <tbody className="w-full">
             {data.shops.map((shop, index) => (
               <tr key={index}>
-                <th scope="row" className="col-1 border-b border-gray-300">
+                <th scope="row" className="col-1 border-b border-gray-300 id">
                   {index + 1}
                 </th>
                 <td className="col-1">{shop._id}</td>
                 <td className="col-2">{shop.name}</td>
                 <td className="col-1">
-                  <button className="px-3 py-2 border rounded bg-blue-600">
-                    <Eye size={18} color="white"></Eye>
+                  <button className="px-3 py-2 border rounded"
+                  style={{backgroundColor: "#214440", color: "white"}}>
+                    <Eye size={16} color="white"></Eye>
                   </button>
                 </td>
                 <td className="col-1">
@@ -518,25 +529,40 @@ function ShopsPage() {
                     parseInt(shop.location.coordinates[1])}
                 </td>
                 <td className="col-1">
-                  <button className="px-3 py-2 border rounded bg-blue-600"
+                  <button
+                    className="px-1 py-1 border rounded max-w-16"
                     onClick={() => handleLogoClick(shop.logo)}
                   >
-                    <Eye size={18} color="white"></Eye>
+                    {shop.logo && (
+                      <img
+                        src={`${imgUrl}/${shop.logo}`}
+                        alt="Shop Logo"
+                        className="object-contain h-10 w-10"
+                      />
+                    )}{" "}
                   </button>
                 </td>
                 <td className="col-1">
-                  <button className="px-3 py-2 border rounded bg-blue-600 "
+                  <button
+                    className="px-1 py-1 border rounded max-w-16"
                     onClick={() => handleLogoClick(shop.photo)}
                   >
-                    <Eye size={18} color="white"></Eye>
+                    {shop.logo && (
+                      <img
+                        src={`${imgUrl}/${shop.photo}`}
+                        alt="Shop Logo"
+                        className="object-contain h-10 w-10"
+                      />
+                    )}
                   </button>
                 </td>
-                <td className="col-2 min-w-20">
-                  <button onClick={() => setEditedItem(shop)}
-                    className="px-3 py-2 bg-green-600 text-white rounded-md">
+                <td className="col-2 min-w-40">
+                  <button
+                    onClick={() => setEditedItem(shop)}
+                    className="px-3 py-2 bg-blue-800 text-white rounded-md"
+                  >
                     <Pencil size={18} />
                   </button>
-
                   <button
                     onClick={() => handleDelete(shop._id)}
                     className="px-3 ms-2 py-2 bg-red-600 text-white rounded-md"

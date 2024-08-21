@@ -55,11 +55,17 @@
 
   th{
     padding: 10px 10px;
+    min-width: 120px;
   }
 
   td{
-    padding: 6px 0px;
+    min-width: 120px;
+    padding: 4px 0px;
     border-bottom: 1px solid lightgray;
     text-align: center;
+  }
+
+  .id{
+    min-width: 15px;
   }
 
