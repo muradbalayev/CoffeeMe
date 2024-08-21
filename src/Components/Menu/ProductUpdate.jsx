@@ -2,9 +2,9 @@ import axios from 'axios'
 import  { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2';
-const PartnerUpdate = () => {
+const ProductUpdate = () => {
 
-    const { partnerid } = useParams();
+    const { productid } = useParams();
     const [newData, setNewData] = useState({
         firstName: '',
         lastName: '',
@@ -14,7 +14,7 @@ const PartnerUpdate = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`https://dummyjson.com/users/${partnerid}`)
+        axios.get(`https://dummyjson.com/users/${productid}`)
             .then(response => {
                 const data = response.data;
                 setNewData({
@@ -27,7 +27,7 @@ const PartnerUpdate = () => {
             .catch(error => {
                 console.error('Error fetching product data:', error);
             });
-    }, [partnerid]);
+    }, [productid]);
 
     const handleChange = (e) => {
         setNewData({ ...newData, [e.target.name]: e.target.value })
@@ -49,7 +49,7 @@ const PartnerUpdate = () => {
     };
 
     const handleBack = () => {
-        navigate(`/dashboard/partner`)
+        navigate(`/dashboard/menu/shopname/products`);
     }
 
     const saveData = () => {
@@ -58,7 +58,7 @@ const PartnerUpdate = () => {
             return;
         }
 
-        axios.put(`https://dummyjson.com/partner/${partnerid}`, newData)
+        axios.put(`https://dummyjson.com/users/${productid}`, newData)
             .then(response => {
                 console.log('Product changed successfully:', response.data);
                 navigate(`/dashboard/partner`);
@@ -130,4 +130,4 @@ const PartnerUpdate = () => {
     )
 }
 
-export default PartnerUpdate
+export default ProductUpdate

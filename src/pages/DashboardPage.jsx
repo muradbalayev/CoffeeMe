@@ -14,6 +14,10 @@ import PartnerUpdate from "../Components/Partners/PartnerUpdate";
 import ShopsPage from "./Shops/ShopsPage";
 
 import { QueryClient, QueryClientProvider } from "react-query";
+import MenuPage from "./Menu/MenuPage";
+import ProductPage from "./Menu/ProductPage";
+import ProductUpdate from "../Components/Menu/ProductUpdate";
+import ProductCreate from "../Components/Menu/ProductCreate";
 function DashboardPage() {
   const queryClient = new QueryClient();
 
@@ -39,6 +43,14 @@ function DashboardPage() {
             <Route path="/partner/update/:partnerid" element={<PartnerUpdate />} />
 
             <Route path="/shops" element={<ShopsPage />} />
+
+            <Route path="/menu" element={<MenuPage />} />
+
+            <Route path="/menu/shopname/products" element={<ProductPage/>} />
+            <Route path="/menu/shopname/products/create" element={<ProductCreate />} />
+            <Route path="/menu/shopname/products/update/:productid" element={<ProductUpdate />} />
+            
+
           </Routes>
         </div>
       </QueryClientProvider>

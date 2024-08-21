@@ -1,5 +1,5 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, ChevronUp, Crown, NotebookText,ShoppingCart, Wallet as WalletIcon } from "lucide-react";
+import { BookOpen, ChevronDown, ChevronUp, Crown, NotebookText,ShoppingCart, Wallet as WalletIcon } from "lucide-react";
 
 import {
   ChartLine,
@@ -34,12 +34,18 @@ const SIDEBAR_ITEMS = [
   },
   {
     id: 4,
+    title: "Menu",
+    icon: <BookOpen size={20} style={{ minWidth: "20px" }} />,
+    path: "/dashboard/menu",
+  },
+  {
+    id: 5,
     title: "Wallet",
     icon: <WalletIcon size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/wallet",
   },
   {
-    id: 5,
+    id: 6,
     title: "Withdraw",
     icon: <NotebookText size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/withdraw",
@@ -114,7 +120,7 @@ function Sidebar() {
           )}
         </AnimatePresence>
       </div>
-      <nav className="links w-full mt-8 flex flex-col">
+      <nav className="links w-full max-h-80 overflow-y-scroll mt-8 flex flex-col">
         <Link ref={dropdownRef} onClick={dropdownToggle} end='true'
           className={`lg:text-sm text-xs px-8 py-3 relative group ${isUsersActive ? "active" : ""}`}>
           <User size={20} style={{ minWidth: "20px" }} />
