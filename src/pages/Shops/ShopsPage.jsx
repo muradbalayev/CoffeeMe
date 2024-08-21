@@ -21,6 +21,7 @@ import {
   X,
 } from "lucide-react";
 import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 
 const deleteShop = async (id) => {
   try {
@@ -44,7 +45,9 @@ const fetchShops = async () => {
 };
 
 const AddShopModal = ({ setShowAddModal }) => {
-  const fileRef = useRef(null);
+  const LogoFileRef = useRef(null);
+  const PhotoFileRef = useRef(null);
+
 
   const queryClient = useQueryClient();
   const [data, setData] = useState({
@@ -64,25 +67,39 @@ const AddShopModal = ({ setShowAddModal }) => {
     });
   };
 
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
+
   const [photoFileName, setPhotoFileName] = useState("Choose File");
   const [logoFileName, setLogoFileName] = useState("Choose File");
+
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState(null)
 
   const handleFileChange = (e) => {
 
     const { name } = e.target;
     const file = e.target.files[0];
+    const fileURL = file ? URL.createObjectURL(file) : null;
+
 
     if (name === "photo") {
       setPhotoFileName(file ? file.name : "Choose File");
+      setPhotoPreview(fileURL);
     } else if (name === "logo") {
       setLogoFileName(file ? file.name : "Choose File");
+      setLogoPreview(fileURL);
     }
 
     setData({
       ...data,
       [name]: file,
     });
-  
+  };
+
+  const handleEyeClick = (image) => {
+    setLightboxImage(image);
+    setIsLightboxOpen(true);
   };
 
   const mutation = useMutation(
@@ -115,7 +132,9 @@ const AddShopModal = ({ setShowAddModal }) => {
         formData.append(key, data[key]);
       }
     });
-    mutation.mutate(formData); // Submit formData using useMutation
+    mutation.mutate(formData); 
+    toast.success("Shop Created Successfully!");
+    // Submit formData using useMutation
   };
 
   return (
@@ -124,7 +143,7 @@ const AddShopModal = ({ setShowAddModal }) => {
       onClick={(e) => {
         e.target.dataset.name && setShowAddModal(false);
       }}
-      className="addModalContainer items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
+      className="addModalContainer z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
     >
       <form
         className="addModalForm w-3/4 items-center justify-center flex-col flex relative"
@@ -192,33 +211,57 @@ const AddShopModal = ({ setShowAddModal }) => {
             <div className="inputContainer">
               <label className="form-label">Photo</label>
               <div
-                className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
-                <p className="select-none">{photoFileName}</p>
-                <Image color="#214440" />
-                <input
-                  type="file"
-                  name="photo"
-                  hidden ref={fileRef}
-                  onChange={handleFileChange}
-                />
+                className="form-control cursor-pointer flex  justify-between items-center gap-2" onClick={() => PhotoFileRef.current.click()}>
+                <div className="flex items-center gap-2">
+                  <p className="select-none">{photoFileName}</p>
+                  <Image color="#214440" />
+                  <input
+                    type="file"
+                    name="photo"
+                    hidden ref={PhotoFileRef}
+                    onChange={handleFileChange}
+                  />
+                </div>
+                {photoPreview && (
+                  <Eye
+                    color="#214440"
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEyeClick(photoPreview);
+                    }}
+                  />
+                )}
               </div>
             </div>
             <div className="inputContainer">
               <label className="form-label">Logo</label>
               <div
-                className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
-                <p className="select-none">{logoFileName}</p>
-                <Image color="#214440" />
-                <input
-                  type="file"
-                  name="logo"
-                  hidden ref={fileRef}
-                  onChange={handleFileChange}
-                />
+                className="form-control cursor-pointer flex justify-between items-center gap-2" onClick={() => LogoFileRef.current.click()}>
+                <div className="flex items-center gap-2">
+                  <p className="select-none">{logoFileName}</p>
+                  <Image color="#214440" />
+                  <input
+                    type="file"
+                    name="logo"
+                    hidden ref={LogoFileRef}
+                    onChange={handleFileChange}
+                  />
+                </div>
+                {logoPreview && (
+                  <Eye
+                    color="#214440"
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEyeClick(logoPreview);
+                    }}
+                  />
+                )}
               </div>
             </div>
           </div>
-          <div className="flex gap-5 justify-center">
+          <div className="flex mt-10 justify-center">
             <div>
               <button
                 style={{ backgroundColor: "#214440" }}
@@ -231,6 +274,13 @@ const AddShopModal = ({ setShowAddModal }) => {
           </div>
         </div>
       </form>
+      {isLightboxOpen && (
+        <Lightbox
+          open={isLightboxOpen}
+          close={() => setIsLightboxOpen(false)}
+          slides={[{ src: lightboxImage }]}
+        />
+      )}
     </div>
   );
 };
@@ -334,7 +384,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
               </div>
             </div>
           </div>
-          <div className="flex gap-5 justify-center">
+          <div className="flex mt-10 gap-5 justify-center">
             <div>
               <button
                 style={{ backgroundColor: "#214440" }}
