@@ -340,7 +340,7 @@ function ShopsPage() {
   );
 
   const handleLogoClick = (logo) => {
-    const url = `https://coffeeme.vercel.app/public/uploads/${logo}`;
+    const url = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/${logo}`;
     setImageSrc(url);
     setOpen(true);
   };
