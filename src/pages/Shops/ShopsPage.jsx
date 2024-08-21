@@ -20,6 +20,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import Swal from "sweetalert2";
 
 const deleteShop = async (id) => {
   try {
@@ -63,14 +64,25 @@ const AddShopModal = ({ setShowAddModal }) => {
     });
   };
 
+  const [photoFileName, setPhotoFileName] = useState("Choose File");
+  const [logoFileName, setLogoFileName] = useState("Choose File");
+
   const handleFileChange = (e) => {
 
     const { name } = e.target;
     const file = e.target.files[0];
+
+    if (name === "photo") {
+      setPhotoFileName(file ? file.name : "Choose File");
+    } else if (name === "logo") {
+      setLogoFileName(file ? file.name : "Choose File");
+    }
+
     setData({
       ...data,
       [name]: file,
     });
+  
   };
 
   const mutation = useMutation(
@@ -86,7 +98,7 @@ const AddShopModal = ({ setShowAddModal }) => {
     },
     {
       onSuccess: (data) => {
-        queryClient.invalidateQueries("shops"); 
+        queryClient.invalidateQueries("shops");
         setShowAddModal(false);
         console.log("Shop added successfully:", data);
       },
@@ -179,10 +191,10 @@ const AddShopModal = ({ setShowAddModal }) => {
           <div className="w-full flex inputRow gap-5 justify-between">
             <div className="inputContainer">
               <label className="form-label">Photo</label>
-              <div 
-              className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
-                <p className="select-none">Choose File </p>
-                <Image color="#214440"/>
+              <div
+                className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
+                <p className="select-none">{photoFileName}</p>
+                <Image color="#214440" />
                 <input
                   type="file"
                   name="photo"
@@ -193,10 +205,10 @@ const AddShopModal = ({ setShowAddModal }) => {
             </div>
             <div className="inputContainer">
               <label className="form-label">Logo</label>
-              <div 
-              className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
-                <p className="select-none">Choose File </p>
-                <Image color="#214440"/>
+              <div
+                className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
+                <p className="select-none">{logoFileName}</p>
+                <Image color="#214440" />
                 <input
                   type="file"
                   name="logo"
@@ -293,31 +305,31 @@ const EditShopModal = ({ data, setShowEditModal }) => {
             </div>
           </div>
           <div className="w-full flex inputRow gap-5 justify-between">
-          <div className="inputContainer">
+            <div className="inputContainer">
               <label className="form-label">Photo</label>
-              <div 
-              className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
+              <div
+                className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
                 <p className="select-none">Choose File </p>
-                <Image color="#214440"/>
+                <Image color="#214440" />
                 <input
                   type="file"
                   name="photo"
                   hidden ref={fileRef}
-                  // onChange={handleFileChange}
+                // onChange={handleFileChange}
                 />
               </div>
             </div>
             <div className="inputContainer">
               <label className="form-label">Logo</label>
-              <div 
-              className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
+              <div
+                className="form-control cursor-pointer flex items-center gap-2" onClick={() => fileRef.current.click()}>
                 <p className="select-none">Choose File </p>
-                <Image color="#214440"/>
+                <Image color="#214440" />
                 <input
                   type="file"
                   name="logo"
                   hidden ref={fileRef}
-                  // onChange={handleFileChange}
+                // onChange={handleFileChange}
                 />
               </div>
             </div>
@@ -355,6 +367,28 @@ function ShopsPage() {
       console.error("Error deleting shop:", error);
     },
   });
+
+  const handleDelete = async (shopId) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (result.isConfirmed) {
+      deleteMutation.mutate(shopId);
+      Swal.fire(
+        'Deleted!',
+        'Your shop has been deleted.',
+        'success'
+      );
+    }
+  };
+
   const [editedItem, setEditedItem] = useState(null);
   const [open, setOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("");
@@ -452,9 +486,9 @@ function ShopsPage() {
                     className="px-3 py-2 bg-green-600 text-white rounded-md">
                     <Pencil size={18} />
                   </button>
-                 
+
                   <button
-                    onClick={() => deleteMutation.mutate(shop._id)}
+                    onClick={() => handleDelete(shop._id)}
                     className="px-3 ms-2 py-2 bg-red-600 text-white rounded-md"
                   >
                     <Trash2 size={18} />

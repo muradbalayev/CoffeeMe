@@ -28,21 +28,21 @@ const SIDEBAR_ITEMS = [
   },
   {
     id: 3,
+    title: "Shops",
+    icon: <ShoppingCart size={20} style={{ minWidth: "20px" }} />,
+    path: "/dashboard/shops",
+  },
+  {
+    id: 4,
     title: "Wallet",
     icon: <WalletIcon size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/wallet",
   },
   {
-    id: 4,
+    id: 5,
     title: "Withdraw",
     icon: <NotebookText size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/withdraw",
-  },
-  {
-    id: 5,
-    title: "Shops",
-    icon: <ShoppingCart size={20} style={{ minWidth: "20px" }} />,
-    path: "/dashboard/shops",
   },
 ];
 
