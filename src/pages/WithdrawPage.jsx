@@ -2,8 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component"
 import WthModal from "../Components/Withdraw/WthModal";
-import { Coffee, Eye, Plus, Search } from "lucide-react";
+import { Coffee, Eye, Search, SquarePlus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 
@@ -44,13 +45,16 @@ const WithdrawPage = () => {
             name: "Actions",
             cell: (row) => (
                 <div className='flex justify-start items-center gap-2'>
-                    <Link to={'/dashboard/withdraw/create'}
-                        className='px-2 py-1 bg-green-600 text-white rounded-md'>
-                        <Plus />
-                    </Link>
-                    <button className='px-2 py-1 bg-blue-600 text-white rounded-md'
+               
+                    <button className='px-2 py-1 bg-green-800 text-white rounded-md'
                         onClick={() => handleModal(row.id)}>
                         <Eye />
+                    </button>
+                    <button
+                        className="px-3 py-2 bg-red-600 text-white rounded-md"
+                        onClick={() => handleDelete(row.id)}
+                    >
+                        <Trash2 size={18} />
                     </button>
                 </div>
             )
@@ -92,6 +96,40 @@ const WithdrawPage = () => {
         setModalShow(true)
     }
 
+           // DELETE METHOD
+           const handleDelete = (id) => {
+            Swal.fire({
+                title: "Əminsiniz?",
+                text: "Dəyişikliyi geri qaytara bilməyəcəksiniz!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Bəli, silin!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios
+                        .delete(`https://dummyjson.com/users/${id}`)
+                        .then(() => {
+                            console.log("Məhsul Silindi!");
+                            Swal.fire({
+                                title: "Silindi!",
+                                text: `Məhsul No:${id} müvəffəqiyyətlə silindi!`,
+                                icon: "success",
+                            });
+                            setRequests(requests.filter((request) => request.id !== id));
+                        })
+                        .catch((error) => {
+                            console.error(`Error deleting product:`, error);
+                            Swal.fire({
+                                title: "Error!",
+                                text: `Error deleting No ${id} product`,
+                                icon: "error",
+                            });
+                        });
+                }
+            });
+        };
 
     return (
         Loading ?
@@ -107,13 +145,22 @@ const WithdrawPage = () => {
                 <div className="w-full flex justify-between items-center mt-4">
                     <h1 className="title text-xl">Request&apos;s table</h1>
                     <div className='flex relative gap-3 mb-1 p-3 border-green-900'>
-                        <input
-                            className='form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md'
-                            placeholder='Search'
-                            value={search}
-                            onChange={(event) => setSearch(event.target.value)}
-                        />
-                        <Search className="search-icon" />
+                    <div className="flex relative">
+                                <input
+                                    className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
+                                    placeholder="Search"
+                                    value={search}
+                                    onChange={(event) => setSearch(event.target.value)}
+                                />
+                                <Search className="search-icon" />
+                            </div>
+                            <Link
+                                to={"/dashboard/withdraw/create"}
+                                className="text-green"
+                                style={{ borderRadius: "25%" }}
+                            >
+                                <SquarePlus size={40} />
+                            </Link>
                     </div>
                 </div>
 

@@ -65,8 +65,8 @@ const PartnerPage = () => {
             <Pencil size={18} />
           </button>
 
-          <button style={{ backgroundColor: '#214440' }}
-           className='px-2 py-1 text-white rounded-md'
+          <button
+           className='px-2 py-1 text-white rounded-md bg-green-800'
             onClick={() => handleModal(row.id)}>
             <Eye />
           </button>
