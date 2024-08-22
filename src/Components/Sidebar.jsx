@@ -159,7 +159,7 @@ function Sidebar() {
               <Link
                 to="/dashboard/users"
                 // style={{ backgroundColor: "gray" }}
-                className=" px-8 py-3 text-xs dropdown-link"
+                className=" px-6 py-3 text-xs dropdown-link"
               >
                 <Users size={15} style={{ minWidth: "20px" }} />
                 <AnimatePresence>
@@ -179,7 +179,7 @@ function Sidebar() {
               <Link
                 to="/dashboard/premiumusers"
                 // style={{ backgroundColor: "gray" }}
-                className=" px-8 py-3 text-xs rounded-b-lg dropdown-link"
+                className=" px-6 py-3 text-xs rounded-b-lg dropdown-link"
               >
                 <Crown size={15} style={{ minWidth: "20px" }} />
                 <AnimatePresence>
