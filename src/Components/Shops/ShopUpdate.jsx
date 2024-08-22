@@ -14,10 +14,27 @@ const EditShopModal = ({ data, setShowEditModal }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditedData({
-      ...data,
-      [name]: value,
-    });
+  
+    if (name === "longitude" || name === "latitude") {
+      const newCoordinates = [...editedData.location.coordinates];
+      if (name === "longitude") {
+        newCoordinates[0] = value;
+      } else {
+        newCoordinates[1] = value;
+      }
+      setEditedData({
+        ...editedData,
+        location: {
+          ...editedData.location,
+          coordinates: newCoordinates,
+        },
+      });
+    } else {
+      setEditedData({
+        ...editedData,
+        [name]: value,
+      });
+    }
   };
 
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -70,14 +87,20 @@ const EditShopModal = ({ data, setShowEditModal }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
+  
+    // Append all the edited data to the formData
     Object.keys(editedData).forEach((key) => {
-      if (editedData[key] !== undefined && editedData[key] !== null) {
+      if (key === 'location') {
+        // Handle the nested location object specifically
+        formData.append('longitude', editedData.location.coordinates[0]);
+        formData.append('latitude', editedData.location.coordinates[1]);
+      } else if (editedData[key] !== undefined && editedData[key] !== null) {
         formData.append(key, editedData[key]);
       }
     });
+  
     mutation.mutate(formData);
     toast.success("Shop Edited Successfully!");
-    // Submit formData using useMutation
   };
 
   const handleEyeClick = (image) => {
