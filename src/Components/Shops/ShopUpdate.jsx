@@ -23,20 +23,30 @@ const EditShopModal = ({ data, setShowEditModal }) => {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
 
-  // const [photoFileName, setPhotoFileName] = useState("Choose File");
-  // const [logoFileName, setLogoFileName] = useState("Choose File");
+  const [photoFileName, setPhotoFileName] = useState("");
+  const [logoFileName, setLogoFileName] = useState("");
 
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState(null);
 
   useEffect(() => {
-    const imageUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/shops`;
+    const imageUrl = `${
+      import.meta.env.VITE_API_GLOBAL_URL
+    }/public/uploads/shops`;
 
     if (data.photo) {
-      setPhotoPreview(`${imageUrl}/${editedData.name}-${editedData.address}/${data.photo}`);
+      setPhotoFileName(data.photo);
+
+      setPhotoPreview(
+        `${imageUrl}/${editedData.name}-${editedData.address}/${data.photo}`
+      );
     }
     if (data.logo) {
-      setLogoPreview(`${imageUrl}/${editedData.name}-${editedData.address}/${data.logo}`);
+      setLogoFileName(data.logo);
+
+      setLogoPreview(
+        `${imageUrl}/${editedData.name}-${editedData.address}/${data.logo}`
+      );
     }
   }, [data]);
 
@@ -46,7 +56,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
     const fileURL = file ? URL.createObjectURL(file) : null;
 
     if (name === "photo") {
-      setPhotoPreview(fileURL); 
+      setPhotoPreview(fileURL);
     } else if (name === "logo") {
       setLogoPreview(fileURL);
     }
@@ -56,7 +66,6 @@ const EditShopModal = ({ data, setShowEditModal }) => {
       [name]: file,
     });
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -79,7 +88,9 @@ const EditShopModal = ({ data, setShowEditModal }) => {
   const mutation = useMutation(
     async (formData) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_GLOBAL_URL}/api/shop/edit/${editedData._id}`,
+        `${import.meta.env.VITE_API_GLOBAL_URL}/api/shop/edit/${
+          editedData._id
+        }`,
         {
           method: "PUT",
           body: formData,
@@ -99,7 +110,6 @@ const EditShopModal = ({ data, setShowEditModal }) => {
     }
   );
 
-
   return (
     <div
       data-name="form-container"
@@ -109,7 +119,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
       className="addModalContainer z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
     >
       <form
-        className="addModalForm w-3/4 items-center justify-center flex-col flex relative"
+        className="addModalForm overflow-hidden w-3/4 items-center justify-center flex-col flex relative"
         onSubmit={handleSubmit}
       >
         <X
@@ -142,7 +152,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 name="address"
                 placeholder="Address"
                 value={editedData.address}
-              onChange={handleChange}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -170,25 +180,25 @@ const EditShopModal = ({ data, setShowEditModal }) => {
               />
             </div>
           </div>
-          <div className="w-full flex inputRow gap-5 justify-between">
+          <div className="w-full flex flex-wrap inputRow gap-5 justify-between">
             <div className="inputContainer">
               <label className="form-label">Photo</label>
               <div
                 className="form-control cursor-pointer flex justify-between items-center gap-2"
                 onClick={() => PhotoFileRef.current.click()}
               >
-                  <div className="flex items-center gap-2">
-                <p className="select-none">Photo </p>
-                <Image color="#214440" />
-                <input
-                  type="file"
-                  name="photo"
-                  hidden
-                  ref={PhotoFileRef}
-                  onChange={handleFileChange}
-                />
+                <div className="flex items-center gap-2 overflow-hidden">
+                  <p className="select-none">{photoFileName} </p>
+                  <Image color="#214440" />
+                  <input
+                    type="file"
+                    name="photo"
+                    hidden
+                    ref={PhotoFileRef}
+                    onChange={handleFileChange}
+                  />
                 </div>
-                   {photoPreview && (
+                {photoPreview && (
                   <Eye
                     color="#214440"
                     className="cursor-pointer"
@@ -206,16 +216,16 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 className="form-control cursor-pointer flex items-center justify-between gap-2"
                 onClick={() => LogoFileRef.current.click()}
               >
-                  <div className="flex items-center gap-2">
-                <p className="select-none">Logo</p>
-                <Image color="#214440" />
-                <input
-                  type="file"
-                  name="logo"
-                  hidden
-                  ref={LogoFileRef}
-                  onChange={handleFileChange}
-                />
+                <div className="flex items-center gap-2 overflow-hidden">
+                  <p className="select-none">{logoFileName}</p>
+                  <Image color="#214440" />
+                  <input
+                    type="file"
+                    name="logo"
+                    hidden
+                    ref={LogoFileRef}
+                    onChange={handleFileChange}
+                  />
                 </div>
                 {logoPreview && (
                   <Eye
@@ -254,5 +264,4 @@ const EditShopModal = ({ data, setShowEditModal }) => {
   );
 };
 
-
-export default EditShopModal
+export default EditShopModal;

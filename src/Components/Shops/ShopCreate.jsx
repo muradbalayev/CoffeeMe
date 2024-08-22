@@ -102,10 +102,10 @@ const AddShopModal = ({ setShowAddModal }) => {
       onClick={(e) => {
         e.target.dataset.name && setShowAddModal(false);
       }}
-      className="addModalContainer z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
+      className="addModalContainer overflow-hidden z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
     >
       <form
-        className="addModalForm w-3/4 items-center justify-center flex-col flex relative"
+        className="addModalForm overflow-hidden w-3/4 items-center justify-center flex-col flex relative"
         onSubmit={handleSubmit}
       >
         <X
@@ -166,14 +166,14 @@ const AddShopModal = ({ setShowAddModal }) => {
               />
             </div>
           </div>
-          <div className="w-full flex inputRow gap-5 justify-between">
+          <div className="w-full flex flex-wrap inputRow gap-5 justify-between">
             <div className="inputContainer">
               <label className="form-label">Photo</label>
               <div
                 className="form-control cursor-pointer flex  justify-between items-center gap-2"
                 onClick={() => PhotoFileRef.current.click()}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 overflow-hidden">
                   <p className="select-none">{photoFileName}</p>
                   <Image color="#214440" />
                   <input
@@ -202,7 +202,7 @@ const AddShopModal = ({ setShowAddModal }) => {
                 className="form-control cursor-pointer flex justify-between items-center gap-2"
                 onClick={() => LogoFileRef.current.click()}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 overflow-hidden">
                   <p className="select-none">{logoFileName}</p>
                   <Image color="#214440" />
                   <input
