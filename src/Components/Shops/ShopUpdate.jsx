@@ -30,13 +30,13 @@ const EditShopModal = ({ data, setShowEditModal }) => {
   const [lightboxImage, setLightboxImage] = useState(null);
 
   useEffect(() => {
-    const imageUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads`;
+    const imageUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/shops`;
 
     if (data.photo) {
-      setPhotoPreview(`${imageUrl}/${data.photo}`);
+      setPhotoPreview(`${imageUrl}/${editedData.name}-${editedData.address}/${data.photo}`);
     }
     if (data.logo) {
-      setLogoPreview(`${imageUrl}/${data.logo}`);
+      setLogoPreview(`${imageUrl}/${editedData.name}-${editedData.address}/${data.logo}`);
     }
   }, [data]);
 

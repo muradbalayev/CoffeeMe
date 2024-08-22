@@ -82,8 +82,8 @@ function ShopsPage() {
     fetchShops
   );
 
-  const handleLogoClick = (logo) => {
-    const url = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/${logo}`;
+  const handleLogoClick = (par) => {
+    const url = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/shops/${par}`;
     setImageSrc(url);
     setOpen(true);
   };
@@ -97,9 +97,7 @@ function ShopsPage() {
     );
   if (isError) return <div>An error occurred: {error.message}</div>;
 
-  console.log(data.shops);
-
-  const imgUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads`;
+  const imgUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/shops`;
 
   return (
     <div className="wrapper relative flex flex-col items-center gap-5 ">
@@ -161,11 +159,11 @@ function ShopsPage() {
                 <td className="col-1">
                   <button
                     className="px-1 py-1 border rounded max-w-16"
-                    onClick={() => handleLogoClick(shop.logo)}
+                    onClick={() => handleLogoClick(`${shop.name}-${shop.address}/${shop.logo}`)}
                   >
                     {shop.logo && (
                       <img
-                        src={`${imgUrl}/${shop.logo}`}
+                        src={`${imgUrl}/${shop.name}-${shop.address}/${shop.logo}`}
                         alt="Shop Logo"
                         className="object-contain h-10 w-10"
                       />
@@ -175,11 +173,11 @@ function ShopsPage() {
                 <td className="col-1">
                   <button
                     className="px-1 py-1 border rounded max-w-16"
-                    onClick={() => handleLogoClick(shop.photo)}
+                    onClick={() => handleLogoClick(`${shop.name}-${shop.address}/${shop.photo}`)}
                   >
                     {shop.logo && (
                       <img
-                        src={`${imgUrl}/${shop.photo}`}
+                        src={`${imgUrl}/${shop.name}-${shop.address}/${shop.photo}`}
                         alt="Shop Logo"
                         className="object-contain h-10 w-10"
                       />
