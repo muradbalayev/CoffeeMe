@@ -90,9 +90,9 @@ function Sidebar() {
 
   return (
     <div
-      className={`sidebar h-screen flex flex-col items-center gap-4 pb-5 pt-3 text-white ${isSidebarOpen ? `md:w-60 w-40 ` : "w-20"}`}
+      className={`sidebar h-screen flex flex-col items-center gap-4 pb-5 pt-3 text-white ${isSidebarOpen ? `md:w-56 w-40 ` : "w-16"}`}
     >
-      <div className='w-full relative flex items-center px-5'>
+      <div className='w-full relative flex items-center px-3'>
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -122,7 +122,7 @@ function Sidebar() {
       </div>
       <nav className="links w-full verflow-y-scroll mt-8 flex flex-col">
         <Link ref={dropdownRef} onClick={dropdownToggle} end='true'
-          className={`lg:text-sm text-xs px-8 py-3 relative group ${isUsersActive ? "active" : ""}`}>
+          className={`lg:text-sm text-xs px-6 py-3 relative group ${isUsersActive ? "active" : ""}`}>
           <User size={20} style={{ minWidth: "20px" }} />
           <AnimatePresence>
             {isSidebarOpen && (
@@ -204,7 +204,7 @@ function Sidebar() {
           <NavLink
             key={item.id}
             to={item.path}
-            className="lg:text-sm text-xs px-8 py-3"
+            className="lg:text-sm text-xs px-6 py-3"
             end
           >
             {item.icon}
@@ -225,7 +225,7 @@ function Sidebar() {
         ))}
       </nav>
       <Link
-        className="logout w-full px-8 min-h-10 py-2 mt-auto flex md:flex-row flex-col gap-2 items-center md:text-base text-sm"
+        className="logout w-full px-6 min-h-10 py-2 mt-auto flex md:flex-row flex-col gap-2 items-center md:text-base text-sm"
         onClick={handleLogout}
       >
         <LogOut size={20} style={{ minWidth: "20px" }} />

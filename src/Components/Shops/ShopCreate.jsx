@@ -94,6 +94,8 @@ const AddShopModal = ({ setShowAddModal }) => {
     // Submit formData using useMutation
   };
 
+  console.log(data);
+
   return (
     <div
       data-name="form-container"
