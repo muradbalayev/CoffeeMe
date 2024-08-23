@@ -203,7 +203,9 @@ function ShopsPage() {
           </tbody>
         </table>
       </div>
-
+<div className="w-full mx-auto flex items-center justify-center">
+  <button className="px-4 py-3" style={{ backgroundColor: "#214440", color: "white"}}>Load More</button>
+</div>
       <Lightbox
         open={open}
         close={() => setOpen(false)}

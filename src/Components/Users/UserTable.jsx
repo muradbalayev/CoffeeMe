@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import DataTable from "react-data-table-component";
 // import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ import UserModal from "./UserModal";
 import { useQuery } from "react-query";
 
 const UserTable = ({ fetchUsers, title, icon, usertype }) => {
-    const { isLoading, isError, isSuccess, data, error } = useQuery(
+    const { isLoading, isError, isSuccess, data } = useQuery(
         "users",
         fetchUsers
     );
@@ -29,7 +29,7 @@ const UserTable = ({ fetchUsers, title, icon, usertype }) => {
     const columns = [
         {
             name: "ID",
-            selector: (row) => row._id,
+            selector: (row, index) => index + 1,
             sortable: true,
         },
         {
@@ -84,7 +84,7 @@ const UserTable = ({ fetchUsers, title, icon, usertype }) => {
                     </button>
                     <button
                         className="px-3 py-2 bg-red-600 text-white rounded-md"
-                        // onClick={() => handleDelete(row.id)}
+                    // onClick={() => handleDelete(row.id)}
                     >
                         <Trash2 size={18} />
                     </button>
@@ -186,6 +186,7 @@ const UserTable = ({ fetchUsers, title, icon, usertype }) => {
     const handleCreateClick = () => {
         navigate(`/dashboard/${usertype}/create`, { state: { usertype } });
     };
+
     if (isLoading)
         return (
             <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
@@ -194,11 +195,14 @@ const UserTable = ({ fetchUsers, title, icon, usertype }) => {
             </div>
         );
 
-    if (isError) return <div>error</div>;
+    if (isError) return (
+        <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
+            <h1 className="title text-2xl">Error</h1>
+        </div>
+    );
 
     console.log(data);
-
-    return (
+    if (isSuccess) return (
         <div className="wrapper">
             <div className="users-header flex items-center justify-between">
                 <div className="relative p-2 flex gap-1 items-center">
