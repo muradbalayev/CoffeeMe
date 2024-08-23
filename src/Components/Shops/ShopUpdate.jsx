@@ -65,7 +65,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
         `${imageUrl}/${editedData.name}-${editedData.address}/${data.logo}`
       );
     }
-  }, [data]);
+  }, [data, editedData.name, editedData.address]);
 
   const handleFileChange = (e) => {
     const { name } = e.target;
@@ -73,20 +73,41 @@ const EditShopModal = ({ data, setShowEditModal }) => {
     const fileURL = file ? URL.createObjectURL(file) : null;
 
     if (name === "photo") {
+      setPhotoPreview(null);
+      setPhotoFileName("");
+  
+
       setPhotoPreview(fileURL);
+      setPhotoFileName(file && file.name);
     } else if (name === "logo") {
+      setLogoPreview(null);
+      setLogoFileName("");
+
+      setLogoFileName(file && file.name);
       setLogoPreview(fileURL);
     }
 
-    setEditedData({
-      ...data,
-      [name]: file,
-    });
+     setEditedData((prevState) => ({
+    ...prevState,
+    [name]: file,
+  }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
+
+    if (
+      !editedData.name ||
+      !editedData.address ||
+      !editedData.location.coordinates[0] ||
+      !editedData.location.coordinates[1] ||
+      !photoFileName ||
+      !logoFileName
+    ) {
+      toast.error('Fill all the inputs');
+      return;
+    }
   
     // Append all the edited data to the formData
     Object.keys(editedData).forEach((key) => {

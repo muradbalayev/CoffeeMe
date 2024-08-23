@@ -64,10 +64,10 @@ const MenuPage = () => {
                         whileTap={{ scale: 0.9 }}
                         transition={{ duration: 0.2, delay: 0 }}
                         onClick={() => navigate(`/dashboard/menu/shopname/products`)} key={shop.id}
-                        className="card border sm:py-10 py-6 relative overflow-hidden rounded-xl bg-gradient-to-br from-green-900 via-green-800 to-gray-800
+                        className="card border py-10 relative overflow-hidden rounded-xl bg-gradient-to-br from-green-900 via-green-800 to-gray-800
                         hover:from-green-700 hover:via-green-600 hover:to-gray-700 transition-colors duration-300 ease-linear">
                         <div className="flex w-full h-full justify-center items-center">
-                            <h1 className="shoptitle font-bold lg:text-2xl text-xl" style={{ color: "white", fontFamily: 'Inter , "sans-serif"' }}>{shop.name}</h1>
+                            <h1 className="shoptitle font-bold lg:text-2xl md:text-xl text-base" style={{ color: "white", fontFamily: 'Inter , "sans-serif"' }}>{shop.name}</h1>
                         </div>
                     </motion.button>
                 ))}

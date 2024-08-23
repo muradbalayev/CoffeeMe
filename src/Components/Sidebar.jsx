@@ -90,7 +90,7 @@ function Sidebar() {
 
   return (
     <div
-      className={`sidebar h-screen flex flex-col items-center gap-4 pb-5 pt-3 text-white ${isSidebarOpen ? `md:w-56 w-40 ` : "w-16"}`}
+      className={`sidebar relative z-10 h-screen flex flex-col items-center gap-4 pb-5 pt-3 text-white ${isSidebarOpen ? `md:w-56 w-40 ` : "w-16"}`}
     >
       <div className='w-full relative flex items-center px-3'>
         <motion.button
