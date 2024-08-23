@@ -99,7 +99,7 @@ function ShopsPage() {
 
   const imgUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/shops`;
 
-  return (
+  if(isSuccess) return (
     <div className="wrapper relative flex flex-col items-center gap-5 ">
       {showAddModal && <AddShopModal setShowAddModal={setShowAddModal} />}
       {editedItem && (
