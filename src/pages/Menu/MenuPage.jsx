@@ -85,10 +85,11 @@ const MenuPage = () => {
             <div className="mt-4 grid lg:grid-cols-4 md:grid-col-3 grid-cols-2 lg:gap-8 gap-6">
                 {data.shops.map((shop) => (
                     <motion.button
+                        key={shop._id}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.9 }}
                         transition={{ duration: 0.2, delay: 0 }}
-                        onClick={() => navigate(`/dashboard/menu/shopname/products`)} key={shop.id}
+                        onClick={() => navigate(`/dashboard/menu/${shop._id}/products`)}
                         className="card border py-10 relative overflow-hidden rounded-xl bg-gradient-to-br from-green-900 via-green-800 to-gray-800
                         hover:from-green-700 hover:via-green-600 hover:to-gray-700 transition-colors duration-300 ease-linear">
                         <div className="flex w-full h-full justify-center items-center">

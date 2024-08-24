@@ -120,7 +120,7 @@ function Sidebar() {
           )}
         </AnimatePresence>
       </div>
-      <nav className="links w-full verflow-y-scroll mt-8 flex flex-col">
+      <nav className="links w-full overflow-y-scroll flex flex-col">
         <Link ref={dropdownRef} onClick={dropdownToggle} end='true'
           className={`lg:text-sm text-xs px-6 py-3 relative group ${isUsersActive ? "active" : ""}`}>
           <User size={20} style={{ minWidth: "20px" }} />

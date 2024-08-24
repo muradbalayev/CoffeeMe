@@ -105,7 +105,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
       !photoFileName ||
       !logoFileName
     ) {
-      toast.error('Fill all the inputs');
+      toast.error('Fill all inputs!');
       return;
     }
   

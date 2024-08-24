@@ -27,6 +27,7 @@ const deleteShop = async (id) => {
         method: "DELETE",
       }
     );
+    console.log(res);
   } catch (error) {
     console.error(error);
   }
