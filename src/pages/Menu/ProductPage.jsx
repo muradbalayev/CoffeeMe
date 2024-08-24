@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import DataTable from "react-data-table-component"
 import { Coffee, Eye, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ProductModal from "../../Components/Menu/ProductModal";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import { useQuery } from "react-query";
 import AddProductModal from "../../Components/Menu/ProductCreate";
 
@@ -11,7 +11,6 @@ import AddProductModal from "../../Components/Menu/ProductCreate";
 
 const ProductPage = () => {
     const { shopId } = useParams();
-    console.log(shopId)
 
     const navigate = useNavigate();
 
@@ -47,39 +46,29 @@ const ProductPage = () => {
         },
         {
             name: "Product Name",
-            selector: row => row.firstName
-        },
-        {
-            name: "Image",
-            selector: row => row.firstName
-        },
-        {
-            name: "Category",
-            selector: row => row.age,
-        },
-        {
-            name: "Size",
-            selector: row => row.firstName,
-            sortable: true
-        },
-        {
-            name: "Type",
-            selector: row => row.age,
-            sortable: true
+            selector: row => row.name
         },
         {
             name: "Price",
-            selector: row => row.age,
-            sortable: true
+            selector: row => row.price
+        },
+        {
+            name: "Category",
+            selector: row => row.category,
         },
         {
             name: "Discounted Price",
-            selector: row => row.age,
+            selector: row => row.discountedPrice,
             sortable: true
         },
         {
-            name: "Discounted Percentage %",
-            selector: row => row.age,
+            name: "Discounted",
+            selector: row => row.discount,
+            sortable: true
+        },
+        {
+            name: "Description",
+            selector: row => row.description,
             sortable: true
         },
         {
