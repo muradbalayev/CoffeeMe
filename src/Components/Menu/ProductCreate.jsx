@@ -1,201 +1,260 @@
-import axios from 'axios'
-import { Flame } from 'lucide-react';
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Swal from 'sweetalert2';
-const ProductCreate = () => {
+import { Eye, Image, ShoppingCart, X } from "lucide-react";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "react-query";
+import Lightbox from "yet-another-react-lightbox";
 
-    const [newData, setNewData] = useState({
-        firstName: '',
-        lastName: '',
-        age: ''
-    })
+const AddProductModal = ({ shopId, setShowAddModal }) => {
+    const PhotoFileRef = useRef(null);
 
-    const navigate = useNavigate();
-
+    const queryClient = useQueryClient();
+    const [data, setData] = useState({
+        name: "",
+        price: "",
+        discount: "",
+        discountType: "",
+        category: "",
+        description: "",
+        photo: null,
+    });
 
     const handleChange = (e) => {
-        setNewData({ ...newData, [e.target.name]: e.target.value })
-    }
-
-    const handleSave = () => {
-        Swal.fire({
-            title: "Yadda Saxlamaq İstədiyindən Əminsən?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Bəli, yadda saxla!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                saveData();
-            }
+        const { name, value } = e.target;
+        setData({
+            ...data,
+            [name]: value,
         });
     };
 
-    const saveData = () => {
-        if (!newData.firstName || !newData.lastName || !newData.age) {
-            alert('Bütün xanaları doldurun!');
+    const [photoPreview, setPhotoPreview] = useState(null);
+
+    const [photoFileName, setPhotoFileName] = useState("Choose File");
+
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [lightboxImage, setLightboxImage] = useState(null);
+
+    const handleFileChange = (e) => {
+        const { name } = e.target;
+        const file = e.target.files[0];
+        const fileURL = file ? URL.createObjectURL(file) : null;
+
+        if (name === "photo") {
+            setPhotoFileName(file ? file.name : "Choose File");
+            setPhotoPreview(fileURL);
+        }
+
+        setData({
+            ...data,
+            [name]: file,
+        });
+    };
+
+    const handleEyeClick = (image) => {
+        setLightboxImage(image);
+        setIsLightboxOpen(true);
+    };
+
+    const mutation = useMutation(
+        async (formData) => {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/product/new/${shopId}`,
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+            return await response.json();
+        },
+        {
+            onSuccess: (data) => {
+                queryClient.invalidateQueries("shops");
+                setShowAddModal(false);
+                console.log("Shop added successfully:", data);
+            },
+            onError: (error) => {
+                console.error("Error adding shop:", error);
+            },
+        }
+    );
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (
+            !data.name ||
+            !data.price ||
+            !data.discount ||
+            !data.discountType ||
+            !data.category ||
+            !data.description ||
+            !photoFileName ||
+            photoFileName === "Choose File"
+        ) {
+            toast.error('Fill all the inputs');
             return;
         }
 
-        axios.post(`https://dummyjson.com/users/add`, newData)
-            .then(response => {
-                console.log('User added successfully:', response.data);
-                navigate('/dashboard/users');
-                Swal.fire({
-                    title: "Yadda Saxlanıldı!",
-                    icon: "success"
-                });
-            })
-            .catch(error => {
-                console.error('Xeta:', error);
-                alert('Xeta.');
-            });
+
+        const formData = new FormData();
+        Object.keys(data).forEach((key) => {
+            if (data[key] !== undefined && data[key] !== null) {
+                formData.append(key, data[key]);
+            }
+        });
+        mutation.mutate(formData);
+        toast.success("Product Created Successfully!");
+        // Submit formData using useMutation
     };
 
-
-    const handleBack = () => {
-        navigate(`/dashboard/menu/shopname/products`);
-    }
-
-
-    const isFormValid = newData.firstName && newData.lastName && newData.age;
+    console.log(data);
 
     return (
-        <div className='card overflow-hidden m-4 flex flex-col border rounded-lg pb-3 min-h-[670px]'>
-            <div className="header px-4 py-3 border-b text-white font-semibold">
-                Yarat
-            </div>
-            <form className='flex flex-col flex-grow'>
+        <div
+            data-name="form-container"
+            onClick={(e) => {
+                e.target.dataset.name && setShowAddModal(false);
+            }}
+            className="addModalContainer overflow-hidden z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
+        >
+            <form
+                className="addModalForm overflow-hidden w-3/4 items-center justify-center flex-col flex relative"
+                onSubmit={handleSubmit}
+            >
+                <X
+                    color="red"
+                    size={30}
+                    className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
+                    onClick={() => setShowAddModal(false)}
+                />
+                <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
+                    Add Product
+                </h2>
+                <div className="w-full gap-3 flex flex-col">
+                    <div className="w-full flex inputRow gap-5 justify-between">
+                        <div className="inputContainer">
+                            <label className="form-label">Name</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="name"
+                                placeholder="Name"
+                                value={data.name}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="inputContainer">
+                            <label className="form-label">Price</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="price"
+                                placeholder="Price"
+                                value={data.price}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
+                        <div className="inputContainer">
+                            <label className="form-label">Discount</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="discount"
+                                placeholder="Discount"
+                                value={data.discount}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="inputContainer">
+                            <label className="form-label">Discount Type</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="discountType"
+                                placeholder="Discount Type"
+                                value={data.discountType}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
+                        <div className="inputContainer">
+                            <label className="form-label">Category</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="category"
+                                placeholder="Category"
+                                value={data.category}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="inputContainer">
+                            <label className="form-label">Description</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="description"
+                                placeholder="Description"
+                                value={data.description}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full flex flex-wrap inputRow gap-5 justify-between">
+                        <div className="inputContainer">
+                            <label className="form-label">Photo</label>
+                            <div
+                                className="form-control cursor-pointer flex  justify-between items-center gap-2"
+                                onClick={() => PhotoFileRef.current.click()}
+                            >
+                                <div className="flex items-center gap-2 overflow-hidden">
+                                    <p className="select-none">{photoFileName}</p>
+                                    <Image color="#214440" />
+                                    <input
+                                        type="file"
+                                        name="photo"
+                                        hidden
+                                        ref={PhotoFileRef}
+                                        onChange={handleFileChange}
+                                    />
+                                </div>
+                                {photoPreview && (
+                                    <Eye
+                                        color="#214440"
+                                        className="cursor-pointer"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleEyeClick(photoPreview);
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        </div>
 
-                <div className='card-body bg-white flex-grow'>
-                    <div className='form-group'>
-                        <label>Name<span className='text-red-600'>*</span></label>
-                        <input type="text"
-                            name='firstName'
-                            value={newData.firstName}
-                            onChange={handleChange}
-                            className="border rounded" />
                     </div>
-                    <div className='form-group'>
-                        <label>Surname<span className='text-red-600'>*</span></label>
-                        <input
-                            name='lastName'
-                            value={newData.lastName}
-                            onChange={handleChange}
-                            type="text"
-                            className="form-control" />
+                    <div className="flex mt-10 justify-center">
+                        <div>
+                            <button
+                                style={{ backgroundColor: "#214440" }}
+                                type="submit"
+                                className="title px-4 py-2 flex items-center rounded text-white font-bold gap-2"
+                            >
+                                Add Product <ShoppingCart color="white" />
+                            </button>
+                        </div>
                     </div>
-                    <div className='form-group'>
-                        <label>Age<span className='text-red-600'>*</span></label>
-                        <input
-                            name='age'
-                            value={newData.age}
-                            onChange={handleChange}
-                            type="number"
-                            className="form-control"
-                        />
-                    </div>
-                    <div className='form-group'>
-                        <label>Adres<span className='text-red-600'>*</span></label>
-                        <input
-                            name='age'
-                            value={newData.age}
-                            onChange={handleChange}
-                            type="text"
-                            className="form-control"
-                        />
-                    </div>
-                    <div className='form-group'>
-                        <label>Number<span className='text-red-600'>*</span></label>
-                        <input
-                            name='age'
-                            value={newData.age}
-                            onChange={handleChange}
-                            type="number"
-                            className="form-control"
-                        />
-                    </div>
-                    <div className='form-group'>
-                        <label>Email<span className='text-red-600'>*</span></label>
-                        <input
-                            name='age'
-                            value={newData.age}
-                            onChange={handleChange}
-                            type="email"
-                            className="form-control"
-                        />
-                    </div>
-                    <div className='form-group'>
-                        <label>Gender<span className='text-red-600'>*</span></label>
-                        <select className='outline-none text-gray border border-gray-300 py-2 ps-4 rounded-md'>
-                            <option selected disabled>
-                                Gender
-                            </option>
-                            <option>
-                                Male
-                            </option>
-                            <option>
-                                Female
-                            </option>
-                        </select>
-                    </div>
-                    <div className='form-group'>
-                        <label>Most Going Coffee Shop<span className='text-red-600'>  *</span></label>
-                        <select className='outline-none text-gray border border-gray-300 py-2 ps-4 rounded-md'>
-                            <option selected disabled>
-                                Most Going Coffee Shop
-                            </option>
-                            <option>
-                                Coffee Shop 1
-                            </option>
-                            <option>
-                                Coffee Shop 2
-                            </option>
-                        </select>
-                    </div>
-                    <div className='form-group'>
-                        <label className='flex items-center'><Flame size={18} color='red' />Streak <span className='text-red-600'> *</span></label>
-                        <input
-                            name='age'
-                            value={newData.age}
-                            onChange={handleChange}
-                            type="number"
-                            className="form-control"
-                        />
-                    </div>
-                    <div className='form-group'>
-                        <label>User Plan<span className='text-red-600'>  *</span></label>
-                        <select className='outline-none text-gray border border-gray-300 py-2 ps-4 rounded-md'>
-                            <option selected disabled>
-                                User Plan
-                            </option>
-                            <option>
-                                Standart
-                            </option>
-                            <option>
-                                Premium
-                            </option>
-                        </select>
-                    </div>
-
-                </div>
-                <div className='card-footer flex justify-between px-4 mt-8'>
-                    <button onClick={handleBack}
-                        className='border rounded px-4 py-2 bg-red-600 text-white font-semibold'>
-                        Geri
-                    </button>
-                    <button disabled={!isFormValid}
-                        type='button'
-                        onClick={handleSave}
-                        className='border rounded px-4 py-2 bg-green-600 text-white font-semibold'>
-                        Yarat
-                    </button>
                 </div>
             </form>
+            {isLightboxOpen && (
+                <Lightbox
+                    open={isLightboxOpen}
+                    close={() => setIsLightboxOpen(false)}
+                    slides={[{ src: lightboxImage }]}
+                />
+            )}
         </div>
-    )
-}
+    );
+};
 
-export default ProductCreate
+export default AddProductModal

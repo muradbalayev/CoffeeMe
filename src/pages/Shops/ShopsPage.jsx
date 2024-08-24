@@ -46,6 +46,7 @@ const fetchShops = async () => {
 function ShopsPage() {
   const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
+  
   const deleteMutation = useMutation({
     mutationFn: deleteShop,
     onSuccess: () => {

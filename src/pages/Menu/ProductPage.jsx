@@ -1,22 +1,42 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component"
 import { Coffee, Eye, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ProductModal from "../../Components/Menu/ProductModal";
 import Swal from "sweetalert2";
+import { useQuery } from "react-query";
+import AddProductModal from "../../Components/Menu/ProductCreate";
 
 
 
 const ProductPage = () => {
+    const { shopId } = useParams();
+    console.log(shopId)
+
     const navigate = useNavigate();
 
-    const [products, setProducts] = useState([]);
-    const [Loading, setLoading] = useState(false);
+    const fetchProducts = async () => {
+        const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/products`);
+        if (!res.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return res.json();
+    };
+
+
+    const { isLoading, isError, isSuccess, data } = useQuery(
+        "products",
+        fetchProducts
+    );
+
+    // const [products, setProducts] = useState([]);
+    // const [Loading, setLoading] = useState(false);
     const [productId, setProductId] = useState(null)
     const [modalShow, setModalShow] = useState(false);
-    const [search, setSearch] = useState('')
-    const [filter, setFilter] = useState("");
+    const [showAddModal, setShowAddModal] = useState(false);
+
+    // const [search, setSearch] = useState('')
+    // const [filter, setFilter] = useState("");
 
 
     const columns = [
@@ -72,7 +92,7 @@ const ProductPage = () => {
                     </button>
                     <button
                         className="px-3 py-2 bg-red-600 text-white rounded-md"
-                        onClick={() => handleDelete(row.id)}
+                    // onClick={() => handleDelete(row.id)}
                     >
                         <Trash2 size={18} />
                     </button>
@@ -88,33 +108,34 @@ const ProductPage = () => {
     ]
 
     // Fetch data
-    useEffect(() => {
-        axios.get('https://dummyjson.com/users')
-            .then(response => {
-                // console.log("Data from API:", response.data);
-                if (response.data && response.data.users && Array.isArray(response.data.users)) {
-                    const ProductDatas = response.data.users.map(data => ({
-                        id: data.id,
-                        firstName: data.firstName,
-                        lastName: data.lastName,
-                        age: data.age
-                    }));
-                    setProducts(ProductDatas);
-                    setFilter(ProductDatas)
-                    setLoading(true);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    }, []);
+    // useEffect(() => {
+    //     axios.get('https://dummyjson.com/users')
+    //         .then(response => {
+    //             // console.log("Data from API:", response.data);
+    //             if (response.data && response.data.users && Array.isArray(response.data.users)) {
+    //                 const ProductDatas = response.data.users.map(data => ({
+    //                     id: data.id,
+    //                     firstName: data.firstName,
+    //                     lastName: data.lastName,
+    //                     age: data.age
+    //                 }));
+    //                 setProducts(ProductDatas);
+    //                 setFilter(ProductDatas)
+    //                 setLoading(true);
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching data:', error);
+    //         });
+    // }, []);
 
-    useEffect(() => {
-        const result = products.filter((product) => {
-            return product.firstName.toLowerCase().includes(search.toLowerCase());
-        });
-        setFilter(result);
-    }, [products, search]);
+    // useEffect(() => {
+    //     const result = data.products.filter((product) => {
+    //         return product.name.toLowerCase().includes(search.toLowerCase());
+    //     });
+    //     setFilter(result);
+    // }, [data, search]);
+
 
 
     function handleModal(id) {
@@ -127,93 +148,107 @@ const ProductPage = () => {
         navigate(`/dashboard/menu/shopname/products/update/${productid}`);
     };
 
-       // DELETE METHOD
-       const handleDelete = (id) => {
-        Swal.fire({
-            title: "Əminsiniz?",
-            text: "Dəyişikliyi geri qaytara bilməyəcəksiniz!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Bəli, silin!",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                axios
-                    .delete(`https://dummyjson.com/users/${id}`)
-                    .then(() => {
-                        console.log("Məhsul Silindi!");
-                        Swal.fire({
-                            title: "Silindi!",
-                            text: `Məhsul No:${id} müvəffəqiyyətlə silindi!`,
-                            icon: "success",
-                        });
-                        setProducts(products.filter((product) => product.id !== id));
-                    })
-                    .catch((error) => {
-                        console.error(`Error deleting product:`, error);
-                        Swal.fire({
-                            title: "Error!",
-                            text: `Error deleting No ${id} product`,
-                            icon: "error",
-                        });
-                    });
-            }
-        });
-    };
+    // DELETE METHOD
+    //    const handleDelete = (id) => {
+    //     Swal.fire({
+    //         title: "Əminsiniz?",
+    //         text: "Dəyişikliyi geri qaytara bilməyəcəksiniz!",
+    //         icon: "warning",
+    //         showCancelButton: true,
+    //         confirmButtonColor: "#3085d6",
+    //         cancelButtonColor: "#d33",
+    //         confirmButtonText: "Bəli, silin!",
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             axios
+    //                 .delete(`https://dummyjson.com/users/${id}`)
+    //                 .then(() => {
+    //                     console.log("Məhsul Silindi!");
+    //                     Swal.fire({
+    //                         title: "Silindi!",
+    //                         text: `Məhsul No:${id} müvəffəqiyyətlə silindi!`,
+    //                         icon: "success",
+    //                     });
+    //                     setProducts(products.filter((product) => product.id !== id));
+    //                 })
+    //                 .catch((error) => {
+    //                     console.error(`Error deleting product:`, error);
+    //                     Swal.fire({
+    //                         title: "Error!",
+    //                         text: `Error deleting No ${id} product`,
+    //                         icon: "error",
+    //                     });
+    //                 });
+    //         }
+    //     });
+    // };
 
 
-    return (
-        Loading ?
-            <div className="wrapper">
-                <div className="sales-header flex items-center justify-between">
-                    <div className='relative p-2'>
-                        <h1 className="title md:text-4xl text-2xl">
-                            Products
-                        </h1>
-                    </div>
-                    <div className='flex gap-3 mb-1 p-3 border-green-900'>
-                        <div className="flex relative gap-3 items-center">
-                            <div className="flex relative">
-                                <input
-                                    className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
-                                    placeholder="Search"
-                                    value={search}
-                                    onChange={(event) => setSearch(event.target.value)}
-                                />
-                                <Search className="search-icon" />
-                            </div>
-                            <Link
-                                to={"/dashboard/menu/shopname/products/create"}
-                                className="text-green"
-                                style={{ borderRadius: "25%" }}
-                            >
-                                <SquarePlus size={40} />
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-                <div className='mt-4'>
-
-                    <DataTable
-                        columns={columns}
-                        data={filter}
-                        pagination
-                        highlightOnHover
-                        responsive
-                    >
-                    </DataTable>
-                </div>
-                <ProductModal
-                    productId={productId}
-                    isOpen={modalShow}
-                    onClose={() => setModalShow(false)}
-                />
-            </div> :
+    if (isLoading)
+        return (
             <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
-                <Coffee size={30} stroke='#214440' />
+                <Coffee size={30} stroke="#214440" />
                 <h1 className="title text-2xl">Loading...</h1>
             </div>
+        );
+
+    if (isError) return (
+        <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
+            <h1 className="title text-2xl">Error</h1>
+        </div>
+    );
+
+
+
+    if (isSuccess) return (
+        <div className="wrapper">
+            {showAddModal && <AddProductModal shopId={shopId} setShowAddModal={setShowAddModal} />}
+
+            <div className="sales-header flex items-center justify-between">
+                <div className='relative p-2'>
+                    <h1 className="title md:text-4xl text-2xl">
+                        Products
+                    </h1>
+                </div>
+                <div className='flex gap-3 mb-1 p-3 border-green-900'>
+                    <div className="flex relative gap-3 items-center">
+                        <div className="flex relative">
+                            <input
+                                className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
+                                placeholder="Search"
+                            // value={search}
+                            // onChange={(event) => setSearch(event.target.value)}
+                            />
+                            <Search className="search-icon" />
+                        </div>
+                        <button
+                            onClick={() => setShowAddModal(true)}
+                            className="text-green"
+                            style={{ borderRadius: "25%" }}
+                        >
+                            <SquarePlus size={40} />
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div className='mt-4'>
+
+                <DataTable
+                    columns={columns}
+                    data={data.products}
+                    pagination
+                    highlightOnHover
+                    responsive
+                >
+                </DataTable>
+            </div>
+            <ProductModal
+                productId={productId}
+                isOpen={modalShow}
+                onClose={() => setModalShow(false)}
+            />
+        </div>
+
     )
 }
 
