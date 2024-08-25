@@ -4,19 +4,37 @@ import { Coffee, Eye, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import ProductModal from "../../Components/Menu/ProductModal";
 // import Swal from "sweetalert2";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import AddProductModal from "../../Components/Menu/ProductCreate";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import EditProductModal from "../../Components/Menu/ProductUpdate";
+import Swal from "sweetalert2";
+
+const deleteShop = async (id) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_GLOBAL_URL}/api/products/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  
 
 
 const ProductPage = () => {
     const { shopId } = useParams();
 
     const [editedItem, setEditedItem] = useState(null);
+    const queryClient = useQueryClient();
 
 
     const fetchProducts = async () => {
@@ -28,6 +46,17 @@ const ProductPage = () => {
     };
 
 
+    const deleteMutation = useMutation({
+        mutationFn: deleteShop,
+        onSuccess: () => {
+          queryClient.invalidateQueries(["products"]);
+          console.log("Product deleted successfully");
+        },
+        onError: (error) => {
+          console.error("Error deleting product:", error);
+        },
+      });
+    
     const { isLoading, isError, isSuccess, data } = useQuery(
         "products",
         fetchProducts
@@ -96,6 +125,11 @@ const ProductPage = () => {
             sortable: true
         },
         {
+            name: "Discount Type",
+            selector: row => row.discountType,
+            sortable: true
+        },
+        {
             name: "Description",
             selector: row => row.description,
             sortable: true
@@ -110,13 +144,13 @@ const ProductPage = () => {
                     </button>
                     <button
                         className="px-3 py-2 bg-red-600 text-white rounded-md"
-                    // onClick={() => handleDelete(row.id)}
+                    onClick={() => handleDelete(row._id)}
                     >
                         <Trash2 size={18} />
                     </button>
                     <button style={{ backgroundColor: '#214440' }}
                         className='px-2 py-1 text-white rounded-md'
-                        onClick={() => handleModal(row.id)}>
+                        onClick={() => handleModal(row._id)}>
                         <Eye />
                     </button>
                 </div>
@@ -125,43 +159,30 @@ const ProductPage = () => {
 
     ]
 
-    // Fetch data
-    // useEffect(() => {
-    //     axios.get('https://dummyjson.com/users')
-    //         .then(response => {
-    //             // console.log("Data from API:", response.data);
-    //             if (response.data && response.data.users && Array.isArray(response.data.users)) {
-    //                 const ProductDatas = response.data.users.map(data => ({
-    //                     id: data.id,
-    //                     firstName: data.firstName,
-    //                     lastName: data.lastName,
-    //                     age: data.age
-    //                 }));
-    //                 setProducts(ProductDatas);
-    //                 setFilter(ProductDatas)
-    //                 setLoading(true);
-    //             }
-    //         })
-    //         .catch(error => {
-    //             console.error('Error fetching data:', error);
-    //         });
-    // }, []);
-
-    // useEffect(() => {
-    //     const result = data.products.filter((product) => {
-    //         return product.name.toLowerCase().includes(search.toLowerCase());
-    //     });
-    //     setFilter(result);
-    // }, [data, search]);
-
+ 
+      const handleDelete = async (shopId) => {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "This action cannot be undone!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        });
+    
+        if (result.isConfirmed) {
+          deleteMutation.mutate(shopId);
+          Swal.fire("Deleted!", "Your product has been deleted.", "success");
+        }
+      };
+    
 
 
     function handleModal(id) {
         setProductId(id)
         setModalShow(true)
     }
-
-
 
 
     if (isLoading)
