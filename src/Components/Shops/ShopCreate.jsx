@@ -163,7 +163,7 @@ const AddShopModal = ({ setShowAddModal }) => {
               <label className="form-label">Longitude</label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="longitude"
                 placeholder="Longitude"
                 value={data.longitude}
@@ -174,7 +174,7 @@ const AddShopModal = ({ setShowAddModal }) => {
               <label className="form-label">Latitude</label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="latitude"
                 placeholder="Latitude"
                 value={data.latitude}

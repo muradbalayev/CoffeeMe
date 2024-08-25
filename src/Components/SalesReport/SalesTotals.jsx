@@ -27,6 +27,7 @@ const SalesTotals = () => {
       exchange: "",
       arrowicon: <TrendingUp color="#00B69B" />,
       percentage: "1.3% Up from past week",
+      path: ''
     },
     {
       id: 3,

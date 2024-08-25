@@ -145,7 +145,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               <label className="form-label">Price</label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="price"
                 placeholder="Price"
                 value={data.price}
@@ -158,7 +158,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               <label className="form-label">Discount</label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="discount"
                 placeholder="Discount"
                 value={data.discount}

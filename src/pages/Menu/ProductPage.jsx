@@ -35,6 +35,7 @@ const ProductPage = () => {
 
     const [editedItem, setEditedItem] = useState(null);
     const queryClient = useQueryClient();
+    
 
 
     const fetchProducts = async () => {
@@ -238,7 +239,6 @@ const ProductPage = () => {
                 <DataTable
                     columns={columns}
                     data={data.products}
-                    pagination
                     highlightOnHover
                     responsive
                 >

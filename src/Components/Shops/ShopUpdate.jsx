@@ -205,7 +205,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
               <label className="form-label">Longitude</label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="longitude"
                 placeholder="Longitude"
                 value={editedData.location.coordinates[0]}
@@ -216,7 +216,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
               <label className="form-label">Latitude</label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="latitude"
                 placeholder="Latitude"
                 value={editedData.location.coordinates[1]}

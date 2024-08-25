@@ -49,6 +49,8 @@ function ShopsPage() {
 
   const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // State to store search query
+
 
   const deleteMutation = useMutation({
     mutationFn: deleteShop,
@@ -104,6 +106,10 @@ function ShopsPage() {
 
   const imgUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/shops`;
 
+  const filteredShops = data.shops.filter((shop) =>
+    shop.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (isSuccess) return (
     <div className="wrapper relative flex flex-col items-center gap-5 ">
       {showAddModal && <AddShopModal setShowAddModal={setShowAddModal} />}
@@ -118,6 +124,8 @@ function ShopsPage() {
             <input
               className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border-3 outline-none rounded-md"
               placeholder="Search"
+              value={searchQuery} 
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <Search className="search-icon" />
           </div>
@@ -143,7 +151,7 @@ function ShopsPage() {
             </tr>
           </thead>
           <tbody className="w-full">
-            {data.shops.map((shop, index) => (
+            {filteredShops.map((shop, index) => (
               <tr key={index}>
                 <th scope="row" className="col-1 border-b border-gray-300 id">
                   {index + 1}
