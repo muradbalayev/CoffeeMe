@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2';
 const PartnerCreate = () => {
 
-
-
     const [newData, setNewData] = useState({
         firstName: '',
         lastName: '',

@@ -33,7 +33,7 @@ const MenuPage = () => {
     // ]
 
     const fetchShops = async () => {
-        const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shop`);
+        const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shops`);
         if (!res.ok) {
             throw new Error("Network response was not ok");
         }

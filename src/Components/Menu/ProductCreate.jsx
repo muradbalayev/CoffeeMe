@@ -17,6 +17,8 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
         description: "",
         photo: null,
     });
+    console.log(data)
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -54,10 +56,11 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
         setIsLightboxOpen(true);
     };
 
+
     const mutation = useMutation(
         async (formData) => {
             const response = await fetch(
-                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/product/new/${shopId}`,
+                `${import.meta.env.VITE_API_GLOBAL_URL}/api/products/${shopId}`,
                 {
                     method: "POST",
                     body: formData,
@@ -167,27 +170,31 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                         </div>
                         <div className="inputContainer">
                             <label className="form-label">Discount Type</label>
-                            <input
+                            <select
                                 className="form-control"
-                                type="text"
                                 name="discountType"
-                                placeholder="Discount Type"
                                 value={data.discountType}
                                 onChange={handleChange}
-                            />
+                            >
+                                <option value="" selected disabled>Select Discount Type</option>
+                                <option value="STANDART_DISCOUNT">Standard Discount</option>
+                                <option value="SPECIAL_DISCOUNT">Special Discount</option>
+                            </select>
                         </div>
                     </div>
                     <div className="w-full flex inputRow gap-5 justify-between">
                         <div className="inputContainer">
-                            <label className="form-label">Category</label>
-                            <input
+                        <label className="form-label">Category</label>
+                            <select
                                 className="form-control"
-                                type="text"
                                 name="category"
-                                placeholder="Category"
                                 value={data.category}
                                 onChange={handleChange}
-                            />
+                            >
+                                <option value="" selected disabled>Select Category</option>
+                                <option value="drink">Drink</option>
+                                <option value="cookie">Cookie</option>
+                            </select>
                         </div>
                         <div className="inputContainer">
                             <label className="form-label">Description</label>

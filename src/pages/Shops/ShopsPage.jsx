@@ -22,7 +22,7 @@ import AddShopModal from "../../Components/Shops/ShopCreate";
 const deleteShop = async (id) => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_API_GLOBAL_URL}/api/shop/delete/${id}`,
+      `${import.meta.env.VITE_API_GLOBAL_URL}/api/shops/${id}`,
       {
         method: "DELETE",
       }
@@ -34,7 +34,7 @@ const deleteShop = async (id) => {
 };
 
 const fetchShops = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shop`);
+  const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shops`);
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }
@@ -46,7 +46,7 @@ const fetchShops = async () => {
 function ShopsPage() {
   const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
-  
+
   const deleteMutation = useMutation({
     mutationFn: deleteShop,
     onSuccess: () => {
@@ -148,9 +148,11 @@ function ShopsPage() {
                 <td className="col-1">{shop._id}</td>
                 <td className="col-2">{shop.name}</td>
                 <td className="col-1">
-                  <button className="px-3 py-2 border rounded"
+                  <button 
+                  // to={`dashboard/menu/${shop._id}/products`} 
+                  className="px-3 py-2 border"
                   style={{backgroundColor: "#214440", color: "white"}}>
-                    <Eye size={16} color="white"></Eye>
+                    <Eye size={15} color="white"></Eye>
                   </button>
                 </td>
                 <td className="col-1">
@@ -205,9 +207,9 @@ function ShopsPage() {
           </tbody>
         </table>
       </div>
-<div className="w-full mx-auto flex items-center justify-center">
+{/* <div className="w-full mx-auto flex items-center justify-center">
   <button className="px-4 py-3" style={{ backgroundColor: "#214440", color: "white"}}>Load More</button>
-</div>
+</div> */}
       <Lightbox
         open={open}
         close={() => setOpen(false)}

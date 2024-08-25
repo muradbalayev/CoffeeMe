@@ -1,7 +1,7 @@
 import {  useState } from "react";
 import DataTable from "react-data-table-component"
 import { Coffee, Eye, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import ProductModal from "../../Components/Menu/ProductModal";
 // import Swal from "sweetalert2";
 import { useQuery } from "react-query";
@@ -12,10 +12,9 @@ import AddProductModal from "../../Components/Menu/ProductCreate";
 const ProductPage = () => {
     const { shopId } = useParams();
 
-    const navigate = useNavigate();
 
     const fetchProducts = async () => {
-        const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/products`);
+        const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shops/${shopId}/products`);
         if (!res.ok) {
             throw new Error("Network response was not ok");
         }
@@ -28,14 +27,11 @@ const ProductPage = () => {
         fetchProducts
     );
 
-    // const [products, setProducts] = useState([]);
-    // const [Loading, setLoading] = useState(false);
     const [productId, setProductId] = useState(null)
     const [modalShow, setModalShow] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
 
-    // const [search, setSearch] = useState('')
-    // const [filter, setFilter] = useState("");
+
 
 
     const columns = [
@@ -75,7 +71,7 @@ const ProductPage = () => {
             name: "Actions",
             cell: (row) => (
                 <div className='flex justify-start items-center gap-2'>
-                    <button onClick={() => handleUpdateClick(row.id)}
+                    <button 
                         className='px-3 py-2 bg-blue-800 text-white rounded-md'>
                         <Pencil size={18} />
                     </button>
@@ -132,45 +128,7 @@ const ProductPage = () => {
         setModalShow(true)
     }
 
-    const handleUpdateClick = (productid) => {
-        setProductId(productid);
-        navigate(`/dashboard/menu/shopname/products/update/${productid}`);
-    };
 
-    // DELETE METHOD
-    //    const handleDelete = (id) => {
-    //     Swal.fire({
-    //         title: "Əminsiniz?",
-    //         text: "Dəyişikliyi geri qaytara bilməyəcəksiniz!",
-    //         icon: "warning",
-    //         showCancelButton: true,
-    //         confirmButtonColor: "#3085d6",
-    //         cancelButtonColor: "#d33",
-    //         confirmButtonText: "Bəli, silin!",
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             axios
-    //                 .delete(`https://dummyjson.com/users/${id}`)
-    //                 .then(() => {
-    //                     console.log("Məhsul Silindi!");
-    //                     Swal.fire({
-    //                         title: "Silindi!",
-    //                         text: `Məhsul No:${id} müvəffəqiyyətlə silindi!`,
-    //                         icon: "success",
-    //                     });
-    //                     setProducts(products.filter((product) => product.id !== id));
-    //                 })
-    //                 .catch((error) => {
-    //                     console.error(`Error deleting product:`, error);
-    //                     Swal.fire({
-    //                         title: "Error!",
-    //                         text: `Error deleting No ${id} product`,
-    //                         icon: "error",
-    //                     });
-    //                 });
-    //         }
-    //     });
-    // };
 
 
     if (isLoading)
@@ -221,7 +179,6 @@ const ProductPage = () => {
                 </div>
             </div>
             <div className='mt-4'>
-
                 <DataTable
                     columns={columns}
                     data={data.products}
