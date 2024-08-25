@@ -22,7 +22,7 @@ import AddShopModal from "../../Components/Shops/ShopCreate";
 const deleteShop = async (id) => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_API_GLOBAL_URL}/api/shop/delete/${id}`,
+      `${import.meta.env.VITE_API_GLOBAL_URL}/api/shops/${id}`,
       {
         method: "DELETE",
       }
@@ -33,7 +33,7 @@ const deleteShop = async (id) => {
 };
 
 const fetchShops = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shop`);
+  const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shops`);
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }
