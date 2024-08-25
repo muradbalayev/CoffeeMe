@@ -177,7 +177,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                                 onChange={handleChange}
                             >
                                 <option value="" selected disabled>Select Discount Type</option>
-                                <option value="STANDART_DISCOUNT">Standard Discount</option>
+                                <option value="STANDARD_DISCOUNT">Standard Discount</option>
                                 <option value="SPECIAL_DISCOUNT">Special Discount</option>
                             </select>
                         </div>
