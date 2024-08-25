@@ -11,11 +11,11 @@ import AddProductModal from "../../Components/Menu/ProductCreate";
 
 const ProductPage = () => {
     const { shopId } = useParams();
-
     const navigate = useNavigate();
+    
 
     const fetchProducts = async () => {
-        const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/products`);
+        const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shops/${shopId}/products`);
         if (!res.ok) {
             throw new Error("Network response was not ok");
         }

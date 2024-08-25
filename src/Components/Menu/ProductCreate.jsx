@@ -57,7 +57,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
     const mutation = useMutation(
         async (formData) => {
             const response = await fetch(
-                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/product/new/${shopId}`,
+                `${import.meta.env.VITE_API_GLOBAL_URL}/api/products/${shopId}`,
                 {
                     method: "POST",
                     body: formData,
