@@ -18,6 +18,7 @@ import {
 import Swal from "sweetalert2";
 import EditShopModal from "../../Components/Shops/ShopUpdate";
 import AddShopModal from "../../Components/Shops/ShopCreate";
+import { useNavigate } from "react-router-dom";
 
 const deleteShop = async (id) => {
   try {
@@ -44,6 +45,8 @@ const fetchShops = async () => {
 
 
 function ShopsPage() {
+  const navigate = useNavigate(); // Initialize useNavigate
+
   const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
 
@@ -101,7 +104,7 @@ function ShopsPage() {
 
   const imgUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/shops`;
 
-  if(isSuccess) return (
+  if (isSuccess) return (
     <div className="wrapper relative flex flex-col items-center gap-5 ">
       {showAddModal && <AddShopModal setShowAddModal={setShowAddModal} />}
       {editedItem && (
@@ -148,10 +151,10 @@ function ShopsPage() {
                 <td className="col-1">{shop._id}</td>
                 <td className="col-2">{shop.name}</td>
                 <td className="col-1">
-                  <button 
-                  // to={`dashboard/menu/${shop._id}/products`} 
-                  className="px-3 py-2 border"
-                  style={{backgroundColor: "#214440", color: "white"}}>
+                  <button
+                    onClick={() => navigate(`/dashboard/menu/${shop._id}/products`)} 
+                    className="px-3 py-2 border"
+                    style={{ backgroundColor: "#214440", color: "white" }}>
                     <Eye size={15} color="white"></Eye>
                   </button>
                 </td>
@@ -207,7 +210,7 @@ function ShopsPage() {
           </tbody>
         </table>
       </div>
-{/* <div className="w-full mx-auto flex items-center justify-center">
+      {/* <div className="w-full mx-auto flex items-center justify-center">
   <button className="px-4 py-3" style={{ backgroundColor: "#214440", color: "white"}}>Load More</button>
 </div> */}
       <Lightbox

@@ -5,33 +5,6 @@ import { useQuery } from "react-query";
 
 const MenuPage = () => {
     const navigate = useNavigate();
-    // const Shops = [
-    //     {
-    //         id: 1,
-    //         name: 'Gloria Jeans',
-    //     },
-    //     {
-    //         id: 2,
-    //         name: 'Starbucks',
-    //     },
-    //     {
-    //         id: 3,
-    //         name: 'Bagel',
-    //     },
-    //     {
-    //         id: 4,
-    //         name: 'Cafe Botanist',
-    //     },
-    //     {
-    //         id: 5,
-    //         name: 'CoffeeShop',
-    //     },
-    //     {
-    //         id: 6,
-    //         name: 'Gloria Jeans',
-    //     }
-    // ]
-
     const fetchShops = async () => {
         const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shops`);
         if (!res.ok) {
@@ -39,8 +12,6 @@ const MenuPage = () => {
         }
         return res.json();
     };
-
-
 
     const { isLoading, isError, isSuccess, data, error } = useQuery(
         "shops",

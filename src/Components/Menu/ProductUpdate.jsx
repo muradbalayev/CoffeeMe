@@ -1,133 +1,285 @@
-import axios from 'axios'
-import  { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import Swal from 'sweetalert2';
-const ProductUpdate = () => {
+import { Eye, Image, ShoppingCart, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRef } from "react";
+import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "react-query";
+import Lightbox from "yet-another-react-lightbox";
 
-    const { productid } = useParams();
-    const [newData, setNewData] = useState({
-        firstName: '',
-        lastName: '',
-        age: ''
-    })
-    const [loading, setLoading] = useState(false)
-    const navigate = useNavigate();
+const EditProductModal = ({ shopId, data, setShowEditModal }) => {
+    const PhotoFileRef = useRef(null);
 
-    useEffect(() => {
-        axios.get(`https://dummyjson.com/users/${productid}`)
-            .then(response => {
-                const data = response.data;
-                setNewData({
-                    firstName: data.firstName || '',
-                    lastName: data.lastName || '',
-                    age: data.age || ''
-                });
-                setLoading(true);
-            })
-            .catch(error => {
-                console.error('Error fetching product data:', error);
-            });
-    }, [productid]);
+    const [editedData, setEditedData] = useState(data);
+    console.log(editedData)
+    const queryClient = useQueryClient();
 
     const handleChange = (e) => {
-        setNewData({ ...newData, [e.target.name]: e.target.value })
+        const { name, value } = e.target;
+
+        setEditedData({
+            ...editedData,
+            [name]: value,
+        });
     }
 
-    const handleSave = () => {
-        Swal.fire({
-            title: "Dəyişiklik Etmək İstədiyindən Əminsən?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Bəli, yadda saxla!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                saveData();
-            }
-        });
+
+    const [photoPreview, setPhotoPreview] = useState(null);
+    const [photoFileName, setPhotoFileName] = useState("");
+
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [lightboxImage, setLightboxImage] = useState(null);
+
+    useEffect(() => {
+        const imageUrl = `${import.meta.env.VITE_API_GLOBAL_URL
+            }/public/uploads/products`;
+
+        if (data.photo) {
+            setPhotoFileName(data.photo);
+
+            setPhotoPreview(
+                `${imageUrl}/${shopId}/${data.photo}`
+            );
+        }
+
+    }, [data, shopId]);
+
+    const handleFileChange = (e) => {
+        const { name } = e.target;
+        const file = e.target.files[0];
+        const fileURL = file ? URL.createObjectURL(file) : null;
+
+        if (name === "photo") {
+            setPhotoPreview(null);
+            setPhotoFileName("");
+
+            setPhotoPreview(fileURL);
+            setPhotoFileName(file && file.name);
+        }
+
+        setEditedData((prevState) => ({
+            ...prevState,
+            [name]: file,
+        }));
     };
 
-    const handleBack = () => {
-        navigate(`/dashboard/menu/shopname/products`);
-    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData();
 
-    const saveData = () => {
-        if (!newData.firstName || !newData.lastName || !newData.age) {
-            alert('Bütün xanaları doldurun!');
+        if (
+            !editedData.name ||
+            !editedData.price ||
+            !editedData.category ||
+            !editedData.discount ||
+            !editedData.discountType ||
+            !editedData.description ||
+            !photoFileName
+        ) {
+            toast.error('Fill all inputs!');
             return;
         }
 
-        axios.put(`https://dummyjson.com/users/${productid}`, newData)
-            .then(response => {
-                console.log('Product changed successfully:', response.data);
-                navigate(`/dashboard/partner`);
-                Swal.fire({
-                    title: "Yadda Saxlanıldı!",
-                    icon: "success"
-                });
-            })
-            .catch(error => {
-                console.error('Xeta:', error);
-                alert('Xeta.');
-            });
+        // Append all the edited data to the formData
+        Object.keys(editedData).forEach((key) => {
+            if (editedData[key] !== undefined && editedData[key] !== null) {
+                formData.append(key, editedData[key]);
+            }
+        });
+
+        mutation.mutate(formData);
+        toast.success("Product Edited Successfully!");
     };
 
+    const handleEyeClick = (image) => {
+        setLightboxImage(image);
+        setIsLightboxOpen(true);
+    };
 
-    const isFormValid = newData.firstName && newData.lastName && newData.age;
+    const mutation = useMutation(
+        async (formData) => {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_GLOBAL_URL}/api/products/${editedData._id
+                }`,
+                {
+                    method: "PUT",
+                    body: formData,
+                }
+            );
+            return await response.json();
+        },
+        {
+            onSuccess: (data) => {
+                queryClient.invalidateQueries("products");
+                setShowEditModal(false);
+                console.log("Procuct edited successfully:", data);
+            },
+            onError: (error) => {
+                console.error("Error adding product:", error);
+            },
+        }
+    );
 
     return (
-        <div className='card m-4 overflow-hidden flex flex-col border rounded-lg pb-3 min-h-[670px]'>
-            <div className="header px-4 py-3 border-b text-white font-semibold">
-                Dəyişiklik Et
-            </div>
-            {loading ?
-                <form className='flex flex-col flex-grow'>
-
-                    <div className='card-body flex-grow'
-                        style={{ overflowY: "visible" }}>
-                        <div className='form-group'>
-                            <label>First Name<span className='text-red-600'>*</span></label>
-                            <input type="text"
-                                name='firstName'
-                                value={newData.firstName}
-                                onChange={handleChange}
-                                className="form-control" />
-                        </div>
-                        <div className='form-group'>
-                            <label>Last Name<span className='text-red-600'>*</span></label>
+        <div
+            data-name="form-container"
+            onClick={(e) => {
+                e.target.dataset.name && setShowEditModal(false);
+            }}
+            className="addModalContainer z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
+        >
+            <form
+                className="addModalForm overflow-hidden w-3/4 items-center justify-center flex-col flex relative"
+                onSubmit={handleSubmit}
+            >
+                <X
+                    color="red"
+                    size={30}
+                    className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
+                    onClick={() => setShowEditModal(false)}
+                />
+                <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
+                    Edit Product
+                </h2>
+                <div className="w-full gap-3 flex flex-col">
+                    <div className="w-full flex inputRow gap-5 justify-between">
+                        <div className="inputContainer">
+                            <label className="form-label">Name</label>
                             <input
-                                name='lastName'
-                                value={newData.lastName}
-                                onChange={handleChange}
+                                className="form-control"
                                 type="text"
-                                className="form-control" />
-                        </div>
-                        <div className='form-group'>
-                            <label>Age<span className='text-red-600'>*</span></label>
-                            <input
-                                name='age'
-                                value={newData.age}
+                                name="name"
+                                placeholder="Name"
+                                value={editedData.name}
                                 onChange={handleChange}
+                            />
+                        </div>
+                        <div className="inputContainer">
+                            <label className="form-label">Price</label>
+                            <input
+                                className="form-control"
                                 type="number"
-                                className="form-control" />
+                                name="price"
+                                placeholder="Price"
+                                value={editedData.price}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
+                        <div className="inputContainer">
+                            <label className="form-label">Discount</label>
+                            <input
+                                className="form-control"
+                                type="number"
+                                name="discount"
+                                placeholder="Discount"
+                                value={editedData.discount}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="inputContainer">
+                            <label className="form-label">Discount Type</label>
+                            <select
+                                className="form-control"
+                                name="discountType"
+                                value={data.discountType}
+                                onChange={handleChange}
+                            >
+                                <option value="" selected disabled>
+                                    Select Discount Type
+                                </option>
+                                <option value="STANDARD_DISCOUNT">Standard Discount</option>
+                                <option value="SPECIAL_DISCOUNT">Special Discount</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
+
+                        <div className="inputContainer">
+                            <label className="form-label">Category</label>
+                            <select
+                                className="form-control"
+                                name="category"
+                                value={editedData.category}
+                                onChange={handleChange}
+                            >
+                                <option value="" selected disabled>
+                                    Select Category
+                                </option>
+                                <option value="drink">Drink</option>
+                                <option value="cookie">Cookie</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
+
+                        <div className="inputContainer">
+                            <label className="form-label">Description</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="description"
+                                placeholder="Description"
+                                value={editedData.description}
+                                onChange={handleChange}
+                            />
                         </div>
                     </div>
 
-                    <div className='card-footer flex justify-between px-4'>
-                    <button onClick={handleBack}
-                        className='border rounded px-4 py-2 bg-red-600 text-white font-semibold'>
-                        Geri
-                    </button>
-                        <button disabled={!isFormValid} type='button' onClick={handleSave} className='border rounded px-4 py-2 bg-green-600 text-white font-semibold'>
-                            Dəyiş
-                        </button>
-                    </div>
-                </form>
-                : null}
-        </div>
+                    <div className="w-full flex flex-wrap inputRow gap-5 justify-between">
+                        <div className="inputContainer">
+                            <label className="form-label">Photo</label>
+                            <div
+                                className="form-control cursor-pointer flex justify-between items-center gap-2"
+                                onClick={() => PhotoFileRef.current.click()}
+                            >
+                                <div className="flex items-center gap-2 overflow-hidden">
+                                    <p className="select-none">{photoFileName} </p>
+                                    <Image color="#214440" />
+                                    <input
+                                        type="file"
+                                        name="photo"
+                                        hidden
+                                        ref={PhotoFileRef}
+                                        onChange={handleFileChange}
+                                    />
+                                </div>
+                                {photoPreview && (
+                                    <Eye
+                                        color="#214440"
+                                        className="cursor-pointer"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleEyeClick(photoPreview);
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        </div>
 
-    )
+                    </div>
+
+                    <div className="flex mt-10 gap-5 justify-center">
+                        <div>
+                            <button
+                                style={{ backgroundColor: "#214440" }}
+                                type="submit"
+                                className="title px-4 py-2 flex items-center rounded text-white font-bold gap-2"
+                            >
+                                Edit Shop <ShoppingCart color="white" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {isLightboxOpen && (
+                <Lightbox
+                    open={isLightboxOpen}
+                    close={() => setIsLightboxOpen(false)}
+                    slides={[{ src: lightboxImage }]}
+                />
+            )}
+        </div>
+    );
 }
 
-export default ProductUpdate
+export default EditProductModal;

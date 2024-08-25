@@ -132,7 +132,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
   const mutation = useMutation(
     async (formData) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_GLOBAL_URL}/api/shop/edit/${
+        `${import.meta.env.VITE_API_GLOBAL_URL}/api/shops/${
           editedData._id
         }`,
         {

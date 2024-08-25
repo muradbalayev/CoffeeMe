@@ -1,16 +1,22 @@
-import {  useState } from "react";
+import { useState } from "react";
 import DataTable from "react-data-table-component"
 import { Coffee, Eye, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ProductModal from "../../Components/Menu/ProductModal";
 // import Swal from "sweetalert2";
 import { useQuery } from "react-query";
 import AddProductModal from "../../Components/Menu/ProductCreate";
-
+import Lightbox from "yet-another-react-lightbox";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import EditProductModal from "../../Components/Menu/ProductUpdate";
 
 
 const ProductPage = () => {
     const { shopId } = useParams();
+
+    const [editedItem, setEditedItem] = useState(null);
 
 
     const fetchProducts = async () => {
@@ -31,13 +37,23 @@ const ProductPage = () => {
     const [modalShow, setModalShow] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
 
+    const [open, setOpen] = useState(false);
+    const [imageSrc, setImageSrc] = useState("");
 
+    const handlePhotoClick = (par) => {
+        //Lightbox
+        const url = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/products/${shopId}/${par}`;
+        setImageSrc(url);
+        setOpen(true);
+    };
 
+    //Photo Preview
+    const imgUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/products/${shopId}`;
 
     const columns = [
         {
             name: "Id",
-            selector: row => row.id,
+            selector: (row, index) => index + 1,
             sortable: true
         },
         {
@@ -49,6 +65,23 @@ const ProductPage = () => {
             selector: row => row.price
         },
         {
+            name: "Photo",
+            cell: (row) => (
+                <button
+                    className="px-1 py-1 border rounded max-w-16 my-1"
+                    onClick={() => handlePhotoClick(row.photo)}
+                >
+                    {row.photo && (
+                        <img
+                            src={`${imgUrl}/${row.photo}`}
+                            alt="Shop Photo"
+                            className="object-contain h-9 w-9"
+                        />
+                    )}{" "}
+                </button>
+            )
+        },
+        {
             name: "Category",
             selector: row => row.category,
         },
@@ -58,7 +91,7 @@ const ProductPage = () => {
             sortable: true
         },
         {
-            name: "Discounted",
+            name: "Discount",
             selector: row => row.discount,
             sortable: true
         },
@@ -71,7 +104,7 @@ const ProductPage = () => {
             name: "Actions",
             cell: (row) => (
                 <div className='flex justify-start items-center gap-2'>
-                    <button 
+                    <button onClick={() => setEditedItem(row)}
                         className='px-3 py-2 bg-blue-800 text-white rounded-md'>
                         <Pencil size={18} />
                     </button>
@@ -150,7 +183,9 @@ const ProductPage = () => {
     if (isSuccess) return (
         <div className="wrapper">
             {showAddModal && <AddProductModal shopId={shopId} setShowAddModal={setShowAddModal} />}
-
+            {editedItem && (
+                <EditProductModal shopId={shopId} data={editedItem} setShowEditModal={setEditedItem} />
+            )}
             <div className="sales-header flex items-center justify-between">
                 <div className='relative p-2'>
                     <h1 className="title md:text-4xl text-2xl">
@@ -192,6 +227,12 @@ const ProductPage = () => {
                 productId={productId}
                 isOpen={modalShow}
                 onClose={() => setModalShow(false)}
+            />
+            <Lightbox
+                open={open}
+                close={() => setOpen(false)}
+                slides={[{ src: imageSrc }]}
+                plugins={[Thumbnails][Fullscreen]}
             />
         </div>
 
