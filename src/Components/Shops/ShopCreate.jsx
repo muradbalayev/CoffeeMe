@@ -83,6 +83,22 @@ const AddShopModal = ({ setShowAddModal }) => {
   );
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (
+      !data.name ||
+      !data.address ||
+      !data.longitude ||
+      !data.latitude ||
+      !photoFileName ||
+      !logoFileName ||
+      photoFileName === "Choose File" ||
+      logoFileName === "Choose File"
+  ) {
+      toast.error('Fill all the inputs');
+      return;
+  }
+
+
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
       if (data[key] !== undefined && data[key] !== null) {

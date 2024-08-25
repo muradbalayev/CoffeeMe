@@ -90,7 +90,7 @@ function Sidebar() {
 
   return (
     <div
-      className={`sidebar h-screen flex flex-col items-center gap-4 pb-5 pt-3 text-white ${isSidebarOpen ? `md:w-56 w-40 ` : "w-16"}`}
+      className={`sidebar relative z-10 h-screen flex flex-col items-center gap-4 pb-5 pt-3 text-white ${isSidebarOpen ? `md:w-56 w-40 ` : "w-16"}`}
     >
       <div className='w-full relative flex items-center px-3'>
         <motion.button
@@ -120,7 +120,7 @@ function Sidebar() {
           )}
         </AnimatePresence>
       </div>
-      <nav className="links w-full verflow-y-scroll mt-8 flex flex-col">
+      <nav className="links w-full overflow-y-scroll flex flex-col">
         <Link ref={dropdownRef} onClick={dropdownToggle} end='true'
           className={`lg:text-sm text-xs px-6 py-3 relative group ${isUsersActive ? "active" : ""}`}>
           <User size={20} style={{ minWidth: "20px" }} />

@@ -27,6 +27,7 @@ const deleteShop = async (id) => {
         method: "DELETE",
       }
     );
+    console.log(res);
   } catch (error) {
     console.error(error);
   }
@@ -45,6 +46,7 @@ const fetchShops = async () => {
 function ShopsPage() {
   const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
+  
   const deleteMutation = useMutation({
     mutationFn: deleteShop,
     onSuccess: () => {
@@ -99,7 +101,7 @@ function ShopsPage() {
 
   const imgUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/shops`;
 
-  return (
+  if(isSuccess) return (
     <div className="wrapper relative flex flex-col items-center gap-5 ">
       {showAddModal && <AddShopModal setShowAddModal={setShowAddModal} />}
       {editedItem && (
@@ -203,7 +205,9 @@ function ShopsPage() {
           </tbody>
         </table>
       </div>
-
+<div className="w-full mx-auto flex items-center justify-center">
+  <button className="px-4 py-3" style={{ backgroundColor: "#214440", color: "white"}}>Load More</button>
+</div>
       <Lightbox
         open={open}
         close={() => setOpen(false)}

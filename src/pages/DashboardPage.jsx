@@ -46,9 +46,9 @@ function DashboardPage() {
 
             <Route path="/menu" element={<MenuPage />} />
 
-            <Route path="/menu/shopname/products" element={<ProductPage/>} />
-            <Route path="/menu/shopname/products/create" element={<ProductCreate />} />
-            <Route path="/menu/shopname/products/update/:productid" element={<ProductUpdate />} />
+            <Route path="/menu/:shopId/products" element={<ProductPage/>} />
+            <Route path="/menu/:shopId/products/create" element={<ProductCreate />} />
+            <Route path="/menu/:shopId/products/update/:productid" element={<ProductUpdate />} />
             
 
           </Routes>
