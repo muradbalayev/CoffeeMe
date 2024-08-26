@@ -77,7 +77,7 @@ const ProductPage = () => {
       sortable: true
     },
     {
-      name: "Product Name",
+      name: "Partner Name",
       selector: row => row.name
     },
     {
@@ -179,7 +179,7 @@ const ProductPage = () => {
       <div className="sales-header flex items-center justify-between">
         <div className='relative p-2'>
           <h1 className="title md:text-4xl text-2xl">
-            Products
+            Partners
           </h1>
         </div>
         <div className='flex gap-3 mb-1 p-3 border-green-900'>
@@ -193,13 +193,7 @@ const ProductPage = () => {
               />
               <Search className="search-icon" />
             </div>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="text-green"
-              style={{ borderRadius: "25%" }}
-            >
-              <SquarePlus size={40} />
-            </button>
+           
           </div>
         </div>
       </div>
