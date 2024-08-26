@@ -63,7 +63,7 @@ const ProductPage = () => {
         fetchProducts
     );
 
-    const [productId, setProductId] = useState(null)
+    const [product, setProduct] = useState(null)
     const [modalShow, setModalShow] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
 
@@ -80,6 +80,11 @@ const ProductPage = () => {
     //Photo Preview
     const imgUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/products/${shopId}`;
 
+    const discountTypeMap = {
+        STANDARD_DISCOUNT: 'Standard Discount',
+        SPECIAL_DISCOUNT: 'Special Discount',
+    };
+
     const columns = [
         {
             name: "Id",
@@ -92,7 +97,7 @@ const ProductPage = () => {
         },
         {
             name: "Price",
-            selector: row => row.price
+            selector: row => `${row.price} ₼`,
         },
         {
             name: "Photo",
@@ -117,17 +122,17 @@ const ProductPage = () => {
         },
         {
             name: "Discounted Price",
-            selector: row => row.discountedPrice,
+            selector: row => `${row.discountedPrice} ₼`,
             sortable: true
         },
         {
             name: "Discount",
-            selector: row => row.discount,
+            selector: row => `${row.discount} %`,
             sortable: true
         },
         {
             name: "Discount Type",
-            selector: row => row.discountType,
+            selector: row => discountTypeMap[row.discountType] || 'Unknown Discount Type',
             sortable: true
         },
         {
@@ -151,7 +156,7 @@ const ProductPage = () => {
                     </button>
                     <button style={{ backgroundColor: '#214440' }}
                         className='px-2 py-1 text-white rounded-md'
-                        onClick={() => handleModal(row._id)}>
+                        onClick={() => handleModal(row)}>
                         <Eye />
                     </button>
                 </div>
@@ -180,8 +185,8 @@ const ProductPage = () => {
     
 
 
-    function handleModal(id) {
-        setProductId(id)
+    function handleModal(row) {
+        setProduct(row)
         setModalShow(true)
     }
 
@@ -245,7 +250,7 @@ const ProductPage = () => {
                 </DataTable>
             </div>
             <ProductModal
-                productId={productId}
+                product={product}
                 isOpen={modalShow}
                 onClose={() => setModalShow(false)}
             />

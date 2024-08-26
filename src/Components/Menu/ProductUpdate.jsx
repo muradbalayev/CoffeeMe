@@ -181,7 +181,7 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                             <select
                                 className="form-control"
                                 name="discountType"
-                                value={data.discountType}
+                                value={editedData.discountType}
                                 onChange={handleChange}
                             >
                                 <option value="" selected disabled>
