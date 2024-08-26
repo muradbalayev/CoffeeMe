@@ -1,127 +1,171 @@
-import axios from 'axios'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Swal from 'sweetalert2';
-const PartnerCreate = () => {
+import {  ShoppingCart, X } from "lucide-react";
+import {  useState } from "react";
+import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "react-query";
 
-    const [newData, setNewData] = useState({
-        firstName: '',
-        lastName: '',
-        age: ''
-    })
+const AddPartnerModal = ({  setShowAddModal }) => {
 
-    const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [data, setData] = useState({
+    name: "",
+    address: "",
+    username: "",
+    phone: "",
+    method: "",
+  });
+
+  console.log(data);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData({
+      ...data,
+      [name]: value,
+    });
+  };
 
 
-    const handleChange = (e) => {
-        setNewData({ ...newData, [e.target.name]: e.target.value })
-    }
 
-    const handleSave = () => {
-        Swal.fire({
-            title: "Yadda Saxlamaq İstədiyindən Əminsən?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Bəli, yadda saxla!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                saveData();
-            }
-        });
-    };
-
-    const saveData = () => {
-        if (!newData.firstName || !newData.lastName || !newData.age) {
-            alert('Bütün xanaları doldurun!');
-            return;
+  const mutation = useMutation(
+    async (formData) => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_GLOBAL_URL}/api/partnershops`,
+        {
+          method: "POST",
+          body: formData,
         }
-//partner olaraq deyisecek
-        axios.post(`https://dummyjson.com/users/add`, newData)
-            .then(response => {
-                console.log('User added successfully:', response.data);
-                navigate('/dashboard/partner');
-                Swal.fire({
-                    title: "Yadda Saxlanıldı!",
-                    icon: "success"
-                });
-            })
-            .catch(error => {
-                console.error('Xeta:', error);
-                alert('Xeta.');
-            });
-    };
+      );
+      return await response.json();
+    },
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries("shops");
+        setShowAddModal(false);
+        console.log("Partner added successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Error adding Partner:", error);
+      },
+    }
+  );
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-
-    const handleBack = () => {
-        navigate(`/dashboard/partner`)
+    if (
+      !data.name ||
+      !data.address ||
+      !data.username ||
+      !data.phone ||
+      !data.method
+ 
+    ) {
+      toast.error("Fill all the inputs");
+      return;
     }
 
+    const formData = new FormData();
+    Object.keys(data).forEach((key) => {
+      if (data[key] !== undefined && data[key] !== null) {
+        formData.append(key, data[key]);
+      }
+    });
+    mutation.mutate(formData);
+    toast.success("Partner Created Successfully!");
+    // Submit formData using useMutation
+  };
 
-    const isFormValid = newData.firstName && newData.lastName && newData.age;
+  console.log(data);
 
-    return (
-        <div className='card overflow-hidden m-4 flex flex-col border rounded-lg pb-3 min-h-[670px]'>
-            <div className="header px-4 py-3 border-b text-white font-semibold">
-                Yarat
+  return (
+    <div
+      data-name="form-container"
+      onClick={(e) => {
+        e.target.dataset.name && setShowAddModal(false);
+      }}
+      className="addModalContainer overflow-hidden z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
+    >
+      <form
+        className="addModalForm overflow-hidden w-3/4 items-center justify-center flex-col flex relative"
+        onSubmit={handleSubmit}
+      >
+        <X
+          color="red"
+          size={30}
+          className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
+          onClick={() => setShowAddModal(false)}
+        />
+        <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
+          Add Product
+        </h2>
+        <div className="w-full gap-3 flex flex-col">
+          <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
+              <label className="form-label">Name</label>
+              <input
+                className="form-control"
+                type="text"
+                name="name"
+                placeholder="Name"
+                value={data.name}
+                onChange={handleChange}
+              />
             </div>
-            <form className='flex flex-col flex-grow'>
-
-                <div className='card-body bg-white flex-grow'>
-                    <div className='form-group'>
-                        <label>Ad<span className='text-red-600'>*</span></label>
-                        <input type="text"
-                            name='firstName'
-                            value={newData.firstName}
-                            onChange={handleChange}
-                            className="border rounded" />
-                    </div>
-                    <div className='form-group'>
-                        <label>Soyad<span className='text-red-600'>*</span></label>
-                        <input
-                            name='lastName'
-                            value={newData.lastName}
-                            onChange={handleChange}
-                            type="text"
-                            className="form-control" />
-                    </div>
-                    <div className='form-group'>
-                        <label>Email<span className='text-red-600'>*</span></label>
-                        <input
-                            name='age'
-                            value={newData.age}
-                            onChange={handleChange}
-                            type="email"
-                            className="form-control"
-                        />
-                    </div>
-                    <div className='form-group'>
-                        <label>Nömrə<span className='text-red-600'>*</span></label>
-                        <input
-                            name='age'
-                            value={newData.age}
-                            onChange={handleChange}
-                            type="text"
-                            className="form-control"
-                        />
-                    </div>
-                </div>
-                <div className='card-footer flex justify-between px-4'>
-                    <button onClick={handleBack}
-                        className='border rounded px-4 py-2 bg-red-600 text-white font-semibold'>
-                        Geri
-                    </button>
-                    <button disabled={!isFormValid}
-                        type='button'
-                        onClick={handleSave}
-                        className='border rounded px-4 py-2 bg-green-600 text-white font-semibold'>
-                        Yarat
-                    </button>
-                </div>
-            </form>
+            <div className="inputContainer">
+              <label className="form-label">Address</label>
+              <input
+                className="form-control"
+                type="text"
+                name="address"
+                placeholder="Address"
+                value={data.address}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
+              <label className="form-label">Contact Number</label>
+              <input
+                className="form-control"
+                type="number"
+                name="phone"
+                placeholder="Contact Number"
+                value={data.phone}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label">Withdraw Method</label>
+              <select
+                className="form-control"
+                name="method"
+                value={data.method}
+                onChange={handleChange}
+              >
+                <option value="" defaultValue={"Select Discount Type"} disabled>
+                  Select Withdraw Method
+                </option>
+                <option value="card">Card</option>
+                <option value="cash">Cash</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex mt-10 justify-center">
+            <div>
+              <button
+                style={{ backgroundColor: "#214440" }}
+                type="submit"
+                className="title px-4 py-2 flex items-center rounded text-white font-bold gap-2"
+              >
+                Add Product <ShoppingCart color="white" />
+              </button>
+            </div>
+          </div>
         </div>
-    )
-}
+      </form>
+  
+    </div>
+  );
+};
 
-export default PartnerCreate
+export default AddPartnerModal;

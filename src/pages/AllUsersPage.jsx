@@ -3,7 +3,7 @@ import UserTable from "../Components/Users/UserTable";
 
 
 const fetchUsers = async () => {
-    const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/users`);
+    const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/users`);
     if (!res.ok) {
         throw new Error("Network response was not ok");
     }
@@ -15,7 +15,6 @@ const AllUsersPage = () => {
     {
         id: 1,
         title: "Users",
-        path: `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/users`,
         icon: <Users size={30} color="#214440" />,
         type: 'users'
     }
@@ -26,7 +25,6 @@ const AllUsersPage = () => {
             fetchUsers={fetchUsers}
             key={users.id}
             title={users.title}
-            path={users.path}
             icon={users.icon}
             usertype={users.type}
         />

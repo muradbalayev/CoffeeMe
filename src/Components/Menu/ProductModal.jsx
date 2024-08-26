@@ -6,7 +6,7 @@ const ProductModal = ({ product, isOpen, onClose }) => {
     return (
         <Modal open={isOpen} onClose={onClose} center>
             <div className="p-12">
-                <h2 className="text-xl font-bold mb-4">User Details</h2>
+                <h2 className="text-xl font-bold mb-4">Product Details</h2>
                 {product ? (
                     <div>
                         <p><strong>ID:</strong> {product._id}</p>

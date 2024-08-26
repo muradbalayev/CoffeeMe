@@ -29,7 +29,6 @@ const deleteShop = async (id) => {
 
   
 
-
 const ProductPage = () => {
     const { shopId } = useParams();
 

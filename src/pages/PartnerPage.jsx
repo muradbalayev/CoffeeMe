@@ -1,73 +1,125 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DataTable from "react-data-table-component"
-import { Coffee, Eye, Pencil, Search, SquarePlus } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Coffee, Eye, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
+// import Swal from "sweetalert2";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import Swal from "sweetalert2";
+import AddPartnerModal from "../Components/Partners/PartnerCreate";
+import EditPartnerModal from "../Components/Partners/PartnerUpdate";
 import PartnerModal from "../Components/Partners/PartnerModal";
 
+const deleteShop = async (id) => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_GLOBAL_URL}/api/partners/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+    console.log(res);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
-const PartnerPage = () => {
-  const navigate = useNavigate();
 
-  const [partners, setPartners] = useState([]);
-  const [Loading, setLoading] = useState(false);
-  const [partnerId, setPartnerId] = useState(null)
+const ProductPage = () => {
+
+  const [editedItem, setEditedItem] = useState(null);
+  const queryClient = useQueryClient();
+
+
+
+  const fetchPartners = async () => {
+    const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/partners`);
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return res.json();
+  };
+
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteShop,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["partners"]);
+      console.log("Partner deleted successfully");
+    },
+    onError: (error) => {
+      console.error("Error deleting partner:", error);
+    },
+  });
+
+  const { isLoading, isError, isSuccess, data } = useQuery(
+    "partners",
+    fetchPartners
+  );
+
+  const [partner, setPartner] = useState(null)
   const [modalShow, setModalShow] = useState(false);
-  const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState("");
+  const [showAddModal, setShowAddModal] = useState(false);
 
+
+  //Photo Preview
+
+  // const discountTypeMap = {
+  //   STANDARD_DISCOUNT: 'Standard Discount',
+  //   SPECIAL_DISCOUNT: 'Special Discount',
+  // };
 
   const columns = [
     {
       name: "Id",
-      selector: row => row.id,
+      selector: (row, index) => index + 1,
       sortable: true
     },
     {
-      name: "Shop Name",
-      selector: row => row.firstName
+      name: "Product Name",
+      selector: row => row.name
+    },
+    {
+      name: "Address",
+      selector: row => row.address,
     },
     {
       name: "Username",
-      selector: row => row.firstName
-    },
-    {
-      name: "Adres",
-      selector: row => row.age,
+      selector: row => row.username,
     },
     {
       name: "Contact Number",
-      selector: row => row.firstName,
+      selector: row => row.phone,
       sortable: true
     },
-    {
-      name: "Withdraw Method",
-      selector: row => row.age,
-      sortable: true
-    },
-    {
-      name: "Rating",
-      selector: row => row.age,
-      sortable: true
-    },
-
-    {
-      name: "Password",
-      selector: row => row.age,
-    },
+    // {
+    //   name: "Withdraw Method",
+    //   selector: row => row.method,
+    //   sortable: true
+    // },
+    // {
+    //   name: "Discount Type",
+    //   selector: row => discountTypeMap[row.discountType] || 'Unknown Discount Type',
+    //   sortable: true
+    // },
     {
       name: "Actions",
       cell: (row) => (
         <div className='flex justify-start items-center gap-2'>
-          <button onClick={() => handleUpdateClick(row.id)}
+          <button onClick={() => setEditedItem(row)}
             className='px-3 py-2 bg-blue-800 text-white rounded-md'>
             <Pencil size={18} />
           </button>
-
           <button
-           className='px-2 py-1 text-white rounded-md bg-green-800'
-            onClick={() => handleModal(row.id)}>
+            className="px-3 py-2 bg-red-600 text-white rounded-md"
+            onClick={() => handleDelete(row._id)}
+          >
+            <Trash2 size={18} />
+          </button>
+          <button style={{ backgroundColor: '#214440' }}
+            className='px-2 py-1 text-white rounded-md'
+            onClick={() => handleModal(row)}>
             <Eye />
           </button>
         </div>
@@ -76,100 +128,98 @@ const PartnerPage = () => {
 
   ]
 
-  // Fetch data
-  useEffect(() => {
-    axios.get('https://dummyjson.com/users')
-      .then(response => {
-        // console.log("Data from API:", response.data);
-        if (response.data && response.data.users && Array.isArray(response.data.users)) {
-          const PartnerDatas = response.data.users.map(data => ({
-            id: data.id,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            age: data.age
-          }));
-          setPartners(PartnerDatas);
-          setFilter(PartnerDatas)
-          setLoading(true);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
 
-  useEffect(() => {
-    const result = partners.filter((partner) => {
-      return partner.firstName.toLowerCase().includes(search.toLowerCase());
+  const handleDelete = async (partnerId) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     });
-    setFilter(result);
-  }, [partners, search]);
 
-
-  function handleModal(id) {
-    setPartnerId(id)
-    setModalShow(true)
-  }
-
-  const handleUpdateClick = (partnerid) => {
-    setPartnerId(partnerid);
-    navigate(`/dashboard/partner/update/${partnerid}`);
+    if (result.isConfirmed) {
+      deleteMutation.mutate(partnerId);
+      Swal.fire("Deleted!", "Your partner has been deleted.", "success");
+    }
   };
 
 
 
-  return (
-    Loading ?
-      <div className="wrapper">
-        <div className="sales-header flex items-center justify-between">
-          <div className='relative p-2'>
-            <h1 className="title md:text-4xl text-2xl">
-              Partners
-            </h1>
-          </div>
-          <div className='flex gap-3 mb-1 p-3 border-green-900'>
-            <div className="flex relative gap-3 items-center">
-              <div className="flex relative">
-                <input
-                  className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
-                  placeholder="Search"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
-                <Search className="search-icon" />
-              </div>
-              <Link
-                to={"/dashboard/partner/create"}
-                className="text-green"
-                style={{ borderRadius: "25%" }}
-              >
-                <SquarePlus size={40} />
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className='mt-4'>
+  function handleModal(row) {
+    setPartner(row)
+    setModalShow(true)
+  }
 
-          <DataTable
-            columns={columns}
-            data={filter}
-            pagination
-            highlightOnHover
-            responsive
-          >
-          </DataTable>
-        </div>
-        <PartnerModal
-          partnerId={partnerId}
-          isOpen={modalShow}
-          onClose={() => setModalShow(false)}
-        />
-      </div> :
+
+  if (isLoading)
+    return (
       <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
-        <Coffee size={30} stroke='#214440' />
+        <Coffee size={30} stroke="#214440" />
         <h1 className="title text-2xl">Loading...</h1>
       </div>
+    );
+
+  if (isError) return (
+    <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
+      <h1 className="title text-2xl">Error</h1>
+    </div>
+  );
+
+
+
+  if (isSuccess) return (
+    <div className="wrapper">
+      {showAddModal && <AddPartnerModal setShowAddModal={setShowAddModal} />}
+      {editedItem && (
+        <EditPartnerModal data={editedItem} setShowEditModal={setEditedItem} />
+      )}
+      <div className="sales-header flex items-center justify-between">
+        <div className='relative p-2'>
+          <h1 className="title md:text-4xl text-2xl">
+            Products
+          </h1>
+        </div>
+        <div className='flex gap-3 mb-1 p-3 border-green-900'>
+          <div className="flex relative gap-3 items-center">
+            <div className="flex relative">
+              <input
+                className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
+                placeholder="Search"
+              // value={search}
+              // onChange={(event) => setSearch(event.target.value)}
+              />
+              <Search className="search-icon" />
+            </div>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="text-green"
+              style={{ borderRadius: "25%" }}
+            >
+              <SquarePlus size={40} />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className='mt-4'>
+        <DataTable
+          columns={columns}
+          data={data.partners}
+          highlightOnHover
+          responsive
+        >
+        </DataTable>
+      </div>
+      <PartnerModal
+        partner={partner}
+        isOpen={modalShow}
+        onClose={() => setModalShow(false)}
+      />
+    </div>
+
   )
 }
 
-export default PartnerPage
+export default ProductPage

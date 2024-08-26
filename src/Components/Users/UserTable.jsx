@@ -19,9 +19,7 @@ const UserTable = ({ fetchUsers, title, icon, usertype }) => {
         "users",
         fetchUsers
     );
-    //   const [Loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
-    //   const [filter, setFilter] = useState("");
     const [userid, setUserid] = useState(null);
     const [modalShow, setModalShow] = useState(false);
     const navigate = useNavigate();
@@ -99,81 +97,12 @@ const UserTable = ({ fetchUsers, title, icon, usertype }) => {
         },
     ];
 
-    // Fetch data
-    // useEffect(() => {
-    //     axios
-    //         .get(`${path}`)
-    //         .then((response) => {
-    //             // console.log("Data from API:", response.data);
-    //             if (
-    //                 response.data &&
-    //                 response.data.users &&
-    //                 Array.isArray(response.data.users)
-    //             ) {
-    //                 const UsersDatas = response.data.users.map((user) => ({
-    //                     id: user.id,
-    //                     firstName: user.firstName,
-    //                     lastName: user.lastName,
-    //                     age: user.age,
-    //                 }));
-    //                 setUsers(UsersDatas);
-    //                 setFilter(UsersDatas);
-    //                 setLoading(true);
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error fetching data:", error);
-    //         });
-    // }, [path]);
-
     //Modal
     function handleModal(id) {
         setUserid(id);
         setModalShow(true);
     }
 
-    // Axtaris Filter
-    //   useEffect(() => {
-    //     const result = users.filter((user) => {
-    //       return user.firstName.toLowerCase().includes(search.toLowerCase());
-    //     });
-    //     setFilter(result);
-    //   }, [users, search]);
-
-    // DELETE METHOD  
-    //   const handleDelete = (id) => {
-    //     Swal.fire({
-    //       title: "Əminsiniz?",
-    //       text: "Dəyişikliyi geri qaytara bilməyəcəksiniz!",
-    //       icon: "warning",
-    //       showCancelButton: true,
-    //       confirmButtonColor: "#3085d6",
-    //       cancelButtonColor: "#d33",
-    //       confirmButtonText: "Bəli, silin!",
-    //     }).then((result) => {
-    //       if (result.isConfirmed) {
-    //         axios
-    //           .delete(`https://dummyjson.com/${usertype}/${id}`)
-    //           .then(() => {
-    //             console.log("Məhsul Silindi!");
-    //             Swal.fire({
-    //               title: "Silindi!",
-    //               text: `Məhsul No:${id} müvəffəqiyyətlə silindi!`,
-    //               icon: "success",
-    //             });
-    //             setUsers(users.filter((user) => user.id !== id));
-    //           })
-    //           .catch((error) => {
-    //             console.error(`Error deleting product:`, error);
-    //             Swal.fire({
-    //               title: "Error!",
-    //               text: `Error deleting No ${id} product`,
-    //               icon: "error",
-    //             });
-    //           });
-    //       }
-    //     });
-    //   };
 
     //Update Navigate
     const handleUpdateClick = (userid) => {
