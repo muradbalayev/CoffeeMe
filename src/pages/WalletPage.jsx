@@ -17,6 +17,11 @@ const columns = [
       sortable: true
   },
   {
+    name: "User",
+    selector: row => row.firstName,
+    sortable: true
+},
+  {
       name: "Tarix və saat",
       selector: row => row.firstName
   },

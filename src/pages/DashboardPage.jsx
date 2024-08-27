@@ -18,6 +18,8 @@ import MenuPage from "./Menu/MenuPage";
 import ProductPage from "./Menu/ProductPage";
 import ProductUpdate from "../Components/Menu/ProductUpdate";
 import ProductCreate from "../Components/Menu/ProductCreate";
+import SendNotification from "./Notification/SendNotificationPage";
+import PartnerMessages from "./Notification/PartnerMessagesPage";
 function DashboardPage() {
   const queryClient = new QueryClient();
 
@@ -49,6 +51,9 @@ function DashboardPage() {
             <Route path="/menu/:shopId/products" element={<ProductPage/>} />
             <Route path="/menu/:shopId/products/create" element={<ProductCreate />} />
             <Route path="/menu/:shopId/products/update/:productid" element={<ProductUpdate />} />
+
+            <Route path="/send-notification" element={<SendNotification/>} />
+            <Route path="/partner-messages" element={<PartnerMessages/>} />
             
 
           </Routes>

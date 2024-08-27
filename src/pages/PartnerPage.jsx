@@ -1,6 +1,6 @@
 import { useState } from "react";
 import DataTable from "react-data-table-component"
-import { Coffee, Eye, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
+import { Coffee, Eye, Pencil, Search, Trash2 } from "lucide-react";
 // import Swal from "sweetalert2";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
