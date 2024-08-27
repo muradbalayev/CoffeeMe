@@ -20,6 +20,7 @@ import ProductUpdate from "../Components/Menu/ProductUpdate";
 import ProductCreate from "../Components/Menu/ProductCreate";
 import SendNotification from "./Notification/SendNotificationPage";
 import PartnerMessages from "./Notification/PartnerMessagesPage";
+import AutoNotificationPage from "./Notification/AutoNotificationPage";
 function DashboardPage() {
   const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ function DashboardPage() {
 
             <Route path="/send-notification" element={<SendNotification/>} />
             <Route path="/partner-messages" element={<PartnerMessages/>} />
+            <Route path="/auto-notifications" element={<AutoNotificationPage/>} />
             
 
           </Routes>

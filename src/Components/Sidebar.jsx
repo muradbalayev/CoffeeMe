@@ -1,5 +1,5 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { BellRing, BookOpen, ChevronDown, ChevronUp, Crown, NotebookText,ShoppingCart, Wallet as WalletIcon } from "lucide-react";
+import { BellElectricIcon, BellRing, BookOpen, ChevronDown, ChevronUp, Crown, NotebookText,ShoppingCart, Wallet as WalletIcon } from "lucide-react";
 
 import {
   ChartLine,
@@ -309,6 +309,25 @@ function Sidebar() {
                 transition={{ duration: 0.1, delay: 0.2 }}
               >
                 Partner Messages
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </Link>
+        <Link
+          to="/dashboard/auto-notifications"
+          className=" px-6 py-3 text-xs dropdown-link"
+        >
+          <BellElectricIcon size={15} style={{ minWidth: "20px" }} />
+          <AnimatePresence>
+            {isSidebarOpen && (
+              <motion.span
+                className="whitespace-nowrap"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.1, delay: 0.2 }}
+              >
+                Auto Notifications
               </motion.span>
             )}
           </AnimatePresence>
