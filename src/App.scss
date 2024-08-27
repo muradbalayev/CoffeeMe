@@ -23,6 +23,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: "Inter", sans-serif;
   padding: 2rem 0.8rem 6rem 0.8rem;
   overflow: hidden;
   background-color: var(--bg-color);
@@ -117,9 +118,9 @@
 }
 
 // Dashboard Header Color  //
-.header {
-  background-color: var(--coffee-green);
-}
+// .header {
+//   background-color: var(--coffee-green);
+// }
 
 /* table header */
 .cvdizt {

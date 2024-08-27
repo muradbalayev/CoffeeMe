@@ -5,7 +5,7 @@ const SalesTable = () => {
         { id: 2, name: "John Doe", sales: 20 },
         { id: 3, name: "John Doe", sales: 20 },
         { id: 4, name: "John Doe", sales: 20 },
-        { id: 4, name: "John Doe", sales: 20 }
+        { id: 5, name: "John Doe", sales: 20 }
     ]
 
     return (
