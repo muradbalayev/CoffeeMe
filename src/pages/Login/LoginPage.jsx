@@ -16,7 +16,6 @@ function LoginPage() {
 
     const [rememberMe, setRememberMe] = useState(false);
  
-console.log(rememberMe)
 
     // console.log(import.meta.env.VITE_API_GLOBAL_URL)
 

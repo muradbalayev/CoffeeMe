@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { setTokens } from "./redux/slice/authSlice";
 import { useDispatch } from "react-redux";
 function App() {
-const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const getAuthToken = async () => {
@@ -32,9 +32,8 @@ const dispatch = useDispatch()
         }
 
         const data = await response.json();
-        
-        console.log(data);
-        const {accessToken} = data;
+
+        const { accessToken } = data;
 
         dispatch(setTokens({ accessToken, refreshToken }));
 

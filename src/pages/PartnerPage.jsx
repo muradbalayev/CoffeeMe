@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import AddPartnerModal from "../Components/Partners/PartnerCreate";
 import EditPartnerModal from "../Components/Partners/PartnerUpdate";
 import PartnerModal from "../Components/Partners/PartnerModal";
+import useCustomFetch from "../utils/utils";
 
 const deleteShop = async (id) => {
   try {
@@ -27,6 +28,7 @@ const deleteShop = async (id) => {
 
 
 const ProductPage = () => {
+  const customFetch = useCustomFetch();
 
   const [editedItem, setEditedItem] = useState(null);
   const queryClient = useQueryClient();
@@ -34,7 +36,7 @@ const ProductPage = () => {
 
 
   const fetchPartners = async () => {
-    const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/partners`);
+    const res = await customFetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/partners`);
     if (!res.ok) {
       throw new Error("Network response was not ok");
     }
@@ -193,7 +195,7 @@ const ProductPage = () => {
               />
               <Search className="search-icon" />
             </div>
-           
+
           </div>
         </div>
       </div>
