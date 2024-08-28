@@ -1,4 +1,4 @@
-import { Coffee, Search, SquarePlus } from "lucide-react"
+import { Coffee, Search } from "lucide-react"
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
@@ -43,14 +43,6 @@ const MenuPage = () => {
                         />
                         <Search className="search-icon" />
                     </div>
-
-                    <button
-                        // onClick={handleCreateClick}
-                        className="text-green"
-                        style={{ borderRadius: "25%" }}
-                    >
-                        <SquarePlus size={40} />
-                    </button>
                 </div>
             </div>
             <div className="mt-4 grid lg:grid-cols-4 md:grid-col-3 grid-cols-2 lg:gap-8 gap-6">
