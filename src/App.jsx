@@ -1,4 +1,5 @@
 import "./App.scss";
+import "./css/Loading.css"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/Login/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -15,41 +16,49 @@ function App() {
 
   useEffect(() => {
     const initializeAuth = async () => {
-        const refreshToken = localStorage.getItem("refreshToken") || sessionStorage.getItem("refreshToken");
+      const refreshToken = localStorage.getItem("refreshToken") || sessionStorage.getItem("refreshToken");
 
-        if (refreshToken) {
-            try {
-                const response = await fetch(
-                    `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/auth/refresh-token`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ token: refreshToken }),
-                    }
-                );
-
-                if (!response.ok) {
-                    throw new Error("Failed to refresh token");
-                }
-
-                const data = await response.json();
-                const { accessToken } = data;
-
-                dispatch(setTokens({ accessToken, refreshToken }));
-            } catch (error) {
-                console.log("Token refresh failed:", error);
+      if (refreshToken) {
+        try {
+          const response = await fetch(
+            `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/auth/refresh-token`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ token: refreshToken }),
             }
-        }
+          );
 
-        setLoading(false); // Authentication check is done
+          if (!response.ok) {
+            throw new Error("Failed to refresh token");
+          }
+
+          const data = await response.json();
+          const { accessToken } = data;
+
+          dispatch(setTokens({ accessToken, refreshToken }));
+        } catch (error) {
+          console.log("Token refresh failed:", error);
+        }
+      }
+
+      setLoading(false); // Authentication check is done
     };
 
     initializeAuth();
-}, [dispatch]);
+  }, [dispatch]);
   if (loading) {
-    return <div>Loading...</div>; // Optional: Show a loader while checking authentication
+
+    return (
+      <div className="loader-container w-full flex justify-center items-center min-h-screen gap-3" >
+        <div className="loader-1"></div>
+        <div className="loader-2"></div>
+        <div className="loader-3"></div> 
+
+      </div>
+    )
   }
 
   return (
