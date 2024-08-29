@@ -1,11 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { clearTokens, setTokens } from '../redux/slice/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 const useCustomFetch = () => {
 
     const { accessToken, refreshToken } = useSelector(state => state.auth);
     const dispatch = useDispatch()
-console.log(accessToken)
+    console.log(accessToken)
+    const navigate = useNavigate();
     const customFetch = async (url, options = {}) => {
         let response = await fetch(url, {
             ...options,
@@ -40,6 +42,7 @@ console.log(accessToken)
             } else {
                 dispatch(clearTokens())
                 localStorage.removeItem('refreshToken')
+                navigate('/');
                 throw new Error('Session expired');
             }
         }

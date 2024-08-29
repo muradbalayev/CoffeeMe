@@ -1,49 +1,56 @@
 import "./App.scss";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/Login/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setTokens } from "./redux/slice/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute";
+
 function App() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const { accessToken } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getAuthToken = async () => {
-      const refreshToken = localStorage.getItem("refreshToken") || "";
+    const initializeAuth = async () => {
+        const refreshToken = localStorage.getItem("refreshToken") || sessionStorage.getItem("refreshToken");
 
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/auth/refresh-token`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              token: refreshToken,
-            }),
-          }
-        );
+        if (refreshToken) {
+            try {
+                const response = await fetch(
+                    `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/auth/refresh-token`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ token: refreshToken }),
+                    }
+                );
 
-        if (!response.ok) {
-          throw new Error("Login failed");
+                if (!response.ok) {
+                    throw new Error("Failed to refresh token");
+                }
+
+                const data = await response.json();
+                const { accessToken } = data;
+
+                dispatch(setTokens({ accessToken, refreshToken }));
+            } catch (error) {
+                console.log("Token refresh failed:", error);
+            }
         }
 
-        const data = await response.json();
-
-        const { accessToken } = data;
-
-        dispatch(setTokens({ accessToken, refreshToken }));
-
-      } catch (error) {
-        console.log(error);
-      }
+        setLoading(false); // Authentication check is done
     };
 
-    getAuthToken();
-  }, [dispatch]);
+    initializeAuth();
+}, [dispatch]);
+  if (loading) {
+    return <div>Loading...</div>; // Optional: Show a loader while checking authentication
+  }
 
   return (
     <div className="w-full h-screen relative">
@@ -63,8 +70,10 @@ function App() {
       />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/dashboard/*" element={<DashboardPage />} />
+          <Route path="/" element={accessToken ? <Navigate to="/dashboard" /> : <LoginPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard/*" element={<DashboardPage />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>

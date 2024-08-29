@@ -45,8 +45,11 @@ function LoginPage() {
 
             dispatch(setTokens({ accessToken, refreshToken }));
 
+
             if (rememberMe) {
                 localStorage.setItem('refreshToken', refreshToken);
+            } else {
+                sessionStorage.setItem('refreshToken', refreshToken);
             }
 
             toast.success(`${username} logged in.`);

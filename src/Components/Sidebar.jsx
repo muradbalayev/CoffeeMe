@@ -1,5 +1,5 @@
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { BellElectricIcon, BellRing, BookOpen, ChevronDown, ChevronUp, Crown, NotebookText,ShoppingCart, Wallet as WalletIcon } from "lucide-react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { BellElectricIcon, BellRing, BookOpen, ChevronDown, ChevronUp, Crown, NotebookText, ShoppingCart, Wallet as WalletIcon } from "lucide-react";
 
 import {
   ChartLine,
@@ -12,6 +12,8 @@ import {
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { clearTokens } from "../redux/slice/authSlice";
 
 const SIDEBAR_ITEMS = [
   {
@@ -54,7 +56,6 @@ const SIDEBAR_ITEMS = [
 
 function Sidebar() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [dropdown, setDropDown] = useState(false);
@@ -64,11 +65,19 @@ function Sidebar() {
   const [notificationDropdown, setNotificationDropDown] = useState(false);
   const notificationDropdownRef = useRef(null);
 
+  const dispatch = useDispatch();
+
   const handleLogout = async (e) => {
     e.preventDefault();
+    dispatch(clearTokens());
+    localStorage.removeItem("refreshToken");
+    sessionStorage.removeItem("refreshToken");
     toast.success("Murad Balayev Coffeeshop'dan çıxış etdi.");
     navigate("/");
+
   };
+
+
 
   const dropdownToggle = () => {
     setDropDown(!dropdown);
@@ -81,7 +90,7 @@ function Sidebar() {
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setDropDown(false);
-    } 
+    }
     if (notificationDropdownRef.current && !notificationDropdownRef.current.contains(event.target)) {
       setNotificationDropDown(false);
     }
@@ -98,7 +107,7 @@ function Sidebar() {
     location.pathname.startsWith("/dashboard/users") ||
     location.pathname.startsWith("/dashboard/premiumusers");
 
-    const isNotificationActive =
+  const isNotificationActive =
     location.pathname.startsWith("/dashboard/send-notification") ||
     location.pathname.startsWith("/dashboard/partner-messages") ||
     location.pathname.startsWith("/dashboard/messages");
@@ -163,56 +172,56 @@ function Sidebar() {
             )}
           </AnimatePresence>
           <AnimatePresence>
-          {dropdown && (
-            //DropDown links
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              className="absolute w-full left-0 top-11 border-b border-s border-e rounded-b-xl border-slate-900 backdrop-blur-lg">
-              <Link
-                to="/dashboard/users"
-                // style={{ backgroundColor: "gray" }}
-                className=" px-6 py-3 text-xs dropdown-link"
-              >
-                <Users size={15} style={{ minWidth: "20px" }} />
-                <AnimatePresence>
-                  {isSidebarOpen && (
-                    <motion.span
-                      className="whitespace-nowrap"
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: "auto" }}
-                      exit={{ opacity: 0, width: 0 }}
-                      transition={{ duration: 0.1, delay: 0.2 }}
-                    >
-                      All Users
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </Link>
-              <Link
-                to="/dashboard/premiumusers"
-                // style={{ backgroundColor: "gray" }}
-                className=" px-6 py-3 text-xs rounded-b-lg dropdown-link"
-              >
-                <Crown size={15} style={{ minWidth: "20px" }} />
-                <AnimatePresence>
-                  {isSidebarOpen && (
-                    <motion.span
-                      className="whitespace-nowrap"
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: "auto" }}
-                      exit={{ opacity: 0, width: 0 }}
-                      transition={{ duration: 0.1, delay: 0.2 }}
-                    >
-                      Premium Users
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </Link>
-            </motion.div>
-          )}
+            {dropdown && (
+              //DropDown links
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="absolute w-full left-0 top-11 border-b border-s border-e rounded-b-xl border-slate-900 backdrop-blur-lg">
+                <Link
+                  to="/dashboard/users"
+                  // style={{ backgroundColor: "gray" }}
+                  className=" px-6 py-3 text-xs dropdown-link"
+                >
+                  <Users size={15} style={{ minWidth: "20px" }} />
+                  <AnimatePresence>
+                    {isSidebarOpen && (
+                      <motion.span
+                        className="whitespace-nowrap"
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: "auto" }}
+                        exit={{ opacity: 0, width: 0 }}
+                        transition={{ duration: 0.1, delay: 0.2 }}
+                      >
+                        All Users
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </Link>
+                <Link
+                  to="/dashboard/premiumusers"
+                  // style={{ backgroundColor: "gray" }}
+                  className=" px-6 py-3 text-xs rounded-b-lg dropdown-link"
+                >
+                  <Crown size={15} style={{ minWidth: "20px" }} />
+                  <AnimatePresence>
+                    {isSidebarOpen && (
+                      <motion.span
+                        className="whitespace-nowrap"
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: "auto" }}
+                        exit={{ opacity: 0, width: 0 }}
+                        transition={{ duration: 0.1, delay: 0.2 }}
+                      >
+                        Premium Users
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </Link>
+              </motion.div>
+            )}
           </AnimatePresence>
         </Link>
         {SIDEBAR_ITEMS.map((item) => (
@@ -242,100 +251,100 @@ function Sidebar() {
         {/* Notification */}
 
         <Link ref={notificationDropdownRef} onClick={notificationDropdownToggle} end='true'
-  className={`lg:text-sm text-xs px-6 py-3 relative group ${isNotificationActive ? "active" : ""}`}>
-  <BellRing size={20} style={{ minWidth: "20px" }} />
-  <AnimatePresence>
-    {isSidebarOpen && (
-      <motion.span
-        className='whitespace-nowrap flex items-center justify-between'
-        initial={{ opacity: 0, width: 0 }}
-        animate={{ opacity: 1, width: "auto" }}
-        exit={{ opacity: 0, width: 0 }}
-        transition={{ duration: 0.1, delay: 0.1 }}
-      >
-        Notifications
-        {notificationDropdown ?
-          <ChevronUp
-            className="dropdown group-hover:scale-110"
-            style={{ position: "absolute", right: "10px" }}
-          /> :
-          <ChevronDown
-            className="dropdown group-hover:scale-110"
-            style={{ position: "absolute", right: "10px" }}
-          />}
-      </motion.span>
-    )}
-  </AnimatePresence>
-  <AnimatePresence>
-    {notificationDropdown && (
-      // DropDown links
-      <motion.div
-        initial={{ opacity: 0, translateY: 10 }} // Start slightly below
-        animate={{ opacity: 1, translateY: 0 }}  // Animate upwards
-        exit={{ opacity: 0, translateY: 10 }}    // Exit downwards
-        transition={{ duration: 0.3, delay: 0.1 }}
-        className="absolute w-full left-0 bottom-11 border-t border-s border-e rounded-t-xl border-slate-900 backdrop-blur-lg">
-        <Link
-          to="/dashboard/send-notification"
-          className=" px-6 py-3 text-xs dropdown-link"
-        >
-          <BellRing size={15} style={{ minWidth: "20px" }} />
+          className={`lg:text-sm text-xs px-6 py-3 relative group ${isNotificationActive ? "active" : ""}`}>
+          <BellRing size={20} style={{ minWidth: "20px" }} />
           <AnimatePresence>
             {isSidebarOpen && (
               <motion.span
-                className="whitespace-nowrap"
+                className='whitespace-nowrap flex items-center justify-between'
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: "auto" }}
                 exit={{ opacity: 0, width: 0 }}
-                transition={{ duration: 0.1, delay: 0.2 }}
+                transition={{ duration: 0.1, delay: 0.1 }}
               >
-                Send Notification
+                Notifications
+                {notificationDropdown ?
+                  <ChevronUp
+                    className="dropdown group-hover:scale-110"
+                    style={{ position: "absolute", right: "10px" }}
+                  /> :
+                  <ChevronDown
+                    className="dropdown group-hover:scale-110"
+                    style={{ position: "absolute", right: "10px" }}
+                  />}
               </motion.span>
             )}
           </AnimatePresence>
-        </Link>
-        <Link
-          to="/dashboard/partner-messages"
-          className=" px-6 py-3 text-xs dropdown-link"
-        >
-          <Crown size={15} style={{ minWidth: "20px" }} />
           <AnimatePresence>
-            {isSidebarOpen && (
-              <motion.span
-                className="whitespace-nowrap"
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: "auto" }}
-                exit={{ opacity: 0, width: 0 }}
-                transition={{ duration: 0.1, delay: 0.2 }}
-              >
-                Partner Messages
-              </motion.span>
+            {notificationDropdown && (
+              // DropDown links
+              <motion.div
+                initial={{ opacity: 0, translateY: 10 }} // Start slightly below
+                animate={{ opacity: 1, translateY: 0 }}  // Animate upwards
+                exit={{ opacity: 0, translateY: 10 }}    // Exit downwards
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="absolute w-full left-0 bottom-11 border-t border-s border-e rounded-t-xl border-slate-900 backdrop-blur-lg">
+                <Link
+                  to="/dashboard/send-notification"
+                  className=" px-6 py-3 text-xs dropdown-link"
+                >
+                  <BellRing size={15} style={{ minWidth: "20px" }} />
+                  <AnimatePresence>
+                    {isSidebarOpen && (
+                      <motion.span
+                        className="whitespace-nowrap"
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: "auto" }}
+                        exit={{ opacity: 0, width: 0 }}
+                        transition={{ duration: 0.1, delay: 0.2 }}
+                      >
+                        Send Notification
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </Link>
+                <Link
+                  to="/dashboard/partner-messages"
+                  className=" px-6 py-3 text-xs dropdown-link"
+                >
+                  <Crown size={15} style={{ minWidth: "20px" }} />
+                  <AnimatePresence>
+                    {isSidebarOpen && (
+                      <motion.span
+                        className="whitespace-nowrap"
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: "auto" }}
+                        exit={{ opacity: 0, width: 0 }}
+                        transition={{ duration: 0.1, delay: 0.2 }}
+                      >
+                        Partner Messages
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </Link>
+                <Link
+                  to="/dashboard/auto-notifications"
+                  className=" px-6 py-3 text-xs dropdown-link"
+                >
+                  <BellElectricIcon size={15} style={{ minWidth: "20px" }} />
+                  <AnimatePresence>
+                    {isSidebarOpen && (
+                      <motion.span
+                        className="whitespace-nowrap"
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: "auto" }}
+                        exit={{ opacity: 0, width: 0 }}
+                        transition={{ duration: 0.1, delay: 0.2 }}
+                      >
+                        Auto Notifications
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </Link>
+              </motion.div>
             )}
           </AnimatePresence>
         </Link>
-        <Link
-          to="/dashboard/auto-notifications"
-          className=" px-6 py-3 text-xs dropdown-link"
-        >
-          <BellElectricIcon size={15} style={{ minWidth: "20px" }} />
-          <AnimatePresence>
-            {isSidebarOpen && (
-              <motion.span
-                className="whitespace-nowrap"
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: "auto" }}
-                exit={{ opacity: 0, width: 0 }}
-                transition={{ duration: 0.1, delay: 0.2 }}
-              >
-                Auto Notifications
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </Link>
-      </motion.div>
-    )}
-  </AnimatePresence>
-</Link>
       </nav>
       <Link
         className="logout w-full px-6 min-h-10 py-2 mt-auto flex md:flex-row flex-col gap-2 items-center md:text-base text-sm"
