@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { BellElectricIcon, BellRing, BookOpen, ChevronDown, ChevronUp, Crown, NotebookText, ShoppingCart, Wallet as WalletIcon } from "lucide-react";
+import { BellElectricIcon, BellRing, BookOpen, ChartBarIncreasing, ChevronDown, ChevronUp, Crown, NotebookText, ShoppingCart, Wallet as WalletIcon } from "lucide-react";
 
 import {
   ChartLine,
@@ -49,6 +49,12 @@ const SIDEBAR_ITEMS = [
   },
   {
     id: 6,
+    title: "Sales",
+    icon: <ChartBarIncreasing size={20} style={{ minWidth: "20px" }} />,
+    path: "/dashboard/sales",
+  },
+  {
+    id: 7,
     title: "Withdraw",
     icon: <NotebookText size={20} style={{ minWidth: "20px" }} />,
     path: "/dashboard/withdraw",

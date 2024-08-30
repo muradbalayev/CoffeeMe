@@ -37,7 +37,9 @@ function LoginPage() {
 
             if (!response.ok) {
                 toast.error('Login failed');
-                throw new Error('Login failed');
+                return;
+                // throw new Error('Login failed');
+                
             }
 
             const data = await response.json();
@@ -46,6 +48,7 @@ function LoginPage() {
 
             dispatch(setTokens({ accessToken, refreshToken }));
             dispatch(setUser( username ));
+
             if (rememberMe) {
                 localStorage.setItem('refreshToken', refreshToken);
                 localStorage.setItem('username', username);
@@ -57,6 +60,7 @@ function LoginPage() {
             toast.success(`${username} logged in.`);
             navigate('/dashboard');
         } catch (error) {
+            toast.error('Login failed');
             toast.error(error);
         }
     };

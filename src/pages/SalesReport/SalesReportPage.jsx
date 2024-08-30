@@ -1,7 +1,7 @@
 import { Wallet } from 'lucide-react'
-import SalesTotals from '../Components/SalesReport/SalesTotals'
+import SalesTotals from '../../Components/SalesReport/SalesTotals'
 // import SalesCharts from '../Components/SalesReport/SalesCharts'
-import SalesTable from '../Components/SalesReport/SalesTable'
+import SalesTable from '../../Components/SalesReport/SalesTable'
 
 
 function SalesReport() {

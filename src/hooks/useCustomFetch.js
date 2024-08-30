@@ -29,9 +29,10 @@ const useCustomFetch = () => {
             });
 
             if (refreshResponse.ok) {
-                const { newAccessToken, newRefreshToken } = await refreshResponse.json();
-                dispatch(setTokens({ accessToken: newAccessToken, refreshToken: newRefreshToken }));
-
+                const { accessToken: newAccessToken } = await refreshResponse.json();
+                dispatch(setTokens({ accessToken: newAccessToken }));
+                sessionStorage.setItem('accessToken', newAccessToken);
+                
                 // Yeniden dene
                 response = await fetch(url, {
                     ...options,

@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component"
-import WthModal from "../Components/Withdraw/WthModal";
+import WthModal from "../../Components/Withdraw/WthModal";
 import { Coffee, Eye, Search, SquarePlus, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
-import AddWithdrawModal from "../Components/Withdraw/WthCreate";
+import AddWithdrawModal from "../../Components/Withdraw/WthCreate";
 
 
 

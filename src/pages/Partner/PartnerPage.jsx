@@ -6,10 +6,10 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import Swal from "sweetalert2";
-import AddPartnerModal from "../Components/Partners/PartnerCreate";
-import EditPartnerModal from "../Components/Partners/PartnerUpdate";
-import PartnerModal from "../Components/Partners/PartnerModal";
-import useCustomFetch from "../hooks/useCustomFetch";
+import AddPartnerModal from "../../Components/Partners/PartnerCreate";
+import EditPartnerModal from "../../Components/Partners/PartnerUpdate";
+import PartnerModal from "../../Components/Partners/PartnerModal";
+import useCustomFetch from "../../hooks/useCustomFetch";
 
 const deleteShop = async (id) => {
   try {

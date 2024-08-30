@@ -1,5 +1,5 @@
 import { Users } from "lucide-react";
-import UserTable from "../Components/Users/UserTable";
+import UserTable from "../../Components/Users/UserTable"
 
 
 const fetchUsers = async () => {

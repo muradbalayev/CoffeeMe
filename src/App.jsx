@@ -2,13 +2,13 @@ import "./App.scss";
 import "./css/Loading.css"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/Login/LoginPage";
-import DashboardPage from "./pages/DashboardPage";
 import { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { setTokens } from "./redux/slice/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute";
 import { setUser } from "./redux/slice/userSlice";
+import DashboardPage from "./pages/Router";
 
 function App() {
   const dispatch = useDispatch();
