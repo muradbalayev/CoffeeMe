@@ -16,10 +16,11 @@ const useCustomFetch = () => {
                 'Authorization': `Bearer ${accessToken}`,
             },
         });
-
+        // console.log(accessToken)
+        // console.log(options)
         if (response.status === 401) {
             // Token süresi dolmuş, refreshToken ile yenile
-            const refreshResponse = await fetch('/auth/refresh-token', {
+            const refreshResponse = await fetch('/admin/auth/refresh-token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,6 +43,7 @@ const useCustomFetch = () => {
             } else {
                 dispatch(clearTokens())
                 localStorage.removeItem('refreshToken')
+                sessionStorage.removeItem('refreshToken')
                 navigate('/');
                 throw new Error('Session expired');
             }

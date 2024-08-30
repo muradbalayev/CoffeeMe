@@ -2,7 +2,7 @@ import {  ShoppingCart, X } from "lucide-react";
 import {  useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
-import useCustomFetch from "../../utils/utils";
+import useCustomFetch from "../../hooks/useCustomFetch";
 
 const EditPartnerModal = ({  data, setShowEditModal }) => {
 
@@ -14,7 +14,6 @@ const EditPartnerModal = ({  data, setShowEditModal }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         
-
         setEditedData({
             ...editedData,
             [name]: value,
@@ -34,7 +33,7 @@ const EditPartnerModal = ({  data, setShowEditModal }) => {
             username: editedData.username,
             password: editedData.password,
         };
-       console.log(editedData.username)
+    //    console.log(updateData)
 
         mutation.mutate(updateData);
         toast.success("Partner Edited Successfully!");
@@ -44,14 +43,18 @@ const EditPartnerModal = ({  data, setShowEditModal }) => {
     const mutation = useMutation(
         async (updateData) => {
             const response = await customFetch(
+
                 `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/partners/${editedData._id
                 }`,
                 {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                     method: "PUT",
                     body: JSON.stringify(updateData),
                 }
             );
-            console.log(response.json)
+
             return await response.json();
         },
         {
@@ -128,7 +131,7 @@ const EditPartnerModal = ({  data, setShowEditModal }) => {
                             <label className="form-label">Password</label>
                             <input
                                 className="form-control"
-                                type="text"
+                                type="password"
                                 name="password"
                                 placeholder="Password"
                                 value={editedData.password}
@@ -136,20 +139,6 @@ const EditPartnerModal = ({  data, setShowEditModal }) => {
                             />
                         </div>
                     </div>
-                    {/* <div className="w-full flex inputRow gap-5 justify-between">
-                          <div className="inputContainer">
-                            <label className="form-label">Contact Number</label>
-                            <input
-                                className="form-control"
-                                type="number"
-                                name="phone"
-                                placeholder="Contact Number"
-                                value={editedData.phone}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    </div>
-                */}
                 
                     <div className="flex mt-10 gap-5 justify-center">
                         <div>
