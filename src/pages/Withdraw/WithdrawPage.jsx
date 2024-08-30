@@ -149,15 +149,15 @@ const WithdrawPage = () => {
                 </div>
                 <div className="w-full flex justify-between items-center mt-4">
                     <h1 className="title text-xl">Request&apos;s table</h1>
-                    <div className='flex relative gap-3 mb-1 p-3 border-green-900'>
+                    <div className='flex relative sm:gap-3 gap-1 mb-1 p-3 border-green-900'>
                         <div className="flex relative">
                             <input
-                                className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
+                                className="form-control font-semibold md:text-lg text-sm text-green md:w-80 sm:w-40 w-24 p-2 border outline-none rounded-md"
                                 placeholder="Search"
                                 value={search}
                                 onChange={(event) => setSearch(event.target.value)}
                             />
-                            <Search className="search-icon" />
+                            <Search className="search-icon md:block hidden" />
                         </div>
                         <button onClick={() => setShowAddModal(true)}>
                             <SquarePlus size={40} />

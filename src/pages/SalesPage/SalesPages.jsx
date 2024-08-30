@@ -1,6 +1,6 @@
 // import { useState } from "react";
 import DataTable from "react-data-table-component"
-import { Search, SquarePlus } from "lucide-react";
+import { Search } from "lucide-react";
 // import { useParams } from "react-router-dom";
 // import ProductModal from "../../Components/Menu/ProductModal";
 // import Swal from "sweetalert2";
@@ -164,8 +164,7 @@ const SalesPage = () => {
     // if (isSuccess)
     return (
         <div className="wrapper">
-            {/* {showAddModal && <AddProductModal shopId={shopId} setShowAddModal={setShowAddModal} />}
-            {editedItem && (
+         {/*    {editedItem && (
                 <EditProductModal shopId={shopId} data={editedItem} setShowEditModal={setEditedItem} />
             )} */}
             <div className="sales-header flex items-center justify-between">
@@ -178,20 +177,14 @@ const SalesPage = () => {
                     <div className="flex relative gap-3 items-center">
                         <div className="flex relative">
                             <input
-                                className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
+                                className="form-control font-semibold md:text-lg text-sm text-green md:w-80 sm:w-40 w-24 p-2 border outline-none rounded-md"
                                 placeholder="Search"
                             // value={search}
                             // onChange={(event) => setSearch(event.target.value)}
                             />
-                            <Search className="search-icon" />
+                            <Search className="md:visible md:block hidden search-icon" />
                         </div>
-                        <button
-                            // onClick={() => setShowAddModal(true)}
-                            className="text-green"
-                            style={{ borderRadius: "25%" }}
-                        >
-                            <SquarePlus size={40} />
-                        </button>
+                       
                     </div>
                 </div>
             </div>
