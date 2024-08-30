@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { setTokens } from "../../redux/slice/authSlice";
+import { setUser } from '../../redux/slice/userSlice';
 function LoginPage() {
     const dispatch = useDispatch()
 
@@ -43,12 +44,14 @@ function LoginPage() {
 
             const { refreshToken, accessToken } = data;
 
-            dispatch(setTokens({ accessToken, refreshToken , username}));
-
+            dispatch(setTokens({ accessToken, refreshToken }));
+            dispatch(setUser( username ));
             if (rememberMe) {
                 localStorage.setItem('refreshToken', refreshToken);
+                localStorage.setItem('username', username);
             } else {
                 sessionStorage.setItem('refreshToken', refreshToken);
+                sessionStorage.setItem('username', username);
             }
 
             toast.success(`${username} logged in.`);
@@ -60,7 +63,8 @@ function LoginPage() {
 
     return (
         <div className="loginpage w-full h-screen flex items-center justify-center flex-col">
-            <h1 className="text-white text-2xl font-semibold mb-20">COFFEE SHOP</h1>
+            <h1 className="text-white text-2xl font-semibold">COFFEE SHOP</h1>
+            <h1 className="text-white text-2xl font-semibold mb-10">ADMIN</h1>
             <form className=" flex flex-col items-center" onSubmit={handleLogin}>
                 <div className="flex flex-col gap-1 mt-3 w-80">
                     <label className="text-white text-sm">Username</label>

@@ -14,6 +14,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearTokens } from "../redux/slice/authSlice";
+import { clearUser } from "../redux/slice/userSlice";
 
 const SIDEBAR_ITEMS = [
   {
@@ -66,14 +67,17 @@ function Sidebar() {
   const notificationDropdownRef = useRef(null);
 
   const dispatch = useDispatch();
-  const username = useSelector(state => state.auth.username)
+  const username = useSelector(state => state.user.username)
 
   const handleLogout = async (e) => {
     e.preventDefault();
     dispatch(clearTokens());
     localStorage.removeItem("refreshToken");
     sessionStorage.removeItem("refreshToken");
-    toast.success("Murad Balayev Coffeeshop'dan çıxış etdi.");
+    toast.success(`${username} coffeeshop'dan çıxış etdi.`);
+    localStorage.removeItem("username");
+    sessionStorage.removeItem("username");
+    dispatch(clearUser());
     navigate("/");
 
   };
@@ -115,7 +119,7 @@ function Sidebar() {
 
   return (
     <div
-      className={`sidebar relative z-10 h-screen flex flex-col items-center gap-4 pb-5 pt-3 text-white ${isSidebarOpen ? `md:w-56 w-40 ` : "w-16"}`}
+      className={`sidebar relative z-10 h-screen flex flex-col items-center gap-4 pb-5 pt-3 text-white ${isSidebarOpen ? `w-56` : "w-16"}`}
     >
       <div className='w-full relative flex items-center px-3'>
         <motion.button
@@ -145,7 +149,7 @@ function Sidebar() {
           )}
         </AnimatePresence>
       </div>
-      <nav className="links w-full flex flex-col">
+      <nav className="links w-full flex flex-col mt-2">
         <Link ref={dropdownRef} onClick={dropdownToggle} end='true'
           className={`lg:text-sm text-xs px-6 py-2 relative group ${isUsersActive ? "active" : ""}`}>
           <User size={20} style={{ minWidth: "20px" }} />
@@ -293,7 +297,7 @@ function Sidebar() {
                   <AnimatePresence>
                     {isSidebarOpen && (
                       <motion.span
-                        className="whitespace-nowrap"
+                        className="md:whitespace-nowrap whitespace-normal text-center"
                         initial={{ opacity: 0, width: 0 }}
                         animate={{ opacity: 1, width: "auto" }}
                         exit={{ opacity: 0, width: 0 }}
@@ -312,7 +316,7 @@ function Sidebar() {
                   <AnimatePresence>
                     {isSidebarOpen && (
                       <motion.span
-                        className="whitespace-nowrap"
+                        className="md:whitespace-nowrap whitespace-normal text-center"
                         initial={{ opacity: 0, width: 0 }}
                         animate={{ opacity: 1, width: "auto" }}
                         exit={{ opacity: 0, width: 0 }}
@@ -331,7 +335,7 @@ function Sidebar() {
                   <AnimatePresence>
                     {isSidebarOpen && (
                       <motion.span
-                        className="whitespace-nowrap"
+                        className="md:whitespace-nowrap whitespace-normal text-center"
                         initial={{ opacity: 0, width: 0 }}
                         animate={{ opacity: 1, width: "auto" }}
                         exit={{ opacity: 0, width: 0 }}

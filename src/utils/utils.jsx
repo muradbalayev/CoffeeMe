@@ -6,7 +6,7 @@ const useCustomFetch = () => {
 
     const { accessToken, refreshToken } = useSelector(state => state.auth);
     const dispatch = useDispatch()
-    console.log(accessToken)
+    // console.log(accessToken)
     const navigate = useNavigate();
     const customFetch = async (url, options = {}) => {
         let response = await fetch(url, {

@@ -8,11 +8,19 @@ import { useEffect, useState } from "react";
 import { setTokens } from "./redux/slice/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute";
+import { setUser } from "./redux/slice/userSlice";
 
 function App() {
   const dispatch = useDispatch();
   const { accessToken } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username') || sessionStorage.getItem('username');
+    if (storedUsername) {
+        dispatch(setUser(storedUsername));
+    }
+}, [dispatch]);
 
   useEffect(() => {
     const initializeAuth = async () => {
