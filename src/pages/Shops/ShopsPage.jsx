@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 const deleteShop = async (id) => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_API_GLOBAL_URL}/api/shops/${id}`,
+      `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops/${id}`,
       {
         method: "DELETE",
       }
@@ -35,7 +35,7 @@ const deleteShop = async (id) => {
 };
 
 const fetchShops = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shops`);
+  const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops`);
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }

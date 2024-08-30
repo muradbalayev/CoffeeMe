@@ -2,15 +2,18 @@ import {  ShoppingCart, X } from "lucide-react";
 import {  useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
+import useCustomFetch from "../../utils/utils";
 
 const EditPartnerModal = ({  data, setShowEditModal }) => {
 
     const [editedData, setEditedData] = useState(data);
-    console.log(editedData)
+    const customFetch = useCustomFetch();
+
     const queryClient = useQueryClient();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        
 
         setEditedData({
             ...editedData,
@@ -21,41 +24,34 @@ const EditPartnerModal = ({  data, setShowEditModal }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const formData = new FormData();
 
-        if (
-            !data.name ||
-            !data.address ||
-            !data.username ||
-            !data.phone 
-       
-          ) {
-            toast.error("Fill all the inputs");
+        if (!editedData.username || !editedData.password) {
+            toast.error("Username is required");
             return;
-          }
+        }
 
-        // Append all the edited data to the formData
-        Object.keys(editedData).forEach((key) => {
-            if (editedData[key] !== undefined && editedData[key] !== null) {
-                formData.append(key, editedData[key]);
-            }
-        });
+        const updateData = {
+            username: editedData.username,
+            password: editedData.password,
+        };
+       console.log(editedData.username)
 
-        mutation.mutate(formData);
+        mutation.mutate(updateData);
         toast.success("Partner Edited Successfully!");
     };
 
 
     const mutation = useMutation(
-        async (formData) => {
-            const response = await fetch(
-                `${import.meta.env.VITE_API_GLOBAL_URL}/api/partners/${editedData._id
+        async (updateData) => {
+            const response = await customFetch(
+                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/partners/${editedData._id
                 }`,
                 {
                     method: "PUT",
-                    body: formData,
+                    body: JSON.stringify(updateData),
                 }
             );
+            console.log(response.json)
             return await response.json();
         },
         {
@@ -101,7 +97,7 @@ const EditPartnerModal = ({  data, setShowEditModal }) => {
                                 name="name"
                                 placeholder="Name"
                                 value={editedData.name}
-                                onChange={handleChange}
+                                disabled
                             />
                         </div>
                         <div className="inputContainer">
@@ -112,7 +108,7 @@ const EditPartnerModal = ({  data, setShowEditModal }) => {
                                 name="address"
                                 placeholder="Address"
                                 value={editedData.address}
-                                onChange={handleChange}
+                                disabled
                             />
                         </div>
                     </div>
@@ -129,6 +125,19 @@ const EditPartnerModal = ({  data, setShowEditModal }) => {
                             />
                         </div>
                         <div className="inputContainer">
+                            <label className="form-label">Password</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="password"
+                                placeholder="Password"
+                                value={editedData.password}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    {/* <div className="w-full flex inputRow gap-5 justify-between">
+                          <div className="inputContainer">
                             <label className="form-label">Contact Number</label>
                             <input
                                 className="form-control"
@@ -138,23 +147,6 @@ const EditPartnerModal = ({  data, setShowEditModal }) => {
                                 value={editedData.phone}
                                 onChange={handleChange}
                             />
-                        </div>
-                    </div>
-                    {/* <div className="w-full flex inputRow gap-5 justify-between">
-                        <div className="inputContainer">
-                            <label className="form-label">Withdraw Method</label>
-                            <select
-                                className="form-control"
-                                name="method"
-                                value={editedData.method}
-                                onChange={handleChange}
-                            >
-                                <option value="" selected disabled>
-                                    Select Method
-                                </option>
-                                <option value="card">Cash</option>
-                                <option value="cash">Card</option>
-                            </select>
                         </div>
                     </div>
                 */}

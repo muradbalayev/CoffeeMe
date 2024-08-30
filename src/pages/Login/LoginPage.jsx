@@ -1,6 +1,6 @@
 import './Login.css'
 import { useNavigate } from "react-router-dom"
-import {  useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
 import { useDispatch } from "react-redux";
@@ -15,7 +15,7 @@ function LoginPage() {
     const [type, setType] = useState(false)
 
     const [rememberMe, setRememberMe] = useState(false);
- 
+
 
     // console.log(import.meta.env.VITE_API_GLOBAL_URL)
 
@@ -43,8 +43,7 @@ function LoginPage() {
 
             const { refreshToken, accessToken } = data;
 
-            dispatch(setTokens({ accessToken, refreshToken }));
-
+            dispatch(setTokens({ accessToken, refreshToken , username}));
 
             if (rememberMe) {
                 localStorage.setItem('refreshToken', refreshToken);
@@ -94,7 +93,7 @@ function LoginPage() {
                         onChange={(e) => setRememberMe(e.target.checked)}
                         type="checkbox" className="hidden" />
 
-                    <div className="checkbox-wrapper-31"  onClick={() => setRememberMe(!rememberMe)}>
+                    <div className="checkbox-wrapper-31" onClick={() => setRememberMe(!rememberMe)}>
                         <input type="checkbox" />
                         <svg viewBox="0 0 35.6 35.6">
                             <circle className="background" cx="17.8" cy="17.8" r="17.8"></circle>

@@ -12,7 +12,7 @@ import {
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearTokens } from "../redux/slice/authSlice";
 
 const SIDEBAR_ITEMS = [
@@ -66,6 +66,7 @@ function Sidebar() {
   const notificationDropdownRef = useRef(null);
 
   const dispatch = useDispatch();
+  const username = useSelector(state => state.auth.username)
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -126,7 +127,7 @@ function Sidebar() {
           <Menu size={24} />
         </motion.button>
       </div>
-      <div className="w-full flex flex-col gap-3 items-center justify-start h-32">
+      <div className="w-full flex flex-col gap-3 items-center justify-start h-28">
         <div className={`profile-img bg-gray-300 rounded-full transition duration-300 md:p-6 p-3 ${isSidebarOpen ? 'scale-100' : 'scale-50'}`}>
           <User size={45} />
         </div>
@@ -139,14 +140,14 @@ function Sidebar() {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, delay: 0.1 }}
             >
-              Coffee Shop Name
+              {username}
             </motion.span>
           )}
         </AnimatePresence>
       </div>
-      <nav className="links w-full overflow-auto flex flex-col">
+      <nav className="links w-full flex flex-col">
         <Link ref={dropdownRef} onClick={dropdownToggle} end='true'
-          className={`lg:text-sm text-xs px-6 py-3 relative group ${isUsersActive ? "active" : ""}`}>
+          className={`lg:text-sm text-xs px-6 py-2 relative group ${isUsersActive ? "active" : ""}`}>
           <User size={20} style={{ minWidth: "20px" }} />
           <AnimatePresence>
             {isSidebarOpen && (
@@ -179,11 +180,11 @@ function Sidebar() {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="absolute w-full left-0 top-11 border-b border-s border-e rounded-b-xl border-slate-900 backdrop-blur-lg">
+                className="absolute w-full left-0 top-9 border-b  rounded-b-xl border-slate-900 backdrop-blur-lg">
                 <Link
                   to="/dashboard/users"
                   // style={{ backgroundColor: "gray" }}
-                  className=" px-6 py-3 text-xs dropdown-link"
+                  className="px-6 py-2 text-xs dropdown-link"
                 >
                   <Users size={15} style={{ minWidth: "20px" }} />
                   <AnimatePresence>
@@ -203,7 +204,7 @@ function Sidebar() {
                 <Link
                   to="/dashboard/premiumusers"
                   // style={{ backgroundColor: "gray" }}
-                  className=" px-6 py-3 text-xs rounded-b-lg dropdown-link"
+                  className=" px-6 py-2 text-xs rounded-b-lg dropdown-link"
                 >
                   <Crown size={15} style={{ minWidth: "20px" }} />
                   <AnimatePresence>
@@ -228,7 +229,7 @@ function Sidebar() {
           <NavLink
             key={item.id}
             to={item.path}
-            className="lg:text-sm text-xs px-6 py-3"
+            className="lg:text-sm text-xs px-6 py-2"
             end
           >
             {item.icon}
@@ -251,7 +252,7 @@ function Sidebar() {
         {/* Notification */}
 
         <Link ref={notificationDropdownRef} onClick={notificationDropdownToggle} end='true'
-          className={`lg:text-sm text-xs px-6 py-3 relative group ${isNotificationActive ? "active" : ""}`}>
+          className={`lg:text-sm text-xs px-6 py-2 relative group ${isNotificationActive ? "active" : ""}`}>
           <BellRing size={20} style={{ minWidth: "20px" }} />
           <AnimatePresence>
             {isSidebarOpen && (
@@ -283,10 +284,10 @@ function Sidebar() {
                 animate={{ opacity: 1, translateY: 0 }}  // Animate upwards
                 exit={{ opacity: 0, translateY: 10 }}    // Exit downwards
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="absolute w-full left-0 bottom-11 border-t border-s border-e rounded-t-xl border-slate-900 backdrop-blur-lg">
+                className="absolute w-full left-0 bottom-9 border-t  rounded-t-xl border-slate-900 backdrop-blur-lg">
                 <Link
                   to="/dashboard/send-notification"
-                  className=" px-6 py-3 text-xs dropdown-link"
+                  className=" px-6 py-2 text-xs dropdown-link"
                 >
                   <BellRing size={15} style={{ minWidth: "20px" }} />
                   <AnimatePresence>
@@ -305,7 +306,7 @@ function Sidebar() {
                 </Link>
                 <Link
                   to="/dashboard/partner-messages"
-                  className=" px-6 py-3 text-xs dropdown-link"
+                  className=" px-6 py-2 text-xs dropdown-link"
                 >
                   <Crown size={15} style={{ minWidth: "20px" }} />
                   <AnimatePresence>
@@ -324,7 +325,7 @@ function Sidebar() {
                 </Link>
                 <Link
                   to="/dashboard/auto-notifications"
-                  className=" px-6 py-3 text-xs dropdown-link"
+                  className=" px-6 py-2 text-xs dropdown-link"
                 >
                   <BellElectricIcon size={15} style={{ minWidth: "20px" }} />
                   <AnimatePresence>
@@ -347,7 +348,7 @@ function Sidebar() {
         </Link>
       </nav>
       <Link
-        className="logout w-full px-6 min-h-10 py-2 mt-auto flex md:flex-row flex-col gap-2 items-center md:text-base text-sm"
+        className="logout w-full px-6 min-h-10 py-2 mt-auto flex md:flex-row flex-col gap-2 items-center md:text-sm text-xs"
         onClick={handleLogout}
       >
         <LogOut size={20} style={{ minWidth: "20px" }} />

@@ -34,12 +34,12 @@ const ProductPage = () => {
   const queryClient = useQueryClient();
 
 
-
   const fetchPartners = async () => {
     const res = await customFetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/partners`);
     if (!res.ok) {
       throw new Error("Network response was not ok");
     }
+    console.log(res)
     return res.json();
   };
 
@@ -65,13 +65,6 @@ const ProductPage = () => {
   const [showAddModal, setShowAddModal] = useState(false);
 
 
-  //Photo Preview
-
-  // const discountTypeMap = {
-  //   STANDARD_DISCOUNT: 'Standard Discount',
-  //   SPECIAL_DISCOUNT: 'Special Discount',
-  // };
-
   const columns = [
     {
       name: "Id",
@@ -95,16 +88,6 @@ const ProductPage = () => {
       selector: row => row.phone,
       sortable: true
     },
-    // {
-    //   name: "Withdraw Method",
-    //   selector: row => row.method,
-    //   sortable: true
-    // },
-    // {
-    //   name: "Discount Type",
-    //   selector: row => discountTypeMap[row.discountType] || 'Unknown Discount Type',
-    //   sortable: true
-    // },
     {
       name: "Actions",
       cell: (row) => (
@@ -148,28 +131,25 @@ const ProductPage = () => {
     }
   };
 
-
-
   function handleModal(row) {
     setPartner(row)
     setModalShow(true)
   }
 
 
-  if (isLoading)
-    return (
+  if (isLoading) return (
       <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
         <Coffee size={30} stroke="#214440" />
         <h1 className="title text-2xl">Loading...</h1>
       </div>
     );
 
+
   if (isError) return (
     <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
       <h1 className="title text-2xl">Error</h1>
     </div>
   );
-
 
 
   if (isSuccess) return (

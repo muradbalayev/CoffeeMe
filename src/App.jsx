@@ -30,6 +30,7 @@ function App() {
               body: JSON.stringify({ token: refreshToken }),
             }
           );
+          
 
           if (!response.ok) {
             throw new Error("Failed to refresh token");
@@ -55,7 +56,7 @@ function App() {
       <div className="loader-container w-full flex justify-center items-center min-h-screen gap-3" >
         <div className="loader-1"></div>
         <div className="loader-2"></div>
-        <div className="loader-3"></div> 
+        <div className="loader-3"></div>
 
       </div>
     )
