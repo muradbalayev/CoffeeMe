@@ -156,8 +156,8 @@ function Sidebar() {
         </AnimatePresence>
       </div>
       <nav className="links w-full flex flex-col mt-2">
-        <Link ref={dropdownRef} onClick={dropdownToggle} end='true'
-          className={`lg:text-sm text-xs px-6 py-2 relative group ${isUsersActive ? "active" : ""}`}>
+        <div ref={dropdownRef} onClick={dropdownToggle} end='true'
+          className={`lg:text-sm user-link text-xs px-6 py-2 relative group ${isUsersActive ? "active" : ""}`}>
           <User size={20} style={{ minWidth: "20px" }} />
           <AnimatePresence>
             {isSidebarOpen && (
@@ -234,7 +234,7 @@ function Sidebar() {
               </motion.div>
             )}
           </AnimatePresence>
-        </Link>
+        </div>
         {SIDEBAR_ITEMS.map((item) => (
           <NavLink
             key={item.id}
@@ -261,8 +261,8 @@ function Sidebar() {
 
         {/* Notification */}
 
-        <Link ref={notificationDropdownRef} onClick={notificationDropdownToggle} end='true'
-          className={`lg:text-sm text-xs px-6 py-2 relative group ${isNotificationActive ? "active" : ""}`}>
+        <div ref={notificationDropdownRef} onClick={notificationDropdownToggle} end='true'
+          className={`user-link lg:text-sm text-xs px-6 py-2 relative group ${isNotificationActive ? "active" : ""}`}>
           <BellRing size={20} style={{ minWidth: "20px" }} />
           <AnimatePresence>
             {isSidebarOpen && (
@@ -355,7 +355,7 @@ function Sidebar() {
               </motion.div>
             )}
           </AnimatePresence>
-        </Link>
+        </div>
       </nav>
       <Link
         className="logout w-full px-6 min-h-10 py-2 mt-auto flex md:flex-row flex-col gap-2 items-center md:text-sm text-xs"

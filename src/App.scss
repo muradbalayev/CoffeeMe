@@ -92,6 +92,20 @@
     font-weight: 500;
   }
 
+  .user-link{
+    display: flex;
+    font-family: Poppins, "sans-serif";
+    align-items: center;
+    gap: 0.4rem;
+    transition: 0.2s ease;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .user-link a:hover {
+    background-color: gray;
+  }
+
   .links a:hover {
     background-color: gray;
   }
