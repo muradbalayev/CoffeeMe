@@ -1,5 +1,67 @@
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "react-query";
+import useCustomFetch from "../../hooks/useCustomFetch";
 
 const SendNotification = () => {
+    const customFetch = useCustomFetch();
+    const queryClient = useQueryClient();
+    const [data, setData] = useState({
+        title: "",
+        category: "",
+        message: "",
+    });
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setData({
+            ...data,
+            [name]: value,
+        });
+    };
+
+    const mutation = useMutation(
+        async (data) => {
+            const response = await customFetch(
+                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/notifications`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                }
+            )
+
+            return await response.json();
+        },
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries("notifications");
+                console.log("Notification sended successfully:", data);
+            },
+            onError: (error) => {
+                console.error("Error sending notification:", error);
+            },
+        }
+    )
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (!data.title || !data.category || !data.message) {
+            toast.error("Fill all the fields");
+            return;
+        }
+
+        mutation.mutate(data)
+
+        toast.success("Notification sent successfully");
+    }
+
+
     const notificationData = [
         { id: 1, name: "John Doe", message: "Message sent successfully!" },
         { id: 2, name: "John Doe", message: "Message sent successfully!" },
@@ -14,43 +76,58 @@ const SendNotification = () => {
                 <div className="relative p-2 flex gap-1 items-center">
                     <h1 className="title lg:text-4xl md:text-3xl text-xl">Send Notification</h1>
                 </div>
-               
+
             </div>
 
-                <form className='notification-form w-full p-3 mt-6 flex flex-col items-center gap-6'>
-                    <div className='flex flex-col gap-1 w-full'>
-                        <label className='font-bold'>Title</label>
-                        <input className='outline-none border-4 rounded-lg md:text-base text-sm md:p-3 p-2 w-full border-green-800 ' type='text' placeholder='Title' />
-                    </div>
-                    <div className='flex flex-col gap-1 w-full'>
-                        <label className='font-bold'>Category</label>
-                        <select className='w-full outline-none border-4 rounded-lg md:text-base text-sm md:p-3 p-2 border-green-800'>
-                            <option disabled selected>
-                                Category
-                            </option>
-                            <option>
-                                All Users
-                            </option>
-                            <option>
-                                Premium Users
-                            </option>
-                            <option>
-                                Streak
-                            </option>
-                            <option>
-                                Gold Badge
-                            </option>
-                        </select>
-                    </div>
-                    <div className='flex flex-col gap-1 w-full'>
-                        <label className='font-bold'>Message</label>
-                        <input className='w-full outline-none border-4 rounded-lg md:text-base text-sm  md:p-3 p-2 border-green-800 ' type='text' placeholder='Message' />
-                    </div>
-                    <button className='border-4 text-white bg-green-800 px-4 py-2'>Send Notification</button>
-                </form>
+            <form onSubmit={handleSubmit} className='notification-form w-full p-3 mt-6 flex flex-col items-center gap-6'>
+                <div className='flex flex-col gap-1 w-full'>
+                    <label className='font-bold'>Title</label>
+                    <input onChange={handleChange}
+                        name="title"
+                        value={data.title}
+                        type='text'
+                        placeholder='Title'
+                        className='outline-none border-4 rounded-lg md:text-base text-sm md:p-3 p-2 w-full border-green-800' />
+                </div>
+                <div className='flex flex-col gap-1 w-full'>
+                    <label className='font-bold'>Category</label>
+                    <select 
+                    name="category"
+                    onChange={handleChange}
+                    value={data.category}
+                    className='w-full outline-none border-4 rounded-lg md:text-base text-sm md:p-3 p-2 border-green-800'>
+                        <option value='' disabled defaultValue={""}>
+                            Category
+                        </option>
+                        <option value='all-users'>
+                            All Users
+                        </option>
+                        <option value='premium-users'>
+                            Premium Users
+                        </option>
+                        <option value='streak'>
+                            Streak
+                        </option>
+                        <option value='gold-badge'>
+                            Gold Badge
+                        </option>
+                    </select>
+                </div>
+                <div className='flex flex-col gap-1 w-full'>
+                    <label className='font-bold'>Message</label>
+                    <input
+                        name="message"
+                        onChange={handleChange}
+                        value={data.message}
+                        type='text' 
+                        placeholder='Message'
+                        className='w-full outline-none border-4 rounded-lg md:text-base text-sm  md:p-3 p-2 border-green-800 ' />
+                </div>
+                <button type="submit" className='border-4 text-white bg-green-800 px-4 py-2'>Send Notification</button>
+            </form>
 
-                {/* Table */}
-                <div className="table overflow-x-auto">
+            {/* Table */}
+            <div className="table overflow-x-auto">
                 <h3 className="my-3 font-semibold lg:text-xl md:text-lg text-base">Last 5 notifications sent</h3>
                 <table className="min-w-full">
                     <thead className="bg-green-800 text-white">
