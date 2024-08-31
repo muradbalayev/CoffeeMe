@@ -37,9 +37,7 @@ function LoginPage() {
 
             if (!response.ok) {
                 toast.error('Login failed');
-                return;
-                // throw new Error('Login failed');
-                
+                return;                
             }
 
             const data = await response.json();
@@ -67,7 +65,7 @@ function LoginPage() {
 
     return (
         <div className="loginpage w-full h-screen flex items-center justify-center flex-col">
-            <h1 className="text-white text-2xl font-semibold">COFFEE SHOP</h1>
+            <h1 className="text-white text-2xl font-semibold">COFFEEME</h1>
             <h1 className="text-white text-2xl font-semibold mb-10">ADMIN</h1>
             <form className=" flex flex-col items-center" onSubmit={handleLogin}>
                 <div className="flex flex-col gap-1 mt-3 w-80">

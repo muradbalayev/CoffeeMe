@@ -4,11 +4,9 @@ import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
 import useCustomFetch from "../../hooks/useCustomFetch";
 
-const EditPartnerModal = ({ data, setShowEditModal }) => {
-    const [editedData, setEditedData] = useState({
-        ...data, 
-        password: "" 
-    });
+const EditPreUserNotification = ({  data, setShowEditModal }) => {
+
+    const [editedData, setEditedData] = useState(data);
     const customFetch = useCustomFetch();
 
     const queryClient = useQueryClient();
@@ -26,19 +24,20 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!editedData.username || !editedData.password) {
-            toast.error("Username is required");
+        if (!editedData.name || !editedData.title || editedData.message) {
+            toast.error("All fields required");
             return;
         }
 
         const updateData = {
-            username: editedData.username,
-            password: editedData.password,
+            name: editedData.name,
+            title: editedData.title,
+            message: editedData.message,
         };
-    //    console.log(updateData)
+       console.log(updateData)
 
         mutation.mutate(updateData);
-        toast.success("Partner Edited Successfully!");
+        toast.success("Notification Edited Successfully!");
     };
 
 
@@ -46,7 +45,7 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
         async (updateData) => {
             const response = await customFetch(
 
-                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/partners/${editedData._id
+                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/notification/premium-users/${editedData._id
                 }`,
                 {
                     headers: {
@@ -61,12 +60,12 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
         },
         {
             onSuccess: (data) => {
-                queryClient.invalidateQueries("partners");
+                queryClient.invalidateQueries("notification");
                 setShowEditModal(false);
-                console.log("Partner edited successfully:", data);
+                console.log("Notification edited successfully:", data);
             },
             onError: (error) => {
-                console.error("Error editing partner:", error);
+                console.error("Error editing notification:", error);
             },
         }
     );
@@ -106,37 +105,26 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
                             />
                         </div>
                         <div className="inputContainer">
-                            <label className="form-label">Address</label>
+                            <label className="form-label">Title</label>
                             <input
                                 className="form-control"
                                 type="text"
-                                name="address"
-                                placeholder="Address"
-                                value={editedData.address}
+                                name="title"
+                                placeholder="Title"
+                                value={editedData.title}
                                 disabled
                             />
                         </div>
                     </div>
                     <div className="w-full flex inputRow gap-5 justify-between">
                         <div className="inputContainer">
-                            <label className="form-label">Username</label>
+                            <label className="form-label">Message</label>
                             <input
                                 className="form-control"
                                 type="text"
                                 name="username"
                                 placeholder="Username"
-                                value={editedData.username}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="inputContainer">
-                            <label className="form-label">Password</label>
-                            <input
-                                className="form-control"
-                                type="password"
-                                name="password"
-                                placeholder="Password"
-                                value={editedData.password}
+                                value={editedData.message}
                                 onChange={handleChange}
                             />
                         </div>
@@ -160,4 +148,4 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
     );
 }
 
-export default EditPartnerModal;
+export default EditPreUserNotification;
