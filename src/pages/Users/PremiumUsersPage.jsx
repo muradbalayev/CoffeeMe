@@ -1,15 +1,21 @@
 import { Crown } from "lucide-react";
 import UserTable from "../../Components/Users/UserTable";
+import useCustomFetch from "../../hooks/useCustomFetch";
 
 
-const fetchUsers = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/users/premium`);
-  if (!res.ok) {
-      throw new Error("Network response was not ok");
-  }
-  return res.json();
-};
+
 const PremiumUsersPage = () => {
+  const customFetch = useCustomFetch();
+
+
+  const fetchUsers = async () => {
+    const res = await customFetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/users/premium`);
+    if (!res.ok) {
+        throw new Error("Network response was not ok");
+    }
+    return res.json();
+  };
+
   const users = 
     {
       id: 1,

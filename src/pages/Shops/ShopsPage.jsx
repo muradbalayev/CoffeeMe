@@ -19,37 +19,41 @@ import Swal from "sweetalert2";
 import EditShopModal from "../../Components/Shops/ShopUpdate";
 import AddShopModal from "../../Components/Shops/ShopCreate";
 import { useNavigate } from "react-router-dom";
+import useCustomFetch from "../../hooks/useCustomFetch";
 
-const deleteShop = async (id) => {
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
-    console.log(res);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const fetchShops = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops`);
-  if (!res.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return res.json();
-};
 
 
 
 function ShopsPage() {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const customFetch = useCustomFetch();
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // State to store search query
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const fetchShops = async () => {
+    const res = await customFetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops`);
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return res.json();
+  };
+
+  const deleteShop = async (id) => {
+    try {
+      const res = await customFetch(
+        `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
 
   const deleteMutation = useMutation({
@@ -124,7 +128,7 @@ function ShopsPage() {
             <input
               className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border-3 outline-none rounded-md"
               placeholder="Search"
-              value={searchQuery} 
+              value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <Search className="search-icon" />
@@ -160,7 +164,7 @@ function ShopsPage() {
                 <td className="col-2">{shop.name}</td>
                 <td className="col-1">
                   <button
-                    onClick={() => navigate(`/dashboard/menu/${shop._id}/products`)} 
+                    onClick={() => navigate(`/dashboard/menu/${shop._id}/products`)}
                     className="px-3 py-2 border"
                     style={{ backgroundColor: "#214440", color: "white" }}>
                     <Eye size={15} color="white"></Eye>

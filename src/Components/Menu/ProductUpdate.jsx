@@ -4,8 +4,11 @@ import { useRef } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
 import Lightbox from "yet-another-react-lightbox";
+import useCustomFetch from "../../hooks/useCustomFetch";
 
 const EditProductModal = ({ shopId, data, setShowEditModal }) => {
+    const customFetch = useCustomFetch();
+
     const PhotoFileRef = useRef(null);
 
     const [editedData, setEditedData] = useState(data);
@@ -96,8 +99,8 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
 
     const mutation = useMutation(
         async (formData) => {
-            const response = await fetch(
-                `${import.meta.env.VITE_API_GLOBAL_URL}/api/products/${editedData._id
+            const response = await customFetch(
+                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/products/${editedData._id
                 }`,
                 {
                     method: "PUT",

@@ -3,8 +3,11 @@ import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
 import Lightbox from "yet-another-react-lightbox";
+import useCustomFetch from "../../hooks/useCustomFetch";
 
 const AddProductModal = ({ shopId, setShowAddModal }) => {
+  const customFetch = useCustomFetch();
+
   const PhotoFileRef = useRef(null);
 
   const queryClient = useQueryClient();
@@ -57,8 +60,8 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
 
   const mutation = useMutation(
     async (formData) => {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_GLOBAL_URL}/api/products/${shopId}`,
+      const response = await customFetch(
+        `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/products/${shopId}`,
         {
           method: "POST",
           body: formData,
@@ -68,12 +71,12 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
     },
     {
       onSuccess: (data) => {
-        queryClient.invalidateQueries("shops");
+        queryClient.invalidateQueries("products");
         setShowAddModal(false);
-        console.log("Shop added successfully:", data);
+        console.log("Product added successfully:", data);
       },
       onError: (error) => {
-        console.error("Error adding shop:", error);
+        console.error("Error adding product:", error);
       },
     }
   );

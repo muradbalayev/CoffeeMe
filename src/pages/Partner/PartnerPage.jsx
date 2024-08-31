@@ -1,37 +1,22 @@
 import { useState } from "react";
 import DataTable from "react-data-table-component"
-import { Coffee, Eye, Pencil, Search, Trash2 } from "lucide-react";
+import { Coffee, Eye, Pencil, Search } from "lucide-react";
 // import Swal from "sweetalert2";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import {  useQuery } from "react-query";
 
 import "yet-another-react-lightbox/plugins/thumbnails.css";
-import Swal from "sweetalert2";
 import AddPartnerModal from "../../Components/Partners/PartnerCreate";
 import EditPartnerModal from "../../Components/Partners/PartnerUpdate";
 import PartnerModal from "../../Components/Partners/PartnerModal";
 import useCustomFetch from "../../hooks/useCustomFetch";
 
-const deleteShop = async (id) => {
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_GLOBAL_URL}/api/partners/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
-    console.log(res);
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 
 
-const ProductPage = () => {
+const PartnerPage = () => {
   const customFetch = useCustomFetch();
 
   const [editedItem, setEditedItem] = useState(null);
-  const queryClient = useQueryClient();
 
 
   const fetchPartners = async () => {
@@ -43,17 +28,7 @@ const ProductPage = () => {
   };
 
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteShop,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["partners"]);
-      console.log("Partner deleted successfully");
-    },
-    onError: (error) => {
-      console.error("Error deleting partner:", error);
-    },
-  });
-
+  
   const { isLoading, isError, isSuccess, data } = useQuery(
     "partners",
     fetchPartners
@@ -95,12 +70,7 @@ const ProductPage = () => {
             className='px-3 py-2 bg-blue-800 text-white rounded-md'>
             <Pencil size={18} />
           </button>
-          <button
-            className="px-3 py-2 bg-red-600 text-white rounded-md"
-            onClick={() => handleDelete(row._id)}
-          >
-            <Trash2 size={18} />
-          </button>
+         
           <button style={{ backgroundColor: '#214440' }}
             className='px-2 py-1 text-white rounded-md'
             onClick={() => handleModal(row)}>
@@ -113,22 +83,6 @@ const ProductPage = () => {
   ]
 
 
-  const handleDelete = async (partnerId) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This action cannot be undone!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    });
-
-    if (result.isConfirmed) {
-      deleteMutation.mutate(partnerId);
-      Swal.fire("Deleted!", "Your partner has been deleted.", "success");
-    }
-  };
 
   function handleModal(row) {
     setPartner(row)
@@ -149,7 +103,7 @@ const ProductPage = () => {
       <h1 className="title text-2xl">Error</h1>
     </div>
   );
-
+console.log(data)
 
   if (isSuccess) return (
     <div className="wrapper">
@@ -197,4 +151,4 @@ const ProductPage = () => {
   )
 }
 
-export default ProductPage
+export default PartnerPage

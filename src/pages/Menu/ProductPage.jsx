@@ -12,24 +12,15 @@ import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import EditProductModal from "../../Components/Menu/ProductUpdate";
 import Swal from "sweetalert2";
+import useCustomFetch from "../../hooks/useCustomFetch";
 
-const deleteShop = async (id) => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_GLOBAL_URL}/api/products/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      console.log(res);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
 
   
 
 const ProductPage = () => {
+    const customFetch = useCustomFetch();
+
     const { shopId } = useParams();
 
     const [editedItem, setEditedItem] = useState(null);
@@ -38,13 +29,27 @@ const ProductPage = () => {
 
 
     const fetchProducts = async () => {
-        const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/shops/${shopId}/products`);
+        const res = await customFetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops/${shopId}/products`);
         if (!res.ok) {
-            throw new Error("Network response was not ok");
+            console.log("Network response was not ok");
         }
         return res.json();
     };
 
+
+    const deleteShop = async (id) => {
+        try {
+          const res = await customFetch(
+            `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/products/${id}`,
+            {
+              method: "DELETE",
+            }
+          );
+          console.log(res);
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
     const deleteMutation = useMutation({
         mutationFn: deleteShop,
