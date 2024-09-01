@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { BellElectricIcon, BellRing, BookOpen, ChartBarIncreasing, ChevronDown, ChevronUp, Crown, NotebookText, ShoppingCart, Wallet as WalletIcon } from "lucide-react";
 
 import {
@@ -9,12 +9,10 @@ import {
   User,
   Users,
 } from "lucide-react";
-import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { clearTokens } from "../redux/slice/authSlice";
-import { clearUser } from "../redux/slice/userSlice";
+import {  useSelector } from "react-redux";
+import useLogout from "../hooks/useLogout";
 
 const SIDEBAR_ITEMS = [
   {
@@ -62,7 +60,8 @@ const SIDEBAR_ITEMS = [
 ];
 
 function Sidebar() {
-  const navigate = useNavigate();
+  const logout = useLogout();
+
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [dropdown, setDropDown] = useState(false);
@@ -72,22 +71,7 @@ function Sidebar() {
   const [notificationDropdown, setNotificationDropDown] = useState(false);
   const notificationDropdownRef = useRef(null);
 
-  const dispatch = useDispatch();
-  const username = useSelector(state => state.user.username)
-
-  const handleLogout = async (e) => {
-    e.preventDefault();
-    dispatch(clearTokens());
-    localStorage.removeItem("refreshToken");
-    sessionStorage.removeItem("refreshToken");
-    toast.success(`${username} coffeeshop'dan çıxış etdi.`);
-    localStorage.removeItem("username");
-    sessionStorage.removeItem("username");
-    dispatch(clearUser());
-    navigate("/");
-
-  };
-
+  const username = useSelector(state => state.user.username);
 
 
   const dropdownToggle = () => {
@@ -359,7 +343,7 @@ function Sidebar() {
       </nav>
       <Link
         className="logout w-full px-6 min-h-10 py-2 mt-auto flex md:flex-row flex-col gap-2 items-center md:text-sm text-xs"
-        onClick={handleLogout}
+        onClick={logout}
       >
         <LogOut size={20} style={{ minWidth: "20px" }} />
         <AnimatePresence>

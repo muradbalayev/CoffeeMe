@@ -1,68 +1,22 @@
 import './Login.css'
-import { useNavigate } from "react-router-dom"
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { setTokens } from "../../redux/slice/authSlice";
-import { setUser } from '../../redux/slice/userSlice';
+import useLogin from '../../hooks/useLogin';
 function LoginPage() {
-    const dispatch = useDispatch()
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
-    const navigate = useNavigate()
     const [type, setType] = useState(false)
-
     const [rememberMe, setRememberMe] = useState(false);
 
+  
+    const login = useLogin(); 
 
-    // console.log(import.meta.env.VITE_API_GLOBAL_URL)
-
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault();
-
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/auth`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username,
-                    password,
-                }),
-            });
-
-            if (!response.ok) {
-                toast.error('Login failed');
-                return;                
-            }
-
-            const data = await response.json();
-
-            const { refreshToken, accessToken } = data;
-
-            dispatch(setTokens({ accessToken, refreshToken }));
-            dispatch(setUser( username ));
-
-            if (rememberMe) {
-                localStorage.setItem('refreshToken', refreshToken);
-                localStorage.setItem('username', username);
-            } else {
-                sessionStorage.setItem('refreshToken', refreshToken);
-                sessionStorage.setItem('username', username);
-            }
-
-            toast.success(`${username} logged in.`);
-            navigate('/dashboard');
-        } catch (error) {
-            toast.error('Login failed');
-            toast.error(error);
-        }
+        login(username, password, rememberMe);
     };
-
+    
     return (
         <div className="loginpage w-full h-screen flex items-center justify-center flex-col">
             <h1 className="text-white text-2xl font-semibold">COFFEEME</h1>
