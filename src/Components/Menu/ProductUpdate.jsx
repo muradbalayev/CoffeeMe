@@ -174,25 +174,21 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
 
     return (
         <div
-            data-name="form-container"
-            onClick={(e) => {
-                e.target.dataset.name && setShowEditModal(false);
-            }}
-            className="addModalContainer overflow-auto z-10 p-4 items-center justify-center flex absolute left-0 top-0 w-full max-h-svh"
+        data-name="form-container"
+        onClick={(e) => e.target.dataset.name && setShowEditModal(false)}
+        className="addModalContainer"
+    >
+        <form
+            className="addModalForm"
+            onSubmit={handleSubmit}
         >
-            <form
-                className="addModalForm overflow-auto w-2/3 items-center justify-center flex-col flex relative"
-                onSubmit={handleSubmit}
-            >
-                <X
-                    color="red"
-                    size={30}
-                    className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
-                    onClick={() => setShowEditModal(false)}
-                />
-                <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
-                    Edit Product
-                </h2>
+            <X
+                color="red"
+                size={30}
+                className="closeButton"
+                onClick={() => setShowEditModal(false)}
+            />
+            <h2 className="text-black display-5 title text-3xl p-3 mb-5">Edit Product</h2>
                 <div className="w-full gap-3 flex flex-col">
                     <div className="w-full flex inputRow gap-5 justify-between">
                         <div className="inputContainer">

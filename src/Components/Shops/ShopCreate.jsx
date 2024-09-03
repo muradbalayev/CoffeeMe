@@ -120,16 +120,16 @@ const AddShopModal = ({ setShowAddModal }) => {
       onClick={(e) => {
         e.target.dataset.name && setShowAddModal(false);
       }}
-      className="addModalContainer overflow-hidden z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
+      className="addModalContainer"
     >
       <form
-        className="addModalForm overflow-hidden w-3/4 items-center justify-center flex-col flex relative"
+        className="addModalForm "
         onSubmit={handleSubmit}
       >
         <X
           color="red"
           size={30}
-          className="absolute top-5 right-5 cursor-pointer hover:scale-110 transition duration-300"
+          className="closeButton"
           onClick={() => setShowAddModal(false)}
         />
         <h2 className="text-dark display-5 title text-3xl p-3 mb-5">

@@ -262,6 +262,43 @@
   }
 }
 
+
+/* Modal Container */
+.addModalContainer {
+  position: fixed; /* Change to fixed for better positioning */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%; /* Full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 10; /* Ensure it's on top */
+}
+
+/* Modal Form */
+.addModalForm {
+  background: white; /* White background for the form */
+  padding: 20px;
+  min-width: 50%;
+  max-width: 90%; /* Max width to ensure it doesn't get too large */
+  max-height: 90vh; /* Max height to ensure it doesn't exceed the viewport */
+  overflow-y: auto; /* Vertical scroll if content overflows */
+  overflow-x: hidden; /* Hide horizontal overflow */
+  border-radius: 8px; /* Rounded corners */
+  position: relative; /* Relative positioning for the close button */
+}
+
+/* Close Button */
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  z-index: 11; /* Ensure it's above other content */
+}
+
 @media (min-width: 768px) {
   .balance {
     padding: 1rem 1rem;
