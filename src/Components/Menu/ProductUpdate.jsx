@@ -11,19 +11,56 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
 
     const PhotoFileRef = useRef(null);
 
-    const [editedData, setEditedData] = useState(data);
+    const [editedData, setEditedData] = useState({
+        ...data,
+        sizes: data.sizes?.map(size => ({
+            size: size.size || '', // Ensure size name is included
+            price: size.price || '',
+            discount: size.discount || ''
+        })) || [
+            { size: 's', price: '', discount: '' },
+            { size: 'm', price: '', discount: '' },
+            { size: 'L', price: '', discount: '' }
+        ]
+    });
+    
     console.log(editedData)
     const queryClient = useQueryClient();
 
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-
-        setEditedData({
-            ...editedData,
-            [name]: value,
-        });
-    }
-
+    
+        const sizeMap = {
+            sPrice: { index: 0, field: "price" },
+            sDiscount: { index: 0, field: "discount" },
+            mPrice: { index: 1, field: "price" },
+            mDiscount: { index: 1, field: "discount" },
+            lPrice: { index: 2, field: "price" },
+            lDiscount: { index: 2, field: "discount" },
+        };
+    
+        if (sizeMap[name]) {
+            const { index, field } = sizeMap[name];
+            const updatedSizes = [...(editedData.sizes || [])];
+    
+            // Initialize missing size objects with default size names if needed
+            while (updatedSizes.length <= index) {
+                updatedSizes.push({ size: ['s', 'm', 'l'][index], price: '', discount: '' });
+            }
+    
+            updatedSizes[index][field] = value;
+            setEditedData({
+                ...editedData,
+                sizes: updatedSizes,
+            });
+        } else {
+            setEditedData({
+                ...editedData,
+                [name]: value,
+            });
+        }
+    };
 
     const [photoPreview, setPhotoPreview] = useState(null);
     const [photoFileName, setPhotoFileName] = useState("");
@@ -66,28 +103,42 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const formData = new FormData();
-
+    
+        const filteredSizes = (editedData.sizes || []).map(size => ({
+            size: size.size || '', // Ensure size name is included
+            price: size.price || '',
+            discount: size.discount || ''
+        })).filter(size => size.price > 0 || size.discount > 0);
+    
+        if (filteredSizes.length === 0) {
+            toast.error("At least one size must have a price or discount.");
+            return;
+        }
+    
         if (
             !editedData.name ||
-            !editedData.price ||
-            !editedData.category ||
-            !editedData.discount ||
             !editedData.discountType ||
+            !editedData.category ||
+            !editedData.type ||
             !editedData.description ||
             !photoFileName
         ) {
             toast.error('Fill all inputs!');
             return;
         }
-
+    
         // Append all the edited data to the formData
+        const formData = new FormData();
         Object.keys(editedData).forEach((key) => {
             if (editedData[key] !== undefined && editedData[key] !== null) {
-                formData.append(key, editedData[key]);
+                if (key === "sizes") {
+                    formData.append(key, JSON.stringify(filteredSizes));
+                } else {
+                    formData.append(key, editedData[key]);
+                }
             }
         });
-
+    
         mutation.mutate(formData);
         toast.success("Product Edited Successfully!");
     };
@@ -127,10 +178,10 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
             onClick={(e) => {
                 e.target.dataset.name && setShowEditModal(false);
             }}
-            className="addModalContainer z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
+            className="addModalContainer overflow-auto z-10 p-4 items-center justify-center flex absolute left-0 top-0 w-full max-h-svh"
         >
             <form
-                className="addModalForm overflow-hidden w-3/4 items-center justify-center flex-col flex relative"
+                className="addModalForm overflow-auto w-2/3 items-center justify-center flex-col flex relative"
                 onSubmit={handleSubmit}
             >
                 <X
@@ -151,34 +202,84 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 type="text"
                                 name="name"
                                 placeholder="Name"
-                                value={editedData.name}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="inputContainer">
-                            <label className="form-label">Price</label>
-                            <input
-                                className="form-control"
-                                type="number"
-                                name="price"
-                                placeholder="Price"
-                                value={editedData.price}
+                                value={editedData.name || ''}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
                     <div className="w-full flex inputRow gap-5 justify-between">
                         <div className="inputContainer">
-                            <label className="form-label">Discount</label>
+                            <label className="form-label">S Price</label>
                             <input
                                 className="form-control"
-                                type="number"
-                                name="discount"
-                                placeholder="Discount"
-                                value={editedData.discount}
+                                type="text"
+                                name="sPrice"
+                                placeholder="S Price"
+                                value={(editedData.sizes && editedData.sizes[0]?.price) || ''} // Use optional chaining
                                 onChange={handleChange}
                             />
                         </div>
+                        <div className="inputContainer">
+                            <label className="form-label">S Discount</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="sDiscount"
+                                placeholder="S Discount"
+                                value={(editedData.sizes && editedData.sizes[0]?.discount) || ''} // Use optional chaining
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
+                        <div className="inputContainer">
+                            <label className="form-label">M Price</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="mPrice"
+                                placeholder="M Price"
+                                value={(editedData.sizes && editedData.sizes[1]?.price) || ''} // Use optional chaining
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="inputContainer">
+                            <label className="form-label">M Discount</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="mDiscount"
+                                placeholder="M Discount"
+                                value={(editedData.sizes && editedData.sizes[1]?.discount) || ''} // Use optional chaining
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
+                        <div className="inputContainer">
+                            <label className="form-label">L Price</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="lPrice"
+                                placeholder="L Price"
+                                value={(editedData.sizes && editedData.sizes[2]?.price) || ''} // Use optional chaining
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="inputContainer">
+                            <label className="form-label">L Discount</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="lDiscount"
+                                placeholder="L Discount"
+                                value={(editedData.sizes && editedData.sizes[2]?.discount) || ''} // Use optional chaining
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
                         <div className="inputContainer">
                             <label className="form-label">Discount Type</label>
                             <select
@@ -187,7 +288,7 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 value={editedData.discountType}
                                 onChange={handleChange}
                             >
-                                <option value="" selected disabled>
+                                <option value="" defaultValue={"Select Discount Type"} disabled>
                                     Select Discount Type
                                 </option>
                                 <option value="STANDARD_DISCOUNT">Standard Discount</option>
@@ -196,7 +297,6 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                         </div>
                     </div>
                     <div className="w-full flex inputRow gap-5 justify-between">
-
                         <div className="inputContainer">
                             <label className="form-label">Category</label>
                             <select
@@ -205,21 +305,35 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 value={editedData.category}
                                 onChange={handleChange}
                             >
-                                <option value="" selected disabled>
-                                    Select Category
-                                </option>
+                                <option value="" disabled>Select Category</option>
                                 <option value="drink">Drink</option>
-                                <option value="cookie">Cookie</option>
+                                <option value="dessert">Dessert</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div className="inputContainer">
+                            <label className="form-label">Type</label>
+                            <select
+                                className="form-control"
+                                name="type"
+                                value={editedData.type}
+                                onChange={handleChange}
+                            >
+                                <option value="" selected disabled>
+                                    Select Type
+                                </option>
+                                <option value="none">None</option>
+                                <option value="takeaway">Takeaway</option>
+                                <option value="cup">Cup</option>
+                                <option value="all">All</option>
                             </select>
                         </div>
                     </div>
                     <div className="w-full flex inputRow gap-5 justify-between">
-
                         <div className="inputContainer">
                             <label className="form-label">Description</label>
-                            <input
+                            <textarea
                                 className="form-control"
-                                type="text"
                                 name="description"
                                 placeholder="Description"
                                 value={editedData.description}
@@ -227,7 +341,6 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                             />
                         </div>
                     </div>
-
                     <div className="w-full flex flex-wrap inputRow gap-5 justify-between">
                         <div className="inputContainer">
                             <label className="form-label">Photo</label>
@@ -258,29 +371,25 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 )}
                             </div>
                         </div>
-
                     </div>
-
-                    <div className="flex mt-10 gap-5 justify-center">
-                        <div>
-                            <button
-                                style={{ backgroundColor: "#214440" }}
-                                type="submit"
-                                className="title px-4 py-2 flex items-center rounded text-white font-bold gap-2"
-                            >
-                                Edit Shop <ShoppingCart color="white" />
-                            </button>
-                        </div>
+                </div>
+                <div className="flex mt-10 gap-5 justify-center">
+                    <div>
+                        <button
+                            style={{ backgroundColor: "#214440" }}
+                            type="submit"
+                            className="title px-4 py-2 flex items-center rounded text-white font-bold gap-2"
+                        >
+                            Edit Shop <ShoppingCart color="white" />
+                        </button>
                     </div>
                 </div>
             </form>
-            {isLightboxOpen && (
-                <Lightbox
-                    open={isLightboxOpen}
-                    close={() => setIsLightboxOpen(false)}
-                    slides={[{ src: lightboxImage }]}
-                />
-            )}
+            <Lightbox
+                open={isLightboxOpen}
+                close={() => setIsLightboxOpen(false)}
+                slides={[{ src: lightboxImage }]}
+            />
         </div>
     );
 }

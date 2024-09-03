@@ -13,10 +13,14 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
   const queryClient = useQueryClient();
   const [data, setData] = useState({
     name: "",
-    price: "",
-    discount: "",
+    sizes: [
+      { size: "s", price: "", discount: "" },
+      { size: "m", price: "", discount: "" },
+      { size: "l", price: "", discount: "" },
+    ],
     discountType: "",
     category: "",
+    type: "",
     description: "",
     photo: null,
   });
@@ -24,16 +28,42 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setData({
-      ...data,
-      [name]: value,
-    });
+
+    // Map the input fields to corresponding sizes array index and field
+    const sizeMap = {
+      sPrice: { index: 0, field: "price" },
+      sDiscount: { index: 0, field: "discount" },
+      mPrice: { index: 1, field: "price" },
+      mDiscount: { index: 1, field: "discount" },
+      lPrice: { index: 2, field: "price" },
+      lDiscount: { index: 2, field: "discount" },
+    };
+
+    if (sizeMap[name]) {
+      const { index, field } = sizeMap[name];
+
+      // Create a copy of the sizes array from the state
+      const updatedSizes = [...data.sizes];
+
+      // Update the specific field in the sizes array
+      updatedSizes[index][field] = value;
+
+      // Update the state with the modified sizes array
+      setData({
+        ...data,
+        sizes: updatedSizes,
+      });
+    } else {
+      // Handle other form inputs that are not related to sizes
+      setData({
+        ...data,
+        [name]: value,
+      });
+    }
   };
 
   const [photoPreview, setPhotoPreview] = useState(null);
-
   const [photoFileName, setPhotoFileName] = useState("Choose File");
-
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState(null);
 
@@ -67,6 +97,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
           body: formData,
         }
       );
+      console.log(formData)
       return await response.json();
     },
     {
@@ -83,12 +114,22 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Filter out sizes where both price and discount are empty
+    const filteredSizes = data.sizes.filter(
+      (size) => size.price > 0 && size.discount > 0
+    );
+
+    // Check if there's at least one valid size after filtering
+    if (filteredSizes.length === 0) {
+      toast.error("At least one size must have a price or discount.");
+      return;
+    }
+
     if (
       !data.name ||
-      !data.price ||
-      !data.discount ||
       !data.discountType ||
       !data.category ||
+      !data.type ||
       !data.description ||
       !photoFileName ||
       photoFileName === "Choose File"
@@ -100,14 +141,18 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
       if (data[key] !== undefined && data[key] !== null) {
-        formData.append(key, data[key]);
+        if (key === "sizes") {
+          // Append the filtered sizes array to formData
+          formData.append(key, JSON.stringify(filteredSizes));
+        } else {
+          formData.append(key, data[key]);
+        }
       }
     });
+
     mutation.mutate(formData);
     toast.success("Product Created Successfully!");
-    // Submit formData using useMutation
   };
-
   console.log(data);
 
   return (
@@ -116,10 +161,10 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       onClick={(e) => {
         e.target.dataset.name && setShowAddModal(false);
       }}
-      className="addModalContainer overflow-hidden z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
+      className="addModalContainer overflow-auto z-10 items-center justify-center flex absolute left-0 top-0 w-full min-h-svh"
     >
       <form
-        className="addModalForm overflow-hidden w-3/4 items-center justify-center flex-col flex relative"
+        className="addModalForm overflow-auto w-3/4 items-center justify-center flex-col flex relative"
         onSubmit={handleSubmit}
       >
         <X
@@ -140,34 +185,85 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                 type="text"
                 name="name"
                 placeholder="Name"
+                required
                 value={data.name}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="inputContainer">
-              <label className="form-label">Price</label>
-              <input
-                className="form-control"
-                type="number"
-                name="price"
-                placeholder="Price"
-                value={data.price}
                 onChange={handleChange}
               />
             </div>
           </div>
           <div className="w-full flex inputRow gap-5 justify-between">
             <div className="inputContainer">
-              <label className="form-label">Discount</label>
+              <label className="form-label">S Price</label>
               <input
                 className="form-control"
-                type="number"
-                name="discount"
-                placeholder="Discount"
-                value={data.discount}
+                type="text"
+                name="sPrice"
+                placeholder="SPrice"
+                value={data.sizes[0].price}
                 onChange={handleChange}
               />
             </div>
+            <div className="inputContainer">
+              <label className="form-label">S Discount</label>
+              <input
+                className="form-control"
+                type="text"
+                name="sDiscount"
+                placeholder="S Discount"
+                value={data.sizes[0].discount}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
+              <label className="form-label">M Price</label>
+              <input
+                className="form-control"
+                type="text"
+                name="mPrice"
+                placeholder="M Price"
+                value={data.sizes[1].price}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label">M Discount</label>
+              <input
+                className="form-control"
+                type="text"
+                name="mDiscount"
+                placeholder="M Discount"
+                value={data.sizes[1].discount}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
+              <label className="form-label">L Price</label>
+              <input
+                className="form-control"
+                type="text"
+                name="lPrice"
+                placeholder="L Price"
+                value={data.sizes[2].price}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label">L Discount </label>
+              <input
+                className="form-control"
+                type="text"
+                name="lDiscount"
+                placeholder="L Discount"
+                value={data.sizes[2].discount}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="w-full flex inputRow gap-5 justify-between">
             <div className="inputContainer">
               <label className="form-label">Discount Type</label>
               <select
@@ -197,7 +293,28 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                   Select Category
                 </option>
                 <option value="drink">Drink</option>
-                <option value="cookie">Cookie</option>
+                <option value="dessert">Dessert</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+          </div>
+          <div className="w-full flex inputRow gap-5 justify-between">
+          <div className="inputContainer">
+              <label className="form-label">Type</label>
+              <select
+                className="form-control"
+                name="type"
+                value={data.type}
+                onChange={handleChange}
+              >
+                <option value="" selected disabled>
+                  Select Type
+                </option>
+                <option value="none">None</option>
+                <option value="takeaway">Takeaway</option>
+                <option value="cup">Cup</option>
+                <option value="all">All</option>
               </select>
             </div>
           </div>
