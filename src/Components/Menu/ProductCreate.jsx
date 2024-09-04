@@ -29,6 +29,17 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+    const isValidNumber = !isNaN(value) && value.trim() !== '';
+
+    // Prevent negative numbers for price and discount
+    if (name.endsWith('Price') || name.endsWith('Discount')) {
+        if (isValidNumber && Number(value) < 0) {
+            toast.error("Price or Discount cannot be negative.");
+            return; // Do not update state if the value is negative
+        }
+    }
+
+
     // Map the input fields to corresponding sizes array index and field
     const sizeMap = {
       sPrice: { index: 0, field: "price" },
@@ -114,17 +125,38 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Filter out sizes where both price and discount are empty
-    const filteredSizes = data.sizes.filter(
-      (size) => size.price > 0 && size.discount > 0
+    // Check if any size has a price without a discount or vice versa
+    for (let i = 0; i < data.sizes.length; i++) {
+      const { price, discount } = data.sizes[i];
+      if ((price && !discount) || (!price && discount)) {
+        toast.error(`Both price and discount must be provided for size ${data.sizes[i].size.toUpperCase()}.`);
+        return;
+      }
+    }
+
+    // Ensure at least one valid size is present
+    const hasValidSize = data.sizes.some(
+      (size) => size.price && size.discount
     );
 
-    // Check if there's at least one valid size after filtering
-    if (filteredSizes.length === 0) {
-      toast.error("At least one size must have a price or discount.");
+    if (!hasValidSize) {
+      toast.error("At least one size must have both a price and a discount.");
       return;
     }
 
+
+      // Filter out sizes where both price and discount are empty
+      const filteredSizes = data.sizes.filter(
+        (size) => size.price > 0 && size.discount >= 0
+      );
+  
+      // Check if there's at least one valid size after filtering
+      if (filteredSizes.length === 0) {
+        toast.error("At least one size must have a price or discount.");
+        return;
+      }
+
+      
     if (
       !data.name ||
       !data.discountType ||
@@ -142,7 +174,6 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
     Object.keys(data).forEach((key) => {
       if (data[key] !== undefined && data[key] !== null) {
         if (key === "sizes") {
-          // Append the filtered sizes array to formData
           formData.append(key, JSON.stringify(filteredSizes));
         } else {
           formData.append(key, data[key]);
@@ -196,7 +227,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               <label className="form-label">S Price</label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="sPrice"
                 placeholder="SPrice"
                 value={data.sizes[0].price}
@@ -207,7 +238,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               <label className="form-label">S Discount</label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="sDiscount"
                 placeholder="S Discount"
                 value={data.sizes[0].discount}
@@ -220,7 +251,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               <label className="form-label">M Price</label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="mPrice"
                 placeholder="M Price"
                 value={data.sizes[1].price}
@@ -231,7 +262,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               <label className="form-label">M Discount</label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="mDiscount"
                 placeholder="M Discount"
                 value={data.sizes[1].discount}
@@ -244,7 +275,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               <label className="form-label">L Price</label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="lPrice"
                 placeholder="L Price"
                 value={data.sizes[2].price}
@@ -255,7 +286,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               <label className="form-label">L Discount </label>
               <input
                 className="form-control"
-                type="text"
+                type="number"
                 name="lDiscount"
                 placeholder="L Discount"
                 value={data.sizes[2].discount}
@@ -289,7 +320,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                 value={data.category}
                 onChange={handleChange}
               >
-                <option defaultValue="" disabled>
+                <option value="" defaultValue={"Select Category"} disabled >
                   Select Category
                 </option>
                 <option value="drink">Drink</option>
@@ -300,7 +331,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
 
           </div>
           <div className="w-full flex inputRow gap-5 justify-between">
-          <div className="inputContainer">
+            <div className="inputContainer">
               <label className="form-label">Type</label>
               <select
                 className="form-control"
@@ -308,7 +339,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                 value={data.type}
                 onChange={handleChange}
               >
-                <option disabled>
+                <option disabled value="" defaultValue={"Select Type"} >
                   Select Type
                 </option>
                 <option value="none">None</option>

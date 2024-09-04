@@ -26,7 +26,7 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!editedData.username || !editedData.password || !editedData.fullname || editedData.shopPercentage) {
+        if (!editedData.username || !editedData.fullname || !editedData.shopPercentage && editedData.shopPercentage !== 0) {
             toast.error("All fields are required");
             return;
         }
@@ -37,7 +37,7 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
             fullname: editedData.fullname,
             shopPercentage: editedData.shopPercentage,
         };
-    //    console.log(updateData)
+       console.log(updateData)
 
         mutation.mutate(updateData);
         toast.success("Partner Edited Successfully!");
@@ -95,7 +95,7 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
                     Edit Product
                 </h2>
                 <div className="w-full gap-3 flex flex-col">
-                    <div className="w-full flex inputRow gap-5 justify-between">
+                    {/* <div className="w-full flex inputRow gap-5 justify-between">
                         <div className="inputContainer">
                             <label className="form-label">Name</label>
                             <input
@@ -118,7 +118,7 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
                                 disabled
                             />
                         </div>
-                    </div>
+                    </div> */}
                     <div className="w-full flex inputRow gap-5 justify-between">
                         <div className="inputContainer">
                             <label className="form-label">Username</label>

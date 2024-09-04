@@ -47,7 +47,11 @@ const PartnerPage = () => {
     },
     {
       name: "Partner Name",
-      selector: row => row.name
+      selector: row => row.fullname
+    },
+    {
+      name: "Partner Name",
+      selector: row => row.fullname
     },
     {
       name: "Address",
@@ -103,6 +107,7 @@ const PartnerPage = () => {
       <h1 className="title text-2xl">Error</h1>
     </div>
   );
+  
 console.log(data)
 
   if (isSuccess) return (

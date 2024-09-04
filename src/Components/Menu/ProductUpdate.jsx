@@ -30,7 +30,14 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        const isValidNumber = !isNaN(value) && value.trim() !== '';
+        if ((name.endsWith('Price') || name.endsWith('Discount')) && isValidNumber && Number(value) < 0) {
+            toast.error("Price or Discount cannot be negative.");
+            return;
+        }
     
+        
         const sizeMap = {
             sPrice: { index: 0, field: "price" },
             sDiscount: { index: 0, field: "discount" },
@@ -42,11 +49,13 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
     
         if (sizeMap[name]) {
             const { index, field } = sizeMap[name];
+           
+
             const updatedSizes = [...(editedData.sizes || [])];
     
             // Initialize missing size objects with default size names if needed
             while (updatedSizes.length <= index) {
-                updatedSizes.push({ size: ['s', 'm', 'l'][index], price: '', discount: '' });
+                updatedSizes.push({ size: ['s', 'm', 'l'][index], price: 0, discount: 0 });
             }
     
             updatedSizes[index][field] = value;
@@ -103,18 +112,18 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
     
         const filteredSizes = (editedData.sizes || []).map(size => ({
-            size: size.size || '', // Ensure size name is included
-            price: size.price || '',
-            discount: size.discount || ''
-        })).filter(size => size.price > 0 || size.discount > 0);
-    
+            size: size.size || '',
+            price: size.price || '0',
+            discount: size.discount || '0'
+        })).filter(size => Number(size.price) > 0 || Number(size.discount) > 0);
+
         if (filteredSizes.length === 0) {
             toast.error("At least one size must have a price or discount.");
             return;
         }
-    
         if (
             !editedData.name ||
             !editedData.discountType ||
@@ -211,7 +220,7 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 type="text"
                                 name="sPrice"
                                 placeholder="S Price"
-                                value={(editedData.sizes && editedData.sizes[0]?.price) || ''} // Use optional chaining
+                                value={(editedData.sizes && editedData.sizes[0]?.price) || '0'} // Use optional chaining
                                 onChange={handleChange}
                             />
                         </div>
@@ -222,7 +231,7 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 type="text"
                                 name="sDiscount"
                                 placeholder="S Discount"
-                                value={(editedData.sizes && editedData.sizes[0]?.discount) || ''} // Use optional chaining
+                                value={(editedData.sizes && editedData.sizes[0]?.discount) || '0'} // Use optional chaining
                                 onChange={handleChange}
                             />
                         </div>
@@ -235,7 +244,7 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 type="text"
                                 name="mPrice"
                                 placeholder="M Price"
-                                value={(editedData.sizes && editedData.sizes[1]?.price) || ''} // Use optional chaining
+                                value={(editedData.sizes && editedData.sizes[1]?.price) || '0'} // Use optional chaining
                                 onChange={handleChange}
                             />
                         </div>
@@ -246,7 +255,7 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 type="text"
                                 name="mDiscount"
                                 placeholder="M Discount"
-                                value={(editedData.sizes && editedData.sizes[1]?.discount) || ''} // Use optional chaining
+                                value={(editedData.sizes && editedData.sizes[1]?.discount) || '0'} // Use optional chaining
                                 onChange={handleChange}
                             />
                         </div>
@@ -259,7 +268,7 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 type="text"
                                 name="lPrice"
                                 placeholder="L Price"
-                                value={(editedData.sizes && editedData.sizes[2]?.price) || ''} // Use optional chaining
+                                value={(editedData.sizes && editedData.sizes[2]?.price) || '0'} // Use optional chaining
                                 onChange={handleChange}
                             />
                         </div>
@@ -270,7 +279,7 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 type="text"
                                 name="lDiscount"
                                 placeholder="L Discount"
-                                value={(editedData.sizes && editedData.sizes[2]?.discount) || ''} // Use optional chaining
+                                value={(editedData.sizes && editedData.sizes[2]?.discount) || '0'} // Use optional chaining
                                 onChange={handleChange}
                             />
                         </div>
