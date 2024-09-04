@@ -289,7 +289,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                 value={data.category}
                 onChange={handleChange}
               >
-                <option value="" selected disabled>
+                <option defaultValue="" disabled>
                   Select Category
                 </option>
                 <option value="drink">Drink</option>
@@ -308,7 +308,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                 value={data.type}
                 onChange={handleChange}
               >
-                <option value="" selected disabled>
+                <option disabled>
                   Select Type
                 </option>
                 <option value="none">None</option>

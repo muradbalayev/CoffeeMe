@@ -315,7 +315,7 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 value={editedData.type}
                                 onChange={handleChange}
                             >
-                                <option value="" selected disabled>
+                                <option defaultValue="" disabled>
                                     Select Type
                                 </option>
                                 <option value="none">None</option>

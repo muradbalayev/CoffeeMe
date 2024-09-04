@@ -101,7 +101,7 @@ const ProductPage = () => {
         },
         {
             name: "Price",
-            selector: row => `${row.price} ₼`,
+            selector: row => `${row.sizes[0].price} ₼`,
         },
         {
             name: "Photo",
@@ -114,7 +114,7 @@ const ProductPage = () => {
                         <img
                             src={`${imgUrl}/${row.photo}`}
                             alt="Shop Photo"
-                            className="object-contain h-9 w-9"
+                            className="object-contain h-14 w-14"
                         />
                     )}{" "}
                 </button>
@@ -126,12 +126,12 @@ const ProductPage = () => {
         },
         {
             name: "Discounted Price",
-            selector: row => `${row.discountedPrice} ₼`,
+            selector: row => `${row.sizes[0].discountedPrice} ₼`,
             sortable: true
         },
         {
             name: "Discount",
-            selector: row => `${row.discount} %`,
+            selector: row => `${row.sizes[0].discount} %`,
             sortable: true
         },
         {
