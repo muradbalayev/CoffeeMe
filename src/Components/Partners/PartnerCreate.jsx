@@ -9,6 +9,8 @@ const AddPartnerModal = ({  setShowAddModal }) => {
   const [data, setData] = useState({
     name: "",
     address: "",
+    shopPercentage: "",
+    fullname: "",
     username: "",
     phone: "",
     method: "",
@@ -54,6 +56,8 @@ const AddPartnerModal = ({  setShowAddModal }) => {
     if (
       !data.name ||
       !data.address ||
+      !data.shopPercentage ||
+      !data.fullname ||
       !data.username ||
       !data.phone ||
       !data.method
@@ -118,6 +122,30 @@ const AddPartnerModal = ({  setShowAddModal }) => {
                 name="address"
                 placeholder="Address"
                 value={data.address}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
+              <label className="form-label">Partner Name</label>
+              <input
+                className="form-control"
+                type="number"
+                name="fullname"
+                placeholder="Partner Name"
+                value={data.fullname}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label">Shop Percentage</label>
+              <input
+                className="form-control"
+                type="number"
+                name="shopPercentage"
+                placeholder="Shop Percentage"
+                value={data.shopPercentage}
                 onChange={handleChange}
               />
             </div>

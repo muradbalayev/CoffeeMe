@@ -11,11 +11,9 @@ const Partner = ({ partner, isOpen, onClose }) => {
                     <div>
                         <p><strong>ID:</strong> {partner._id}</p>
                         <p><strong>Name:</strong> {partner.name}</p>
-                        <p><strong>Price:</strong> {partner.price}</p>
-                        <p><strong>Category:</strong> {partner.category}</p>
-                        <p><strong>Discount:</strong> {partner.discount}</p>
-                        <p><strong>DiscountedPrice:</strong> {partner.discountedPrice}</p>
-                        <p><strong>Discount Type:</strong> {partner.discountType}</p>
+                        <p><strong>Price:</strong> {partner.fullname}</p>
+                        <p><strong>Category:</strong> {partner.username}</p>
+                        <p><strong>Discount:</strong> {partner.shopPercentage}</p>
                     </div>
                 ) : (
                     <p>Loading...</p>

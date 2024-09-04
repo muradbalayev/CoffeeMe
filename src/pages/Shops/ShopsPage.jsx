@@ -122,11 +122,11 @@ function ShopsPage() {
       )}
 
       <div className="flex justify-between w-full items-center p-2">
-        <h1 className="title md:text-4xl text-2xl">Shops</h1>
+        <h1 className="title lg:text-4xl text-3xl">Shops</h1>
         <div className="gap-3 flex items-center">
           <div className="flex relative">
             <input
-              className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border-3 outline-none rounded-md"
+              className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
               placeholder="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

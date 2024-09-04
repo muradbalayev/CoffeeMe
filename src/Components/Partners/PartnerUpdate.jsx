@@ -26,14 +26,16 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!editedData.username || !editedData.password) {
-            toast.error("Username is required");
+        if (!editedData.username || !editedData.password || !editedData.fullname || editedData.shopPercentage) {
+            toast.error("All fields are required");
             return;
         }
 
         const updateData = {
             username: editedData.username,
             password: editedData.password,
+            fullname: editedData.fullname,
+            shopPercentage: editedData.shopPercentage,
         };
     //    console.log(updateData)
 
@@ -137,6 +139,30 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
                                 name="password"
                                 placeholder="Password"
                                 value={editedData.password}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
+                        <div className="inputContainer">
+                            <label className="form-label">Partner Name</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                name="fullname"
+                                placeholder="Partner Name"
+                                value={editedData.fullname}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="inputContainer">
+                            <label className="form-label">Shop Percentage</label>
+                            <input
+                                className="form-control"
+                                type="number"
+                                name="shopPercentage"
+                                placeholder="Shop Percentage"
+                                value={editedData.shopPercentage}
                                 onChange={handleChange}
                             />
                         </div>

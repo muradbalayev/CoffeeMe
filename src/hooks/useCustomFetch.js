@@ -16,35 +16,45 @@ const useCustomFetch = () => {
                 'Authorization': `Bearer ${accessToken}`,
             },
         });
-        // console.log(accessToken)
-        // console.log(options)
-        if (response.status === 401) {
-            // Token süresi dolmuş, refreshToken ile yenile
-            const refreshResponse = await fetch('/admin/auth/refresh-token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ token: refreshToken }),
-            });
 
-            if (refreshResponse.ok) {
-                const { accessToken: newAccessToken } = await refreshResponse.json();
-                dispatch(setTokens({ accessToken: newAccessToken }));
-                sessionStorage.setItem('accessToken', newAccessToken);
-                
-                // Yeniden dene
-                response = await fetch(url, {
-                    ...options,
+        if (response.status === 401) {
+            try {
+                console.log('Access token expired, attempting to refresh token...');
+                const refreshResponse = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/admin/auth/refresh-token`, {
+                    method: 'POST',
                     headers: {
-                        ...options.headers,
-                        'Authorization': `Bearer ${newAccessToken}`,
+                        'Content-Type': 'application/json',
                     },
+                    body: JSON.stringify({ token: refreshToken }),
                 });
-            } else {
-                dispatch(clearTokens())
-                localStorage.removeItem('refreshToken')
-                sessionStorage.removeItem('refreshToken')
+
+                if (refreshResponse.ok) {
+                    const { accessToken: newAccessToken } = await refreshResponse.json();
+                    dispatch(setTokens({ accessToken: newAccessToken }));
+                    sessionStorage.setItem('accessToken', newAccessToken);
+
+                    // Retry the original request with the new access token
+                    response = await fetch(url, {
+                        ...options,
+                        headers: {
+                            ...options.headers,
+                            'Authorization': `Bearer ${newAccessToken}`,
+                        },
+                    });
+                    console.log('Token refreshed successfully');
+                } else {
+                    console.error('Failed to refresh token. Logging out...');
+                    dispatch(clearTokens());
+                    localStorage.removeItem('refreshToken');
+                    sessionStorage.removeItem('refreshToken');
+                    navigate('/');
+                    throw new Error('Session expired');
+                }
+            } catch (error) {
+                console.error('Error during token refresh', error);
+                dispatch(clearTokens());
+                localStorage.removeItem('refreshToken');
+                sessionStorage.removeItem('refreshToken');
                 navigate('/');
                 throw new Error('Session expired');
             }

@@ -34,7 +34,7 @@ const MenuPage = () => {
         <div className="wrapper">
             <div className="users-header flex items-center justify-between">
                 <div className="relative p-2 flex gap-1 items-center">
-                    <h1 className="title lg:text-4xl md:text-3xl text-xl">Menu</h1>
+                    <h1 className="title lg:text-4xl text-3xl ">Menu</h1>
                 </div>
                 <div className="flex items-center gap-3 mb-1 p-3 border-green-900">
                     <div className="flex relative">
