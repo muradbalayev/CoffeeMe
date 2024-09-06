@@ -1,16 +1,14 @@
 import { Eye, Image, ShoppingCart, X } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "react-query";
 import Lightbox from "yet-another-react-lightbox";
-import useCustomFetch from "../../hooks/useCustomFetch";
+import { useAddProductMutation } from "../../redux/services/productApi";
 
 const AddProductModal = ({ shopId, setShowAddModal }) => {
-  const customFetch = useCustomFetch();
+  const [addProduct] = useAddProductMutation();
 
   const PhotoFileRef = useRef(null);
 
-  const queryClient = useQueryClient();
   const [data, setData] = useState({
     name: "",
     sizes: [
@@ -99,30 +97,8 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
     setIsLightboxOpen(true);
   };
 
-  const mutation = useMutation(
-    async (formData) => {
-      const response = await customFetch(
-        `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/products/${shopId}`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      console.log(formData)
-      return await response.json();
-    },
-    {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries("products");
-        setShowAddModal(false);
-        console.log("Product added successfully:", data);
-      },
-      onError: (error) => {
-        console.error("Error adding product:", error);
-      },
-    }
-  );
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Check if any size has a price without a discount or vice versa
@@ -181,8 +157,14 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       }
     });
 
-    mutation.mutate(formData);
-    toast.success("Product Created Successfully!");
+    try {
+      await addProduct({ shopId, formData }).unwrap();
+      toast.success("Product Created Successfully!");
+      setShowAddModal(false);
+  } catch (error) {
+      toast.error("Failed to create product");
+      console.error("Error adding product:", error);
+  }
   };
   console.log(data);
 

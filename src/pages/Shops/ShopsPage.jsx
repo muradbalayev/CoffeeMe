@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
@@ -19,53 +18,19 @@ import Swal from "sweetalert2";
 import EditShopModal from "../../Components/Shops/ShopUpdate";
 import AddShopModal from "../../Components/Shops/ShopCreate";
 import { useNavigate } from "react-router-dom";
-import useCustomFetch from "../../hooks/useCustomFetch";
-
-
+import { useDeleteShopMutation, useGetShopQuery } from "../../redux/services/shopApi";
 
 
 function ShopsPage() {
-  const customFetch = useCustomFetch();
   const navigate = useNavigate();
 
-  const queryClient = useQueryClient();
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const fetchShops = async () => {
-    const res = await customFetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops`);
-    if (!res.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return res.json();
-  };
-
-  const deleteShop = async (id) => {
-    try {
-      const res = await customFetch(
-        `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      console.log(res);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteShop,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["shops"]);
-      console.log("Shop deleted successfully");
-    },
-    onError: (error) => {
-      console.error("Error deleting shop:", error);
-    },
+  
+  const { data, isLoading, isError, isSuccess, error } = useGetShopQuery(undefined, {
+    pollingInterval: 10000, // ReFetch every 5 seconds
   });
+  console.log(data)
+
+  const [deleteShop] = useDeleteShopMutation();
 
   const handleDelete = async (shopId) => {
     const result = await Swal.fire({
@@ -79,19 +44,25 @@ function ShopsPage() {
     });
 
     if (result.isConfirmed) {
-      deleteMutation.mutate(shopId);
-      Swal.fire("Deleted!", "Your shop has been deleted.", "success");
+      // Call the delete mutation
+      deleteShop(shopId).then(() => {
+        Swal.fire("Deleted!", "Your shop has been deleted.", "success");
+      }).catch((error) => {
+        Swal.fire("Error!", "There was an issue deleting the shop.", {error});
+      });
     }
   };
+
+
+  // const queryClient = useQueryClient();
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   const [editedItem, setEditedItem] = useState(null);
   const [open, setOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("");
 
-  const { isLoading, isError, isSuccess, data, error } = useQuery(
-    "shops",
-    fetchShops
-  );
 
   const handleLogoClick = (par) => {
     const url = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/shops/${par}`;
@@ -106,6 +77,7 @@ function ShopsPage() {
         <h1 className="title text-2xl">Loading...</h1>
       </div>
     );
+
   if (isError) return <div>An error occurred: {error.message}</div>;
 
   const imgUrl = `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/shops`;

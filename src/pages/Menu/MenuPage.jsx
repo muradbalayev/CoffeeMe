@@ -1,25 +1,15 @@
 import { Coffee, Search } from "lucide-react"
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "react-query";
-import useCustomFetch from "../../hooks/useCustomFetch";
+import { useGetMenuQuery } from "../../redux/services/menuApi";
 
 const MenuPage = () => {
     const navigate = useNavigate();
-    const customFetch = useCustomFetch();
+    const { data, isLoading, isError, isSuccess, error } = useGetMenuQuery(undefined, {
+        pollingInterval: 10000, // ReFetch every 5 seconds
+    });
+    console.log(data)
 
-    const fetchShops = async () => {
-        const res = await customFetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops`);
-        if (!res.ok) {
-            throw new Error("Network response was not ok");
-        }
-        return res.json();
-    };
-
-    const { isLoading, isError, isSuccess, data, error } = useQuery(
-        "shops",
-        fetchShops
-    );
 
     if (isLoading)
         return (

@@ -12,13 +12,14 @@ import {
     Trash2,
 } from "lucide-react";
 import UserModal from "./UserModal";
-import { useQuery } from "react-query";
+import { useGetUserQuery } from "../../redux/services/userApi";
 
-const UserTable = ({ fetchUsers, title, icon, usertype }) => {
-    const { isLoading, isError, isSuccess, data } = useQuery(
-        "users",
-        fetchUsers
-    );
+const UserTable = ({  title, icon, usertype }) => {
+    const { data, isLoading, isError, isSuccess, error } = useGetUserQuery(undefined, {
+        pollingInterval: 10000, // ReFetch every 5 seconds
+    });
+    console.log(data)
+ 
     const [search, setSearch] = useState("");
     const [userid, setUserid] = useState(null);
     const [modalShow, setModalShow] = useState(false);
@@ -126,7 +127,7 @@ const UserTable = ({ fetchUsers, title, icon, usertype }) => {
 
     if (isError) return (
         <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
-            <h1 className="title text-2xl">Error</h1>
+            <h1 className="title text-2xl">{error}</h1>
         </div>
     );
 

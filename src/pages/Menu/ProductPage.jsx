@@ -3,8 +3,6 @@ import DataTable from "react-data-table-component"
 import { Coffee, Eye, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import ProductModal from "../../Components/Menu/ProductModal";
-// import Swal from "sweetalert2";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import AddProductModal from "../../Components/Menu/ProductCreate";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
@@ -12,60 +10,43 @@ import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import EditProductModal from "../../Components/Menu/ProductUpdate";
 import Swal from "sweetalert2";
-import useCustomFetch from "../../hooks/useCustomFetch";
+import { useDeleteProductMutation, useGetProductQuery } from "../../redux/services/productApi";
 
 
 
   
 
 const ProductPage = () => {
-    const customFetch = useCustomFetch();
+    // const customFetch = useCustomFetch();
 
     const { shopId } = useParams();
+    const { data, isLoading, isError,isSuccess, error } = useGetProductQuery(shopId);
+    console.log(data)
+    const [deleteProduct] = useDeleteProductMutation();
 
-    const [editedItem, setEditedItem] = useState(null);
-    const queryClient = useQueryClient();
+    const handleDelete = async (shopId) => {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "This action cannot be undone!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        });
     
-
-
-    const fetchProducts = async () => {
-        const res = await customFetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops/${shopId}/products`);
-        if (!res.ok) {
-            console.log("Network response was not ok");
-        }
-        return res.json();
-    };
-
-
-    const deleteShop = async (id) => {
-        try {
-          const res = await customFetch(
-            `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/products/${id}`,
-            {
-              method: "DELETE",
-            }
-          );
-          console.log(res);
-        } catch (error) {
-          console.error(error);
+        if (result.isConfirmed) {
+          // Call the delete mutation
+          deleteProduct(shopId).then(() => {
+            Swal.fire("Deleted!", "Your shop has been deleted.", "success");
+          }).catch((error) => {
+            Swal.fire("Error!", "There was an issue deleting the shop.", {error});
+          });
         }
       };
-
-    const deleteMutation = useMutation({
-        mutationFn: deleteShop,
-        onSuccess: () => {
-          queryClient.invalidateQueries(["products"]);
-          console.log("Product deleted successfully");
-        },
-        onError: (error) => {
-          console.error("Error deleting product:", error);
-        },
-      });
     
-    const { isLoading, isError, isSuccess, data } = useQuery(
-        "products",
-        fetchProducts
-    );
+    const [editedItem, setEditedItem] = useState(null);
+    
 
     const [product, setProduct] = useState(null)
     const [modalShow, setModalShow] = useState(false);
@@ -169,25 +150,6 @@ const ProductPage = () => {
 
     ]
 
- 
-      const handleDelete = async (shopId) => {
-        const result = await Swal.fire({
-          title: "Are you sure?",
-          text: "This action cannot be undone!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, delete it!",
-        });
-    
-        if (result.isConfirmed) {
-          deleteMutation.mutate(shopId);
-          Swal.fire("Deleted!", "Your product has been deleted.", "success");
-        }
-      };
-    
-
 
     function handleModal(row) {
         setProduct(row)
@@ -205,7 +167,7 @@ const ProductPage = () => {
 
     if (isError) return (
         <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
-            <h1 className="title text-2xl">Error</h1>
+            <h1 className="title text-2xl">Error:{error}</h1>
         </div>
     );
 

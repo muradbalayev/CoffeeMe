@@ -2,41 +2,26 @@ import { useState } from "react";
 import DataTable from "react-data-table-component"
 import { Coffee, Eye, Pencil, Search } from "lucide-react";
 // import Swal from "sweetalert2";
-import {  useQuery } from "react-query";
+// import {  useQuery } from "react-query";
 
 import "yet-another-react-lightbox/plugins/thumbnails.css";
-import AddPartnerModal from "../../Components/Partners/PartnerCreate";
 import EditPartnerModal from "../../Components/Partners/PartnerUpdate";
 import PartnerModal from "../../Components/Partners/PartnerModal";
-import useCustomFetch from "../../hooks/useCustomFetch";
-
-
+import { useGetPartnerQuery } from "../../redux/services/partnerApi";
 
 
 const PartnerPage = () => {
-  const customFetch = useCustomFetch();
 
   const [editedItem, setEditedItem] = useState(null);
 
+  const { data, isLoading, isError, isSuccess, error } = useGetPartnerQuery(undefined, {
+    pollingInterval: 10000, // ReFetch every 5 seconds
+  });
+  console.log(data)
 
-  const fetchPartners = async () => {
-    const res = await customFetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/partners`);
-    if (!res.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return res.json();
-  };
-
-
-  
-  const { isLoading, isError, isSuccess, data } = useQuery(
-    "partners",
-    fetchPartners
-  );
 
   const [partner, setPartner] = useState(null)
   const [modalShow, setModalShow] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
 
 
   const columns = [
@@ -74,7 +59,7 @@ const PartnerPage = () => {
             className='px-3 py-2 bg-blue-800 text-white rounded-md'>
             <Pencil size={18} />
           </button>
-         
+
           <button style={{ backgroundColor: '#214440' }}
             className='px-2 py-1 text-white rounded-md'
             onClick={() => handleModal(row)}>
@@ -86,13 +71,10 @@ const PartnerPage = () => {
 
   ]
 
-
-
   function handleModal(row) {
     setPartner(row)
     setModalShow(true)
   }
-
 
   if (isLoading) return (
     <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
@@ -104,15 +86,13 @@ const PartnerPage = () => {
 
   if (isError) return (
     <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
-      <h1 className="title text-2xl">Error</h1>
+      <h1 className="title text-2xl">{error.message || "An error occurred"}</h1>
     </div>
   );
-
-console.log(data)
+  console.log(data)
 
   if (isSuccess) return (
     <div className="wrapper">
-      {showAddModal && <AddPartnerModal setShowAddModal={setShowAddModal} />}
       {editedItem && (
         <EditPartnerModal data={editedItem} setShowEditModal={setEditedItem} />
       )}
@@ -140,7 +120,7 @@ console.log(data)
       <div className='mt-4'>
         <DataTable
           columns={columns}
-          data={data.partners}
+          data={data.partners || []} 
           highlightOnHover
           responsive
         >

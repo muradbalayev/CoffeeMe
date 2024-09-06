@@ -2,12 +2,11 @@ import { Eye, Image, ShoppingCart, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "react-query";
 import Lightbox from "yet-another-react-lightbox";
-import useCustomFetch from "../../hooks/useCustomFetch";
+import { useEditProductMutation } from "../../redux/services/productApi";
 
 const EditProductModal = ({ shopId, data, setShowEditModal }) => {
-    const customFetch = useCustomFetch();
+    const [editProduct] = useEditProductMutation();
 
     const PhotoFileRef = useRef(null);
 
@@ -25,7 +24,6 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
     });
     
     console.log(editedData)
-    const queryClient = useQueryClient();
 
 
     const handleChange = (e) => {
@@ -110,7 +108,7 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
     
@@ -148,38 +146,20 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
             }
         });
     
-        mutation.mutate(formData);
-        toast.success("Product Edited Successfully!");
+        try {
+            await editProduct({ id: editedData._id, formData }).unwrap();
+            setShowEditModal(false);
+            toast.success("Product Edited Successfully!");
+        } catch (error) {
+            toast.error("Failed to edit the product. Please try again.");
+            console.error("Error editing product:", error);
+        }
     };
 
     const handleEyeClick = (image) => {
         setLightboxImage(image);
         setIsLightboxOpen(true);
     };
-
-    const mutation = useMutation(
-        async (formData) => {
-            const response = await customFetch(
-                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/products/${editedData._id
-                }`,
-                {
-                    method: "PUT",
-                    body: formData,
-                }
-            );
-            return await response.json();
-        },
-        {
-            onSuccess: (data) => {
-                queryClient.invalidateQueries("products");
-                setShowEditModal(false);
-                console.log("Procuct edited successfully:", data);
-            },
-            onError: (error) => {
-                console.error("Error adding product:", error);
-            },
-        }
-    );
 
     return (
         <div

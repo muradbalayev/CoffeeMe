@@ -1,16 +1,17 @@
 import { Eye, Image, ShoppingCart, X } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "react-query";
 import Lightbox from "yet-another-react-lightbox";
-import useCustomFetch from "../../hooks/useCustomFetch";
+import { useAddShopMutation } from "../../redux/services/shopApi";
 
 const AddShopModal = ({ setShowAddModal }) => {
-  const customFetch = useCustomFetch();
+  // const customFetch = useCustomFetch();
   const LogoFileRef = useRef(null);
   const PhotoFileRef = useRef(null);
 
-  const queryClient = useQueryClient();
+  const [addShop] = useAddShopMutation();
+
+  // const queryClient = useQueryClient();
   const [data, setData] = useState({
     name: "",
     address: "",
@@ -61,29 +62,7 @@ const AddShopModal = ({ setShowAddModal }) => {
     setIsLightboxOpen(true);
   };
 
-  const mutation = useMutation(
-    async (formData) => {
-      const response = await customFetch(
-        `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      return await response.json();
-    },
-    {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries("shops");
-        setShowAddModal(false);
-        console.log("Shop added successfully:", data);
-      },
-      onError: (error) => {
-        console.error("Error adding shop:", error);
-      },
-    }
-  );
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -95,11 +74,10 @@ const AddShopModal = ({ setShowAddModal }) => {
       !logoFileName ||
       photoFileName === "Choose File" ||
       logoFileName === "Choose File"
-  ) {
+    ) {
       toast.error('Fill all the inputs');
       return;
-  }
-
+    }
 
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
@@ -107,9 +85,15 @@ const AddShopModal = ({ setShowAddModal }) => {
         formData.append(key, data[key]);
       }
     });
-    mutation.mutate(formData);
-    toast.success("Shop Created Successfully!");
-    // Submit formData using useMutation
+
+    try {
+      await addShop(formData).unwrap(); // Trigger the mutation and unwrap the result
+      toast.success("Shop Created Successfully!");
+      setShowAddModal(false);
+    } catch (error) {
+      toast.error("Failed to create shop");
+      console.error("Error adding shop:", error);
+    }
   };
 
   console.log(data);

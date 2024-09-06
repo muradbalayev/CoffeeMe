@@ -1,17 +1,18 @@
 import {  ShoppingCart, X } from "lucide-react";
 import {  useState } from "react";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "react-query";
-import useCustomFetch from "../../hooks/useCustomFetch";
+import { useEditPartnerMutation } from "../../redux/services/partnerApi";
+
+
 
 const EditPartnerModal = ({ data, setShowEditModal }) => {
     const [editedData, setEditedData] = useState({
         ...data, 
         password: "" 
     });
-    const customFetch = useCustomFetch();
 
-    const queryClient = useQueryClient();
+    const [editPartner] = useEditPartnerMutation();
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,8 +23,7 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
         });
     }
 
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!editedData.username || !editedData.fullname || !editedData.shopPercentage && editedData.shopPercentage !== 0) {
@@ -31,47 +31,23 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
             return;
         }
 
-        const updateData = {
-            username: editedData.username,
-            password: editedData.password,
-            fullname: editedData.fullname,
-            shopPercentage: editedData.shopPercentage,
-        };
-       console.log(updateData)
+        try {
+            const formData = {
+                username: editedData.username,
+                password: editedData.password,
+                fullname: editedData.fullname,
+                shopPercentage: editedData.shopPercentage,
+            };
 
-        mutation.mutate(updateData);
-        toast.success("Partner Edited Successfully!");
+            await editPartner({ id: editedData._id, formData }).unwrap();
+            toast.success("Partner Edited Successfully!");
+            setShowEditModal(false);
+        } catch (error) {
+            console.error("Error editing partner:", error);
+            toast.error("Error editing partner");
+        }
     };
 
-
-    const mutation = useMutation(
-        async (updateData) => {
-            const response = await customFetch(
-
-                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/partners/${editedData._id
-                }`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    method: "PUT",
-                    body: JSON.stringify(updateData),
-                }
-            );
-
-            return await response.json();
-        },
-        {
-            onSuccess: (data) => {
-                queryClient.invalidateQueries("partners");
-                setShowEditModal(false);
-                console.log("Partner edited successfully:", data);
-            },
-            onError: (error) => {
-                console.error("Error editing partner:", error);
-            },
-        }
-    );
 
     return (
         <div

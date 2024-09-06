@@ -2,18 +2,18 @@ import { Eye, Image, ShoppingCart, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "react-query";
 import Lightbox from "yet-another-react-lightbox";
-import useCustomFetch from "../../hooks/useCustomFetch";
+import { useEditShopMutation } from "../../redux/services/shopApi";
 
 const EditShopModal = ({ data, setShowEditModal }) => {
-  const customFetch = useCustomFetch();
 
   const LogoFileRef = useRef(null);
   const PhotoFileRef = useRef(null);
 
   const [editedData, setEditedData] = useState(data);
-  const queryClient = useQueryClient();
+
+  const [editShop] = useEditShopMutation();
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -96,7 +96,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
   }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
 
@@ -115,7 +115,6 @@ const EditShopModal = ({ data, setShowEditModal }) => {
     // Append all the edited data to the formData
     Object.keys(editedData).forEach((key) => {
       if (key === 'location') {
-        // Handle the nested location object specifically
         formData.append('longitude', editedData.location.coordinates[0]);
         formData.append('latitude', editedData.location.coordinates[1]);
       } else if (editedData[key] !== undefined && editedData[key] !== null) {
@@ -123,8 +122,14 @@ const EditShopModal = ({ data, setShowEditModal }) => {
       }
     });
   
-    mutation.mutate(formData);
-    toast.success("Shop Edited Successfully!");
+    try {
+      await editShop({ id: editedData._id, formData }).unwrap();
+      setShowEditModal(false);
+      toast.success("Shop Edited Successfully!");
+    } catch (error) {
+      toast.error("Failed to edit the shop!", error);
+    }
+
   };
 
   const handleEyeClick = (image) => {
@@ -132,30 +137,6 @@ const EditShopModal = ({ data, setShowEditModal }) => {
     setIsLightboxOpen(true);
   };
 
-  const mutation = useMutation(
-    async (formData) => {
-      const response = await customFetch(
-        `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/shops/${
-          editedData._id
-        }`,
-        {
-          method: "PUT",
-          body: formData,
-        }
-      );
-      return await response.json();
-    },
-    {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries("shops");
-        setShowEditModal(false);
-        console.log("Shop edited successfully:", data);
-      },
-      onError: (error) => {
-        console.error("Error adding shop:", error);
-      },
-    }
-  );
 
   return (
     <div

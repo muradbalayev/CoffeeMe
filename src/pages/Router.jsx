@@ -10,7 +10,6 @@ import WithdrawPage from "./Withdraw/WithdrawPage";
 import WhtCreate from "../Components/Withdraw/WthCreate";
 import AllUsersPage from "./Users/AllUsersPage";
 import PremiumUsersPage from "./Users/PremiumUsersPage";
-import PartnerCreate from "../Components/Partners/PartnerCreate";
 import PartnerUpdate from "../Components/Partners/PartnerUpdate";
 import ShopsPage from "./Shops/ShopsPage";
 import MenuPage from "./Menu/MenuPage";
@@ -46,7 +45,6 @@ function DashboardPage() {
             <Route path="/:users/update/:userid" element={<UserUpdate />} />
 
             <Route path="/partner" element={<PartnerPage />} />
-            <Route path="/partner/create" element={<PartnerCreate />} />
             <Route path="/partner/update/:partnerid" element={<PartnerUpdate />} />
 
             <Route path="/shops" element={<ShopsPage />} />
