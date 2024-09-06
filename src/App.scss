@@ -3,7 +3,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 :root {
-  --coffee-green: #214440;
+  --coffee-green: #00704a;
   --text-gray: #4e4d4d;
   --text-green: #214440;
   --bg-color: rgb(251, 251, 251);
@@ -47,7 +47,7 @@
 .title {
   font-family: "Poppins", sans-serif;
   font-weight: 800;
-  color: var(--coffee-green);
+  color: var(--text-green);
 }
 
 /* LoginForm */
@@ -101,19 +101,10 @@
     font-weight: 500;
     cursor: pointer;
   }
-.user-link:hover{
-  background-color: gray;
-}
-
-  .user-link a:hover {
-    background-color: gray;
-  }
-
-  .links a:hover {
-    background-color: gray;
-  }
 
   .dropdown-link {
+    // background-color: #00704a;
+    color: white;
     transition: 0.3s ease;
 
     &:hover {
@@ -131,13 +122,9 @@
 }
 
 .active {
-  background-color: rgb(88, 88, 88) !important;
+  background-color: white !important;
+  color: #00704a;
 }
-
-// Dashboard Header Color  //
-// .header {
-//   background-color: var(--coffee-green);
-// }
 
 /* table header */
 .cvdizt {

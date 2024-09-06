@@ -174,7 +174,7 @@ function Sidebar() {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="absolute w-full left-0 top-9 border-b  rounded-b-xl border-slate-900 backdrop-blur-lg">
+                className="absolute w-full left-0 top-9 border-b  rounded-b-xl border-slate-900 backdrop-blur-xl">
                 <Link
                   to="/dashboard/users"
                   // style={{ backgroundColor: "gray" }}
@@ -197,7 +197,6 @@ function Sidebar() {
                 </Link>
                 <Link
                   to="/dashboard/premiumusers"
-                  // style={{ backgroundColor: "gray" }}
                   className=" px-6 py-2 text-xs rounded-b-lg dropdown-link"
                 >
                   <Crown size={15} style={{ minWidth: "20px" }} />
@@ -215,6 +214,8 @@ function Sidebar() {
                     )}
                   </AnimatePresence>
                 </Link>
+                <div className="absolute w-full h-full -z-10 opacity-50 bg-[#00704a] left-0 bottom-0 rounded-b-lg"></div>
+
               </motion.div>
             )}
           </AnimatePresence>
@@ -336,6 +337,8 @@ function Sidebar() {
                     )}
                   </AnimatePresence>
                 </Link>
+                <div className="absolute w-full h-full -z-10 opacity-50 bg-[#00704a] left-0 top-0 rounded-t-lg"></div>
+
               </motion.div>
             )}
           </AnimatePresence>
