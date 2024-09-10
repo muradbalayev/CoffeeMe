@@ -1,5 +1,6 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import { clearTokens, setTokens } from "./slice/authSlice";
+import { clearUser } from "./slice/userSlice";
 
 export const baseQueryWithReauth = async (args, api, extraOptions) => {
     let result = await fetchBaseQuery({
@@ -36,6 +37,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
                 })(args, api, extraOptions);
             } else {
                 api.dispatch(clearTokens());
+                api.dispatch(clearUser());
                 // Optionally redirect to login page
             }
         } else {

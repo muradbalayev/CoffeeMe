@@ -29,12 +29,12 @@ export const productApi = createApi({
         }),
         editProduct: builder.mutation({
             query: ({ id, formData }) => ({
-              url: `api/admin/products/${id}`,
-              method: 'PUT',
-              body: formData,
+                url: `api/admin/products/${id}`,
+                method: 'PUT',
+                body: formData,
             }),
             invalidatesTags: ['Product'],
-          }),
+        }),
     }),
     keepUnusedDataFor: 60,
     refetchOnMountOrArgChange: 5

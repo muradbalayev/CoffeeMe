@@ -92,7 +92,7 @@
     font-weight: 500;
   }
 
-  .user-link{
+  .drop-link{
     display: flex;
     font-family: Poppins, "sans-serif";
     align-items: center;
@@ -107,9 +107,9 @@
     color: white;
     transition: 0.3s ease;
 
-    &:hover {
-      background-color: darkgray !important;
-    }
+    // &:hover {
+    //   background-color: darkgray !important;
+    // }
   }
 
   .logout {
@@ -145,6 +145,7 @@
   color: white;
   font-weight: bold !important;
   font-size: 0.9rem !important;
+  
 }
 
 .hsGprm {
@@ -152,12 +153,21 @@
   color: white;
   font-weight: bold !important;
   font-size: 0.9rem !important;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  
 }
 
 /* table row */
+// .rdt_TableRow{
+//   padding-top: 20px;
+//   padding-bottom: 20px;
+// }
+
 .dFsSgh{
   min-width: 200px!important;
 }
+
 
 .dFsSgh:nth-child(1) {
   max-width: 70px !important;

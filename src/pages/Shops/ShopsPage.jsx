@@ -24,7 +24,7 @@ import { useDeleteShopMutation, useGetShopQuery } from "../../redux/services/sho
 function ShopsPage() {
   const navigate = useNavigate();
 
-  
+
   const { data, isLoading, isError, isSuccess, error } = useGetShopQuery(undefined, {
     pollingInterval: 10000, // ReFetch every 5 seconds
   });
@@ -48,7 +48,7 @@ function ShopsPage() {
       deleteShop(shopId).then(() => {
         Swal.fire("Deleted!", "Your shop has been deleted.", "success");
       }).catch((error) => {
-        Swal.fire("Error!", "There was an issue deleting the shop.", {error});
+        Swal.fire("Error!", "There was an issue deleting the shop.", { error });
       });
     }
   };
@@ -111,8 +111,8 @@ function ShopsPage() {
         </div>
       </div>
       <div className="overflow-y-scroll overflow-x-auto w-full">
-        <table className="w-full overflow-y-auto overflow-x-auto">
-          <thead className="text-white" style={{ backgroundColor: "#214440" }}>
+        <table className="w-full rounded-t-xl overflow-hidden">
+          <thead className="text-white bg-[#00704a]" >
             <tr>
               <th className="id" scope="col">
                 #
@@ -129,16 +129,16 @@ function ShopsPage() {
           <tbody className="w-full">
             {filteredShops.map((shop, index) => (
               <tr key={index}>
-                <th scope="row" className="col-1 border-b border-gray-300 id">
+                <td scope="row" className="col-1 border-b border-gray-300 id">
                   {index + 1}
-                </th>
+                </td>
                 <td className="col-1">{shop._id}</td>
                 <td className="col-2">{shop.name}</td>
                 <td className="col-1">
                   <button
                     onClick={() => navigate(`/dashboard/menu/${shop._id}/products`)}
                     className="px-3 py-2 border"
-                    style={{ backgroundColor: "#214440", color: "white" }}>
+                    style={{ backgroundColor: "#00704a", color: "white" }}>
                     <Eye size={15} color="white"></Eye>
                   </button>
                 </td>
@@ -147,7 +147,7 @@ function ShopsPage() {
                     "," +
                     parseInt(shop.location.coordinates[1])}
                 </td>
-                <td className="col-1">
+                <td className="col-1 min-w-32">
                   <button
                     className="px-1 py-1 border rounded max-w-16"
                     onClick={() => handleLogoClick(`${shop.name}-${shop.address}/${shop.logo}`)}
@@ -161,7 +161,7 @@ function ShopsPage() {
                     )}{" "}
                   </button>
                 </td>
-                <td className="col-1">
+                <td className="col-1 min-w-32">
                   <button
                     className="px-1 py-1 border rounded max-w-16"
                     onClick={() => handleLogoClick(`${shop.name}-${shop.address}/${shop.photo}`)}
@@ -175,10 +175,10 @@ function ShopsPage() {
                     )}
                   </button>
                 </td>
-                <td className="col-2 min-w-40">
+                <td className="col-2 min-w-44  ">
                   <button
                     onClick={() => setEditedItem(shop)}
-                    className="px-3 py-2 bg-blue-800 text-white rounded-md"
+                    className=" px-3 py-2 bg-blue-600 text-white rounded-md"
                   >
                     <Pencil size={18} />
                   </button>

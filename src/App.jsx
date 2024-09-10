@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-route
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearTokens, setTokens } from "./redux/slice/authSlice";
-import { setUser } from "./redux/slice/userSlice";
+import { clearUser, setUser } from "./redux/slice/userSlice";
 import LoginPage from "./pages/Login/LoginPage";
 import DashboardPage from "./pages/Router";
 import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute";
@@ -45,51 +45,58 @@ function AuthInitializer() {
   useEffect(() => {
     const storedUsername = localStorage.getItem('username') || sessionStorage.getItem('username');
     if (storedUsername) {
-        dispatch(setUser(storedUsername));
+      dispatch(setUser(storedUsername));
     }
   }, [dispatch]);
 
   useEffect(() => {
     const initializeAuth = async () => {
-        const refreshToken = localStorage.getItem("refreshToken") || sessionStorage.getItem("refreshToken");
+      const refreshToken = localStorage.getItem("refreshToken") || sessionStorage.getItem("refreshToken");
 
-        if (refreshToken) {
-            try {
-                const response = await fetch(
-                    `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/auth/refresh-token`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ token: refreshToken }),
-                    }
-                );
-
-                if (response.ok) {
-                    const data = await response.json();
-                    const { accessToken } = data;
-
-                    dispatch(setTokens({ accessToken, refreshToken }));
-                } else {
-                    dispatch(clearTokens());
-                    localStorage.removeItem("refreshToken");
-                    sessionStorage.removeItem("refreshToken");
-                    navigate("/"); // Redirect to login page
-                }
-            } catch (error) {
-                console.log("Token refresh failed:", error);
-                dispatch(clearTokens());
-                localStorage.removeItem("refreshToken");
-                sessionStorage.removeItem("refreshToken");
-                navigate("/"); // Redirect to login page
+      if (refreshToken) {
+        try {
+          const response = await fetch(
+            `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/auth/refresh-token`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ token: refreshToken }),
             }
-        } else {
-            dispatch(clearTokens());
-            navigate("/"); // Redirect to login page
-        }
+          );
 
-        setLoading(false);
+          if (response.ok) {
+            const data = await response.json();
+            const { accessToken } = data;
+
+            dispatch(setTokens({ accessToken, refreshToken }));
+          } else {
+            dispatch(clearTokens());
+            dispatch(clearUser());
+            localStorage.removeItem("refreshToken");
+            sessionStorage.removeItem("refreshToken");
+            localStorage.removeItem("username");
+            sessionStorage.removeItem("username");
+            navigate("/"); // Redirect to login page
+          }
+        } catch (error) {
+          console.log("Token refresh failed:", error);
+          dispatch(clearTokens());
+          dispatch(clearUser());
+          localStorage.removeItem("refreshToken");
+          sessionStorage.removeItem("refreshToken");
+          localStorage.removeItem("username");
+          sessionStorage.removeItem("username");
+          navigate("/"); // Redirect to login page
+        }
+      } else {
+        dispatch(clearTokens());
+        dispatch(clearUser());
+        navigate("/"); // Redirect to login page
+      }
+
+      setLoading(false);
     };
 
     initializeAuth();

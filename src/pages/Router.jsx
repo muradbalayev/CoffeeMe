@@ -10,17 +10,18 @@ import WithdrawPage from "./Withdraw/WithdrawPage";
 import WhtCreate from "../Components/Withdraw/WthCreate";
 import AllUsersPage from "./Users/AllUsersPage";
 import PremiumUsersPage from "./Users/PremiumUsersPage";
-import PartnerUpdate from "../Components/Partners/PartnerUpdate";
 import ShopsPage from "./Shops/ShopsPage";
 import MenuPage from "./Menu/MenuPage";
 import ProductPage from "./Menu/ProductPage";
-import ProductUpdate from "../Components/Menu/ProductUpdate";
-import ProductCreate from "../Components/Menu/ProductCreate";
+// import PartnerUpdate from "../Components/Partners/PartnerUpdate";
+// import ProductUpdate from "../Components/Menu/ProductUpdate";
+// import ProductCreate from "../Components/Menu/ProductCreate";
 import SendNotification from "./Notification/SendNotificationPage";
 import PartnerMessages from "./Notification/PartnerMessagesPage";
 import AutoNotificationPage from "./Notification/AutoNotificationPage";
 import SalesPage from "./SalesPage/SalesPages";
 import Sidebar from "../Components/Sidebar";
+import StockPage from "./Stock/StockPage";
 function DashboardPage() {
   const queryClient = new QueryClient();
 
@@ -44,16 +45,17 @@ function DashboardPage() {
             <Route path="/:users/create" element={<UserCreate />} />
             <Route path="/:users/update/:userid" element={<UserUpdate />} />
 
-            <Route path="/partner" element={<PartnerPage />} />
-            <Route path="/partner/update/:partnerid" element={<PartnerUpdate />} />
+            <Route path="/partners" element={<PartnerPage />} />
+            {/* <Route path="/partner/update/:partnerid" element={<PartnerUpdate />} /> */}
 
             <Route path="/shops" element={<ShopsPage />} />
 
             <Route path="/menu" element={<MenuPage />} />
+            <Route path="/stock" element={<StockPage/>} />
 
             <Route path="/menu/:shopId/products" element={<ProductPage />} />
-            <Route path="/menu/:shopId/products/create" element={<ProductCreate />} />
-            <Route path="/menu/:shopId/products/update/:productid" element={<ProductUpdate />} />
+            {/* <Route path="/menu/:shopId/products/create" element={<ProductCreate />} /> */}
+            {/* <Route path="/menu/:shopId/products/update/:productid" element={<ProductUpdate />} /> */}
 
             <Route path="/send-notification" element={<SendNotification />} />
             <Route path="/partner-messages" element={<PartnerMessages />} />
