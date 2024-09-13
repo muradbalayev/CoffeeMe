@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import { BellElectricIcon, BellRing, BookOpen, ChartBarIncreasing, ChevronDown, ChevronUp, Crown, NotebookText, PackageSearch, ShoppingCart, Wallet as WalletIcon } from "lucide-react";
+import { BellElectricIcon, BellRing, BookOpen, ChartBarIncreasing, ChevronDown, ChevronUp, Crown, NotebookText, PackageSearch, ShoppingCart, UserRoundPlus, Wallet as WalletIcon } from "lucide-react";
 
 import {
   ChartLine,
@@ -257,6 +257,26 @@ function Sidebar() {
             )}
           </AnimatePresence>
         </div>
+        <NavLink
+          to='/dashboard/subscribers'
+          className="lg:text-sm text-xs px-6 py-2"
+          end
+        >
+         <UserRoundPlus size={18} style={{ minWidth: "20px" }} />
+          <AnimatePresence>
+            {isSidebarOpen && (
+              <motion.span
+                className="whitespace-nowrap"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.1, delay: 0.2 }}
+              >
+                Subscribers
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </NavLink>
         <NavLink
           to='/dashboard/partners'
           className="lg:text-sm text-xs px-6 py-2"

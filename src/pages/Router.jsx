@@ -22,6 +22,7 @@ import AutoNotificationPage from "./Notification/AutoNotificationPage";
 import SalesPage from "./SalesPage/SalesPages";
 import Sidebar from "../Components/Sidebar";
 import StockPage from "./Stock/StockPage";
+import SubscribersPage from "./Subscribers/SubscribersPage";
 function DashboardPage() {
   const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ function DashboardPage() {
             <Route path="/:users/update/:userid" element={<UserUpdate />} />
 
             <Route path="/partners" element={<PartnerPage />} />
+            <Route path="/subscribers" element={<SubscribersPage />} />
             {/* <Route path="/partner/update/:partnerid" element={<PartnerUpdate />} /> */}
 
             <Route path="/shops" element={<ShopsPage />} />
