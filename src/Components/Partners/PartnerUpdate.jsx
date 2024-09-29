@@ -67,34 +67,11 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
                     className="closeButton"
                     onClick={() => setShowEditModal(false)}
                 />
-                <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
-                    Edit Product
+                <h2 className="text-black text-center title text-3xl p-3 mb-5">
+                    Edit Partner
                 </h2>
                 <div className="w-full gap-3 flex flex-col">
-                    {/* <div className="w-full flex inputRow gap-5 justify-between">
-                        <div className="inputContainer">
-                            <label className="form-label">Name</label>
-                            <input
-                                className="form-control"
-                                type="text"
-                                name="name"
-                                placeholder="Name"
-                                value={editedData.name}
-                                disabled
-                            />
-                        </div>
-                        <div className="inputContainer">
-                            <label className="form-label">Address</label>
-                            <input
-                                className="form-control"
-                                type="text"
-                                name="address"
-                                placeholder="Address"
-                                value={editedData.address}
-                                disabled
-                            />
-                        </div>
-                    </div> */}
+
                     <div className="w-full flex inputRow gap-5 justify-between">
                         <div className="inputContainer">
                             <label className="form-label">Username</label>
@@ -149,9 +126,9 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
                             <button
                                 style={{ backgroundColor: "#214440" }}
                                 type="submit"
-                                className="title px-4 py-2 flex items-center rounded text-white font-bold gap-2"
+                                className="action-btn px-4 py-2 flex items-center rounded text-white font-bold gap-2"
                             >
-                                Edit Shop <ShoppingCart color="white" />
+                                Edit Partner <ShoppingCart color="white" />
                             </button>
                         </div>
                     </div>

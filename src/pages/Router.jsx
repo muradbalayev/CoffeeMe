@@ -2,14 +2,11 @@
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Route, Routes } from "react-router-dom";
 import PartnerPage from "./Partner/PartnerPage";
-import UserCreate from "../Components/Users/UserCreate";
-import UserUpdate from "../Components/Users/UserUpdate";
+
 import SalesReport from "./SalesReport/SalesReportPage";
 import WalletPage from "./Wallet/WalletPage";
 import WithdrawPage from "./Withdraw/WithdrawPage";
 import WhtCreate from "../Components/Withdraw/WthCreate";
-import AllUsersPage from "./Users/AllUsersPage";
-import PremiumUsersPage from "./Users/PremiumUsersPage";
 import ShopsPage from "./Shops/ShopsPage";
 import MenuPage from "./Menu/MenuPage";
 import ProductPage from "./Menu/ProductPage";
@@ -23,6 +20,8 @@ import SalesPage from "./SalesPage/SalesPages";
 import Sidebar from "../Components/Sidebar";
 import StockPage from "./Stock/StockPage";
 import SubscribersPage from "./Subscribers/SubscribersPage";
+import AllUsers from "./Users/AllUsers";
+import PremiumUsers from "./Users/PremiumUsers";
 function DashboardPage() {
   const queryClient = new QueryClient();
 
@@ -41,10 +40,9 @@ function DashboardPage() {
             <Route path="/withdraw" element={<WithdrawPage />} />
             <Route path="/withdraw/create" element={<WhtCreate />} />
 
-            <Route path="/users" element={<AllUsersPage />} />
-            <Route path="/premiumusers" element={<PremiumUsersPage />} />
-            <Route path="/:users/create" element={<UserCreate />} />
-            <Route path="/:users/update/:userid" element={<UserUpdate />} />
+            <Route path="/users" element={<AllUsers />} />
+            <Route path="/premiumusers" element={<PremiumUsers />} />
+
 
             <Route path="/partners" element={<PartnerPage />} />
             <Route path="/subscribers" element={<SubscribersPage />} />

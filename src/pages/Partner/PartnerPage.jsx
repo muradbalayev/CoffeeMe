@@ -1,9 +1,6 @@
 import { useState } from "react";
 import DataTable from "react-data-table-component"
 import { Coffee, Eye, Pencil, Search } from "lucide-react";
-// import Swal from "sweetalert2";
-// import {  useQuery } from "react-query";
-
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import EditPartnerModal from "../../Components/Partners/PartnerUpdate";
 import PartnerModal from "../../Components/Partners/PartnerModal";
