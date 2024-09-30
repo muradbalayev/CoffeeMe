@@ -215,7 +215,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
           className="closeButton"
           onClick={() => setShowAddModal(false)}
         />
-        <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
+        <h2 className="text-black text-center title text-3xl p-3 mb-5">
           Add Product
         </h2>
         <div className="w-full gap-3 flex flex-col">
@@ -379,9 +379,6 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                 <option value="other">Other</option>
               </select>
             </div>
-
-          </div>
-          <div className="w-full flex inputRow gap-5 justify-between">
             <div className="inputContainer">
               <label className="form-label">Type</label>
               <select
@@ -400,13 +397,13 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                 <option value="all">All</option>
               </select>
             </div>
+
           </div>
           <div className="w-full flex inputRow gap-5 justify-between">
             <div className="inputContainer">
               <label className="form-label">Description</label>
-              <input
+              <textarea
                 className="form-control"
-                type="text"
                 name="description"
                 placeholder="Description"
                 value={data.description}
@@ -451,7 +448,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               <button
                 style={{ backgroundColor: "#214440" }}
                 type="submit"
-                className="title px-4 py-2 flex items-center rounded text-white font-bold gap-2"
+                className="action-btn px-4 py-2 flex items-center rounded text-white font-bold gap-2"
               >
                 Add Product <ShoppingCart color="white" />
               </button>
