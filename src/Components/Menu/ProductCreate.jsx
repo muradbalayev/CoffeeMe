@@ -1,4 +1,4 @@
-import { Eye, Image, ShoppingCart, X } from "lucide-react";
+import { Eye, Image, Plus, ShoppingCart, X } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Lightbox from "yet-another-react-lightbox";
@@ -9,6 +9,32 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
 
   const PhotoFileRef = useRef(null);
 
+  const [extraInput, setExtraInput] = useState("");
+
+  const handleAddExtra = () => {
+    if (extraInput.trim() !== "") {
+      setData((prevData) => ({
+        ...prevData,
+        extras: [...prevData.extras, extraInput.trim()],
+      }));
+      setExtraInput(""); 
+    }
+  };
+
+  const handleExtraInputKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddExtra();
+    }
+  };
+
+  const handleRemoveExtra = (index) => {
+    setData((prevData) => ({
+      ...prevData,
+      extras: prevData.extras.filter((_, i) => i !== index),
+    }));
+  };
+
   const [data, setData] = useState({
     name: "",
     sizes: [
@@ -16,6 +42,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       { size: "m", price: "", discount: "" },
       { size: "l", price: "", discount: "" },
     ],
+    extras: [],
     discountType: "",
     category: "",
     type: "",
@@ -31,10 +58,10 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
 
     // Prevent negative numbers for price and discount
     if (name.endsWith('Price') || name.endsWith('Discount')) {
-        if (isValidNumber && Number(value) < 0) {
-            toast.error("Price or Discount cannot be negative.");
-            return; // Do not update state if the value is negative
-        }
+      if (isValidNumber && Number(value) < 0) {
+        toast.error("Price or Discount cannot be negative.");
+        return; // Do not update state if the value is negative
+      }
     }
 
 
@@ -121,18 +148,18 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
     }
 
 
-      // Filter out sizes where both price and discount are empty
-      const filteredSizes = data.sizes.filter(
-        (size) => size.price > 0 && size.discount >= 0
-      );
-  
-      // Check if there's at least one valid size after filtering
-      if (filteredSizes.length === 0) {
-        toast.error("At least one size must have a price or discount.");
-        return;
-      }
+    // Filter out sizes where both price and discount are empty
+    const filteredSizes = data.sizes.filter(
+      (size) => size.price > 0 && size.discount >= 0
+    );
 
-      
+    // Check if there's at least one valid size after filtering
+    if (filteredSizes.length === 0) {
+      toast.error("At least one size must have a price or discount.");
+      return;
+    }
+
+
     if (
       !data.name ||
       !data.discountType ||
@@ -151,6 +178,8 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       if (data[key] !== undefined && data[key] !== null) {
         if (key === "sizes") {
           formData.append(key, JSON.stringify(filteredSizes));
+        } else if (key === "extras") {
+          formData.append(key, JSON.stringify(data.extras));
         } else {
           formData.append(key, data[key]);
         }
@@ -161,10 +190,10 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       await addProduct({ shopId, formData }).unwrap();
       toast.success("Product Created Successfully!");
       setShowAddModal(false);
-  } catch (error) {
+    } catch (error) {
       toast.error("Failed to create product");
       console.error("Error adding product:", error);
-  }
+    }
   };
   console.log(data);
 
@@ -278,12 +307,51 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
           </div>
           <div className="w-full flex inputRow gap-5 justify-between">
             <div className="inputContainer">
+              <label className="form-label">Extra</label>
+              <div className="relative">
+                <input
+                  className="form-control w-full"
+                  type="text"
+                  name="extra"
+                  placeholder="Add Extra"
+                  value={extraInput}
+                  onChange={(e) => setExtraInput(e.target.value)}
+                  onKeyPress={handleExtraInputKeyPress}
+                />
+                <Plus
+                  size={25} color="blue"
+                  className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2"
+                  onClick={handleAddExtra}
+                />
+              </div>
+
+              {data.extras.length > 0 && (
+              <div className="min-h-28 p-2 gap-2 border border-gray-400 rounded mt-3 flex flex-wrap justify-start items-start">
+                {data.extras.map((extra, index) => (
+                  <div key={index} className="border rounded-md border-gray-400 p-2 pe-8 relative">
+                    {extra}
+                    <X
+                      size={18}
+                      color="red"
+                      className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2"
+                      onClick={() => handleRemoveExtra(index)}
+                      />
+                  </div>
+                ))}
+              </div>
+              )}
+            </div>
+          </div>
+
+          <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
               <label className="form-label">Discount Type</label>
               <select
                 className="form-control"
                 name="discountType"
                 value={data.discountType}
                 onChange={handleChange}
+                required
               >
                 <option value="" defaultValue={"Select Discount Type"} disabled>
                   Select Discount Type
@@ -299,6 +367,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               <select
                 className="form-control"
                 name="category"
+                required
                 value={data.category}
                 onChange={handleChange}
               >
@@ -320,6 +389,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                 name="type"
                 value={data.type}
                 onChange={handleChange}
+                required
               >
                 <option disabled value="" defaultValue={"Select Type"} >
                   Select Type
@@ -358,6 +428,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
                     type="file"
                     name="photo"
                     hidden
+                    required
                     ref={PhotoFileRef}
                     onChange={handleFileChange}
                   />

@@ -1,4 +1,4 @@
-import { Eye, Image, ShoppingCart, X } from "lucide-react";
+import { Eye, Image, Plus, ShoppingCart, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import toast from "react-hot-toast";
@@ -20,10 +20,39 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
             { size: 's', price: '', discount: '' },
             { size: 'm', price: '', discount: '' },
             { size: 'L', price: '', discount: '' }
-        ]
+        ],
+        extras: Array.isArray(data.extras) ? data.extras : [], // Ensure extras is always an array
+
     });
     
     console.log(editedData)
+
+
+    const [extraInput, setExtraInput] = useState("");
+
+    const handleAddExtra = () => {
+      if (extraInput.trim() !== "") {
+        setEditedData((prevData) => ({
+          ...prevData,
+          extras: [...prevData.extras, extraInput.trim()],
+        }));
+        setExtraInput(""); 
+      }
+    };
+  
+    const handleExtraInputKeyPress = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleAddExtra();
+      }
+    };
+  
+    const handleRemoveExtra = (index) => {
+      setEditedData((prevData) => ({
+        ...prevData,
+        extras: prevData.extras.filter((_, i) => i !== index),
+      }));
+    };
 
 
     const handleChange = (e) => {
@@ -264,6 +293,43 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                             />
                         </div>
                     </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
+              <label className="form-label">Extra</label>
+              <div className="relative">
+                <input
+                  className="form-control w-full"
+                  type="text"
+                  name="extra"
+                  placeholder="Add Extra"
+                  value={extraInput}
+                  onChange={(e) => setExtraInput(e.target.value)}
+                  onKeyPress={handleExtraInputKeyPress}
+                />
+                <Plus
+                  size={25} color="blue"
+                  className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2"
+                  onClick={handleAddExtra}
+                />
+              </div>
+
+              {editedData.extras.length > 0 && (
+              <div className="min-h-28 p-2 gap-2 border border-gray-400 rounded mt-3 flex flex-wrap justify-start items-start">
+                {editedData.extras.map((extra, index) => (
+                  <div key={index} className="border rounded-md border-gray-400 p-2 pe-8 relative">
+                    {extra}
+                    <X
+                      size={18}
+                      color="red"
+                      className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2"
+                      onClick={() => handleRemoveExtra(index)}
+                      />
+                  </div>
+                ))}
+              </div>
+              )}
+            </div>
+          </div>
                     <div className="w-full flex inputRow gap-5 justify-between">
                         <div className="inputContainer">
                             <label className="form-label">Discount Type</label>
