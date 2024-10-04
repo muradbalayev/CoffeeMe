@@ -9,30 +9,63 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
 
   const PhotoFileRef = useRef(null);
 
-  const [extraInput, setExtraInput] = useState("");
+
+  const [extraInput, setExtraInput] = useState({
+    name: "",
+    price: "",
+    discount: ""
+  });
+
+  const [siropInput, setSiropInput] = useState({
+    name: "",
+    price: "",
+    discount: "",
+  });
 
   const handleAddExtra = () => {
-    if (extraInput.trim() !== "") {
-      setData((prevData) => ({
-        ...prevData,
-        extras: [...prevData.extras, extraInput.trim()],
-      }));
-      setExtraInput(""); 
+    if (!extraInput.name || !extraInput.price || !extraInput.discount) {
+      toast.error("Please fill in all extra fields.");
+      return;
     }
+
+    setData({
+      ...data,
+      extras: [...data.extras, extraInput],
+    });
+
+    setExtraInput({ name: "", price: "", discount: "" });
   };
 
-  const handleExtraInputKeyPress = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddExtra();
-    }
-  };
 
   const handleRemoveExtra = (index) => {
-    setData((prevData) => ({
-      ...prevData,
-      extras: prevData.extras.filter((_, i) => i !== index),
-    }));
+    const updatedExtras = data.extras.filter((_, i) => i !== index);
+    setData({
+      ...data,
+      extras: updatedExtras,
+    });
+  };
+
+
+  const handleAddSirop = () => {
+    if (!siropInput.name || !siropInput.price || !siropInput.discount) {
+      toast.error("Please fill in all sirop fields.");
+      return;
+    }
+
+    setData({
+      ...data,
+      sirops: [...data.sirops, siropInput],
+    });
+
+    setSiropInput({ name: "", price: "", discount: "" });
+  };
+
+  const handleRemoveSirop = (index) => {
+    const updatedSirop = data.sirops.filter((_, i) => i !== index);
+    setData({
+      ...data,
+      sirops: updatedSirop,
+    });
   };
 
   const [data, setData] = useState({
@@ -43,6 +76,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       { size: "l", price: "", discount: "" },
     ],
     extras: [],
+    sirops: [],
     discountType: "",
     category: "",
     type: "",
@@ -178,8 +212,8 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       if (data[key] !== undefined && data[key] !== null) {
         if (key === "sizes") {
           formData.append(key, JSON.stringify(filteredSizes));
-        } else if (key === "extras") {
-          formData.append(key, JSON.stringify(data.extras));
+        } else if (key === "extras" || key === "sirops") {
+          formData.append(key, JSON.stringify(data[key]));
         } else {
           formData.append(key, data[key]);
         }
@@ -305,44 +339,124 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               />
             </div>
           </div>
-          <div className="w-full flex inputRow gap-5 justify-between">
+          <div className="w-full flex inputRow gap-3 justify-between relative">
             <div className="inputContainer">
-              <label className="form-label">Extra</label>
-              <div className="relative">
-                <input
-                  className="form-control w-full"
-                  type="text"
-                  name="extra"
-                  placeholder="Add Extra"
-                  value={extraInput}
-                  onChange={(e) => setExtraInput(e.target.value)}
-                  onKeyPress={handleExtraInputKeyPress}
-                />
-                <Plus
-                  size={25} color="blue"
-                  className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2"
-                  onClick={handleAddExtra}
-                />
-              </div>
-
-              {data.extras.length > 0 && (
-              <div className="min-h-28 p-2 gap-2 border border-gray-400 rounded mt-3 flex flex-wrap justify-start items-start">
-                {data.extras.map((extra, index) => (
-                  <div key={index} className="border rounded-md border-gray-400 p-2 pe-8 relative">
-                    {extra}
-                    <X
-                      size={18}
-                      color="red"
-                      className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2"
-                      onClick={() => handleRemoveExtra(index)}
-                      />
-                  </div>
-                ))}
-              </div>
-              )}
+              <label className="form-label">Extra&apos;s Name</label>
+              <input
+                className="form-control"
+                type="text"
+                name="extraName"
+                placeholder="Extra Name"
+                value={extraInput.name}
+                onChange={(e) => setExtraInput({ ...extraInput, name: e.target.value })}
+              />
             </div>
-          </div>
+            <div className="inputContainer">
+              <label className="form-label">Extra&apos;s Price</label>
+              <input
+                className="form-control"
+                type="number"
+                name="extraPrice"
+                placeholder="Extra Price"
+                value={extraInput.price}
+                onChange={(e) => setExtraInput({ ...extraInput, price: e.target.value })}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label whitespace-nowrap">Extra&apos;s Discount</label>
+              <input
+                className="form-control"
+                type="number"
+                name="extraDiscount"
+                placeholder="Extra Discount"
+                value={extraInput.discount}
+                onChange={(e) => setExtraInput({ ...extraInput, discount: e.target.value })}
+              />
+            </div>
 
+            <div className="relative min-w-6">
+            <Plus
+              size={30}
+              color="blue"
+              className="cursor-pointer absolute top-[70%] -translate-y-1/2 right-0"
+              onClick={handleAddExtra}
+              />
+              </div>
+          </div>
+          {data.extras.length > 0 && (
+            <div className="min-h-28 p-2 gap-2 border border-gray-400 rounded flex flex-wrap justify-start items-start">
+              {data.extras.map((extra, index) => (
+                <div key={index} className="border rounded-md border-gray-400 p-2 pe-8 relative">
+                  {`${extra.name}: ${extra.price}₼ , ${extra.discount}%`}
+                  <X
+                    size={18}
+                    color="red"
+                    className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2"
+                    onClick={() => handleRemoveExtra(index)}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+             <div className="w-full flex inputRow gap-3 justify-between relative">
+            <div className="inputContainer">
+              <label className="form-label">Sirop&apos;s Name</label>
+              <input
+                className="form-control"
+                type="text"
+                name="siropName"
+                placeholder="Sirop Name"
+                value={siropInput.name}
+                onChange={(e) => setSiropInput({ ...siropInput, name: e.target.value })}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label">Sirop&apos;s Price</label>
+              <input
+                className="form-control"
+                type="number"
+                name="siropPrice"
+                placeholder="Sirop Price"
+                value={siropInput.price}
+                onChange={(e) => setSiropInput({ ...siropInput, price: e.target.value })}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label whitespace-nowrap">Sirop&apos;s Discount</label>
+              <input
+                className="form-control"
+                type="number"
+                name="siropDiscount"
+                placeholder="Sirop Discount"
+                value={siropInput.discount}
+                onChange={(e) => setSiropInput({ ...siropInput, discount: e.target.value })}
+              />
+            </div>
+
+            <div className="relative min-w-6">
+            <Plus
+              size={30}
+              color="blue"
+              className="cursor-pointer absolute top-[70%] -translate-y-1/2 right-0"
+              onClick={handleAddSirop}
+              />
+              </div>
+          </div>
+          {data.sirops.length > 0 && (
+            <div className="min-h-28 p-2 gap-2 border border-gray-400 rounded flex flex-wrap justify-start items-start">
+              {data.sirops.map((sirop, index) => (
+                <div key={index} className="border rounded-md border-gray-400 p-2 pe-8 relative">
+                  {`${sirop.name}: ${sirop.price}₼ , ${sirop.discount}%`}
+                  <X
+                    size={18}
+                    color="red"
+                    className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2"
+                    onClick={() => handleRemoveSirop(index)}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
           <div className="w-full flex inputRow gap-5 justify-between">
             <div className="inputContainer">
               <label className="form-label">Discount Type</label>

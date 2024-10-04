@@ -14,6 +14,7 @@ const AddUserModal = ({ setShowAddModal }) => {
         gender: "",
         phone: "",
         email: '',
+        password: "",
         birthDate: ''
     });
 
@@ -35,6 +36,7 @@ const AddUserModal = ({ setShowAddModal }) => {
             !data.gender ||
             !data.phone ||
             !data.email ||
+            !data.password ||
             !data.birthDate
         ) {
             toast.error('Fill all the inputs');
@@ -137,7 +139,7 @@ const AddUserModal = ({ setShowAddModal }) => {
                             <label className="form-label">Phone</label>
                             <input
                                 className="form-control"
-                                type="text"
+                                type="number"
                                 name="phone"
                                 placeholder="Phone"
                                 value={data.phone}
@@ -163,7 +165,7 @@ const AddUserModal = ({ setShowAddModal }) => {
                                 name="gender"
                                 onChange={handleChange}
                                 value={data.gender}
-                                className="form-control py-2"> 
+                                className="form-control py-2">
                                 <option value='' disabled defaultValue={""}>
                                     Gender
                                 </option>
@@ -174,6 +176,32 @@ const AddUserModal = ({ setShowAddModal }) => {
                                     Woman
                                 </option>
                             </select>
+                        </div>
+
+                    </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
+
+                        <div className="inputContainer">
+                            <label className="form-label">Premium</label>
+                            <input
+                                className="form-control"
+                                type="number"
+                                name="premium"
+                                placeholder="10 Days"
+                                value={data.premium}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="inputContainer">
+                            <label className="form-label">Password</label>
+                            <input
+                                className="form-control"
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                value={data.password}
+                                onChange={handleChange}
+                            />
                         </div>
                     </div>
                     <div className="flex mt-10 justify-center">

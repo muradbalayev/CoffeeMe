@@ -22,12 +22,13 @@ function AllUsers() {
   });
   console.log(data)
 
-
-
-
   const [showAddModal, setShowAddModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [editedItem, setEditedItem] = useState(null);
+
+  const formatPhoneNumber = (phone) => {
+    return phone.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, '$1-$2-$3-$4');
+  }
 
 
   if (isLoading)
@@ -82,6 +83,7 @@ function AllUsers() {
               <th scope="col">Id</th>
               <th scope="col">Name</th>
               <th scope="col">Gender</th>
+              <th scope="col">Plan</th>
               <th scope="col">Address</th>
               <th scope="col">Phone</th>
               <th scope="col">Email</th>
@@ -104,8 +106,9 @@ function AllUsers() {
                 <td className="col-1">{user._id}</td>
                 <td className="col-2">{user.firstname} {user.secondname} </td>
                 <td className="col-2">{user.gender}</td>
+                <td className="col-2">{user.plan}</td>
                 <td className="col-2">{user.address}</td>
-                <td className="col-2">{user.phone}</td>
+                <td className="col-2">{formatPhoneNumber(user.phone)}</td>
                 <td className="col-2">{user.email}</td>
                 <td className="col-2">{new Date(user.birthdate).toLocaleDateString()}</td>
                 <td className="col-2">{user.firstname} {user.secondname}</td>
