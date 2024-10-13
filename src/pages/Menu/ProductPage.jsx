@@ -126,6 +126,44 @@ const ProductPage = () => {
             sortable: true
         },
         {
+            name: "Extras",
+            cell: (row) => (
+                <div>
+                    {row.additions.extras && row.additions.extras.length > 0 ? (
+                        row.additions.extras.map((extra, index) => (
+                            <div key={index} className="flex gap-2 items-center">
+                                <span>{extra.name}</span>
+                                <span>{extra.price} ₼</span>
+                                <span>{extra.discount}%</span>
+                            </div>
+                        ))
+                    ) : (
+                        <span>No Extras</span>
+                    )}
+                </div>
+            ),
+            sortable: false
+        },
+        {
+            name: "Syrups",
+            cell: (row) => (
+                <div>
+                    {row.additions.syrups && row.additions.syrups.length > 0 ? (
+                        row.additions.syrups.map((syrup, index) => (
+                            <div key={index} className="flex gap-2 items-center">
+                                <span>{syrup.name}</span>
+                                <span>{syrup.price} ₼</span>
+                                <span>{syrup.discount}%</span>
+                            </div>
+                        ))
+                    ) : (
+                        <span>No Syrups</span>
+                    )}
+                </div>
+            ),
+            sortable: false
+        },
+        {
             name: "Actions",
             cell: (row) => (
                 <div className='flex justify-start items-center gap-2'>

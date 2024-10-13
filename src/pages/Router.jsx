@@ -1,5 +1,4 @@
 
-import { QueryClient, QueryClientProvider } from "react-query";
 import { Route, Routes } from "react-router-dom";
 import PartnerPage from "./Partner/PartnerPage";
 
@@ -23,11 +22,9 @@ import SubscribersPage from "./Subscribers/SubscribersPage";
 import AllUsers from "./Users/AllUsers";
 import PremiumUsers from "./Users/PremiumUsers";
 function DashboardPage() {
-  const queryClient = new QueryClient();
 
   return (
     <div className="flex h-screen w-full overflow-hidden max-w-[1920px] mx-auto">
-      <QueryClientProvider client={queryClient}>
         <Sidebar />
         <div className="w-full overflow-y-scroll">
           <Routes>
@@ -64,7 +61,6 @@ function DashboardPage() {
 
           </Routes>
         </div>
-      </QueryClientProvider>
     </div>
   );
 }

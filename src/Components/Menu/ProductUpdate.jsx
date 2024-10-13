@@ -21,9 +21,12 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                 { size: 'm', price: '', discount: '' },
                 { size: 'L', price: '', discount: '' }
             ],
-        extras: Array.isArray(data.extras) ? data.extras : [],
-        sirops: Array.isArray(data.sirops) ? data.sirops : []
+        additions: {
+            extras: Array.isArray(data.additions.extras) ? data.additions.extras : [],
+            syrups: Array.isArray(data.additions.syrups) ? data.additions.syrups : []
+        }
     });
+
 
     console.log(editedData)
 
@@ -34,7 +37,7 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
         discount: ''
     });
 
-    const [siropInput, setSiropInput] = useState({
+    const [syrupInput, setSyrupInput] = useState({
         name: '',
         price: '',
         discount: ''
@@ -45,7 +48,10 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
         if (extraInput.name.trim() !== "" && extraInput.price.trim() !== "" && extraInput.discount.trim() !== "") {
             setEditedData((prevData) => ({
                 ...prevData,
-                extras: [...prevData.extras, { ...extraInput }],
+                additions: {
+                    ...prevData.additions,
+                    extras: [...prevData.additions.extras, { ...extraInput }],
+                }
             }));
             setExtraInput({
                 name: '',
@@ -57,19 +63,22 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
         }
     };
 
-    const handleAddSirop = () => {
-        if (siropInput.name.trim() !== "" && siropInput.price.trim() !== "" && siropInput.discount.trim() !== "") {
+    const handleAddSyrup = () => {
+        if (syrupInput.name.trim() !== "" && syrupInput.price.trim() !== "" && syrupInput.discount.trim() !== "") {
             setEditedData((prevData) => ({
                 ...prevData,
-                sirops: [...prevData.sirops, { ...siropInput }],
+                additions: {
+                    ...prevData.additions,
+                    syrups: [...prevData.additions.syrups, { ...syrupInput }],
+                }
             }));
-            setSiropInput({
+            setSyrupInput({
                 name: '',
                 price: '',
                 discount: ''
             });
         } else {
-            toast.error('Please provide a name and price for the sirop.');
+            toast.error('Please provide a name and price for the syrup.');
         }
     };
 
@@ -81,9 +90,9 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
         }));
     };
 
-    const handleSiropInputChange = (e) => {
+    const handleSyrupInputChange = (e) => {
         const { name, value } = e.target;
-        setSiropInput((prevInput) => ({
+        setSyrupInput((prevInput) => ({
             ...prevInput,
             [name]: value,
         }));
@@ -92,14 +101,20 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
     const handleRemoveExtra = (index) => {
         setEditedData((prevData) => ({
             ...prevData,
-            extras: prevData.extras.filter((_, i) => i !== index),
+            additions: {
+                ...prevData.additions,
+                extras: prevData.additions.extras.filter((_, i) => i !== index),
+            }
         }));
     };
 
-    const handleRemoveSirop = (index) => {
+    const handleRemoveSyrup = (index) => {
         setEditedData((prevData) => ({
             ...prevData,
-            sirops: prevData.sirops.filter((_, i) => i !== index),
+            additions: {
+                ...prevData.additions,
+                syrups: prevData.additions.syrups.filter((_, i) => i !== index),
+            }
         }));
     };
 
@@ -189,7 +204,6 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-
         const filteredSizes = (editedData.sizes || []).map(size => ({
             size: size.size || '',
             price: size.price || '0',
@@ -212,14 +226,13 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
             return;
         }
 
-        // Append all the edited data to the formData
         const formData = new FormData();
         Object.keys(editedData).forEach((key) => {
             if (editedData[key] !== undefined && editedData[key] !== null) {
                 if (key === "sizes") {
                     formData.append(key, JSON.stringify(filteredSizes));
-                } else if (key === "extras" || key === "syrups") {
-                    formData.append(key, JSON.stringify(editedData[key]));
+                } else if (key === "additions") {
+                    formData.append(key, JSON.stringify(editedData.additions));
                 } else {
                     formData.append(key, editedData[key]);
                 }
@@ -384,9 +397,9 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                             />
                         </div>
                     </div>
-                    {editedData.extras?.length > 0 && (
+                    {editedData.additions.extras?.length > 0 && (
                         <div className="extrasList min-h-28 p-2 gap-2 border border-gray-400 rounded flex flex-wrap justify-start items-start">
-                            {editedData.extras?.map((extra, index) => (
+                            {editedData.additions.extras?.map((extra, index) => (
                                 <div key={index} className="border rounded-md border-gray-400 p-2 pe-8 relative">
                                     {`${extra.name}: ${extra.price}₼ , ${extra.discount}%`}
                                     <X
@@ -401,33 +414,33 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                     )}
                     <div className="w-full flex inputRow gap-3 justify-between">
                         <div className="inputContainer">
-                            <label className="form-label">Sirop Name</label>
+                            <label className="form-label">Syrup Name</label>
                             <input
                                 className="form-control"
                                 type="text"
                                 name="name"
-                                value={siropInput.name}
-                                onChange={handleSiropInputChange}
+                                value={syrupInput.name}
+                                onChange={handleSyrupInputChange}
                             />
                         </div>
                         <div className="inputContainer">
-                            <label className="form-label">Sirop Price</label>
+                            <label className="form-label">Syrup Price</label>
                             <input
                                 className="form-control"
                                 type="text"
                                 name="price"
-                                value={siropInput.price}
-                                onChange={handleSiropInputChange}
+                                value={syrupInput.price}
+                                onChange={handleSyrupInputChange}
                             />
                         </div>
                         <div className="inputContainer">
-                            <label className="form-label">Sirop Discount</label>
+                            <label className="form-label">Syrup Discount</label>
                             <input
                                 className="form-control"
                                 type="text"
                                 name="discount"
-                                value={siropInput.discount}
-                                onChange={handleSiropInputChange}
+                                value={syrupInput.discount}
+                                onChange={handleSyrupInputChange}
                             />
                         </div>
                         <div className="relative min-w-6">
@@ -435,20 +448,20 @@ const EditProductModal = ({ shopId, data, setShowEditModal }) => {
                                 size={30}
                                 color="blue"
                                 className="cursor-pointer absolute top-[70%] -translate-y-1/2 right-0"
-                                onClick={handleAddSirop}
+                                onClick={handleAddSyrup}
                             />
                         </div>
                     </div>
-                    {editedData.sirops?.length > 0 && (
-                        <div className="siropsList min-h-28 p-2 gap-2 border border-gray-400 rounded flex flex-wrap justify-start items-start">
-                            {editedData.sirops?.map((sirop, index) => (
+                    {editedData.additions.syrups?.length > 0 && (
+                        <div className="syrupsList min-h-28 p-2 gap-2 border border-gray-400 rounded flex flex-wrap justify-start items-start">
+                            {editedData.additions.syrups?.map((syrup, index) => (
                                 <div key={index} className="border rounded-md border-gray-400 p-2 pe-8 relative">
-                                    {`${sirop.name}: ${sirop.price}₼ , ${sirop.discount}%`}
+                                    {`${syrup.name}: ${syrup.price}₼ , ${syrup.discount}%`}
                                     <X
                                         size={18}
                                         color="red"
                                         className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2"
-                                        onClick={() => handleRemoveSirop(index)}
+                                        onClick={() => handleRemoveSyrup(index)}
                                     />
                                 </div>
                             ))}

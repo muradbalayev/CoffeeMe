@@ -16,7 +16,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
     discount: ""
   });
 
-  const [siropInput, setSiropInput] = useState({
+  const [syrupInput, setSyrupInput] = useState({
     name: "",
     price: "",
     discount: "",
@@ -30,7 +30,10 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
 
     setData({
       ...data,
-      extras: [...data.extras, extraInput],
+      additions: {
+        ...data.additions,
+        extras: [...data.additions.extras, extraInput],
+      }
     });
 
     setExtraInput({ name: "", price: "", discount: "" });
@@ -38,33 +41,42 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
 
 
   const handleRemoveExtra = (index) => {
-    const updatedExtras = data.extras.filter((_, i) => i !== index);
+    const updatedExtras = data.additions.extras.filter((_, i) => i !== index);
     setData({
       ...data,
-      extras: updatedExtras,
+      additions: {
+        ...data.additions,
+        extras: updatedExtras,
+      }
     });
   };
 
 
-  const handleAddSirop = () => {
-    if (!siropInput.name || !siropInput.price || !siropInput.discount) {
-      toast.error("Please fill in all sirop fields.");
+  const handleAddSyrup = () => {
+    if (!syrupInput.name || !syrupInput.price || !syrupInput.discount) {
+      toast.error("Please fill in all syrup fields.");
       return;
     }
 
     setData({
       ...data,
-      sirops: [...data.sirops, siropInput],
+      additions: {
+        ...data.additions,
+        syrups: [...data.additions.syrups, syrupInput],
+      }
     });
 
-    setSiropInput({ name: "", price: "", discount: "" });
+    setSyrupInput({ name: "", price: "", discount: "" });
   };
 
-  const handleRemoveSirop = (index) => {
-    const updatedSirop = data.sirops.filter((_, i) => i !== index);
+  const handleRemoveSyrup = (index) => {
+    const updatedSyrups = data.additions.syrups.filter((_, i) => i !== index);
     setData({
       ...data,
-      sirops: updatedSirop,
+      additions: {
+        ...data.additions,
+        syrups: updatedSyrups,
+      }
     });
   };
 
@@ -75,8 +87,10 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       { size: "m", price: "", discount: "" },
       { size: "l", price: "", discount: "" },
     ],
-    extras: [],
-    sirops: [],
+    additions: {
+      extras: [],
+      syrups: [],
+    },
     discountType: "",
     category: "",
     type: "",
@@ -162,7 +176,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if any size has a price without a discount or vice versa
+    // Validate size prices and discounts
     for (let i = 0; i < data.sizes.length; i++) {
       const { price, discount } = data.sizes[i];
       if ((price && !discount) || (!price && discount)) {
@@ -171,7 +185,6 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       }
     }
 
-    // Ensure at least one valid size is present
     const hasValidSize = data.sizes.some(
       (size) => size.price && size.discount
     );
@@ -181,18 +194,14 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       return;
     }
 
-
-    // Filter out sizes where both price and discount are empty
     const filteredSizes = data.sizes.filter(
       (size) => size.price > 0 && size.discount >= 0
     );
 
-    // Check if there's at least one valid size after filtering
     if (filteredSizes.length === 0) {
       toast.error("At least one size must have a price or discount.");
       return;
     }
-
 
     if (
       !data.name ||
@@ -212,8 +221,8 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       if (data[key] !== undefined && data[key] !== null) {
         if (key === "sizes") {
           formData.append(key, JSON.stringify(filteredSizes));
-        } else if (key === "extras" || key === "sirops") {
-          formData.append(key, JSON.stringify(data[key]));
+        } else if (key === "additions") {
+          formData.append(key, JSON.stringify(data.additions));
         } else {
           formData.append(key, data[key]);
         }
@@ -383,9 +392,9 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               />
               </div>
           </div>
-          {data.extras.length > 0 && (
+          {data.additions.extras.length > 0 && (
             <div className="min-h-28 p-2 gap-2 border border-gray-400 rounded flex flex-wrap justify-start items-start">
-              {data.extras.map((extra, index) => (
+              {data.additions.extras.map((extra, index) => (
                 <div key={index} className="border rounded-md border-gray-400 p-2 pe-8 relative">
                   {`${extra.name}: ${extra.price}₼ , ${extra.discount}%`}
                   <X
@@ -400,36 +409,36 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
           )}
              <div className="w-full flex inputRow gap-3 justify-between relative">
             <div className="inputContainer">
-              <label className="form-label">Sirop&apos;s Name</label>
+              <label className="form-label">Syrup&apos;s Name</label>
               <input
                 className="form-control"
                 type="text"
-                name="siropName"
-                placeholder="Sirop Name"
-                value={siropInput.name}
-                onChange={(e) => setSiropInput({ ...siropInput, name: e.target.value })}
+                name="syrupName"
+                placeholder="Syrup Name"
+                value={syrupInput.name}
+                onChange={(e) => setSyrupInput({ ...syrupInput, name: e.target.value })}
               />
             </div>
             <div className="inputContainer">
-              <label className="form-label">Sirop&apos;s Price</label>
+              <label className="form-label">Syrup&apos;s Price</label>
               <input
                 className="form-control"
                 type="number"
-                name="siropPrice"
-                placeholder="Sirop Price"
-                value={siropInput.price}
-                onChange={(e) => setSiropInput({ ...siropInput, price: e.target.value })}
+                name="syrupPrice"
+                placeholder="Syrup Price"
+                value={syrupInput.price}
+                onChange={(e) => setSyrupInput({ ...syrupInput, price: e.target.value })}
               />
             </div>
             <div className="inputContainer">
-              <label className="form-label whitespace-nowrap">Sirop&apos;s Discount</label>
+              <label className="form-label whitespace-nowrap">Syrup&apos;s Discount</label>
               <input
                 className="form-control"
                 type="number"
-                name="siropDiscount"
-                placeholder="Sirop Discount"
-                value={siropInput.discount}
-                onChange={(e) => setSiropInput({ ...siropInput, discount: e.target.value })}
+                name="syrupDiscount"
+                placeholder="Syrup Discount"
+                value={syrupInput.discount}
+                onChange={(e) => setSyrupInput({ ...syrupInput, discount: e.target.value })}
               />
             </div>
 
@@ -438,20 +447,20 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               size={30}
               color="blue"
               className="cursor-pointer absolute top-[70%] -translate-y-1/2 right-0"
-              onClick={handleAddSirop}
+              onClick={handleAddSyrup}
               />
               </div>
           </div>
-          {data.sirops.length > 0 && (
+          {data.additions.syrups.length > 0 && (
             <div className="min-h-28 p-2 gap-2 border border-gray-400 rounded flex flex-wrap justify-start items-start">
-              {data.sirops.map((sirop, index) => (
+              {data.additions.syrups.map((syrup, index) => (
                 <div key={index} className="border rounded-md border-gray-400 p-2 pe-8 relative">
-                  {`${sirop.name}: ${sirop.price}₼ , ${sirop.discount}%`}
+                  {`${syrup.name}: ${syrup.price}₼ , ${syrup.discount}%`}
                   <X
                     size={18}
                     color="red"
                     className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2"
-                    onClick={() => handleRemoveSirop(index)}
+                    onClick={() => handleRemoveSyrup(index)}
                   />
                 </div>
               ))}
