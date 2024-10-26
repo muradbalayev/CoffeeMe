@@ -26,7 +26,7 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!editedData.username || !editedData.fullname || !editedData.shopPercentage && editedData.shopPercentage !== 0) {
+        if (!editedData.username || !editedData.fullname || !editedData.shopPercentage && editedData.shopPercentage !== 0 && !editedData.notificationDistance) {
             toast.error("All fields are required");
             return;
         }
@@ -37,6 +37,7 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
                 password: editedData.password,
                 fullname: editedData.fullname,
                 shopPercentage: editedData.shopPercentage,
+                notificationDistance: editedData.notificationDistance
             };
 
             await editPartner({ id: editedData._id, formData }).unwrap();
@@ -116,6 +117,20 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
                                 name="shopPercentage"
                                 placeholder="Shop Percentage"
                                 value={editedData.shopPercentage}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full flex inputRow gap-5 justify-between">
+                        
+                        <div className="inputContainer">
+                            <label className="form-label">Notification Distance</label>
+                            <input
+                                className="form-control"
+                                type="number"
+                                name="notificationDistance"
+                                placeholder="Notification Distance"
+                                value={editedData.notificationDistance}
                                 onChange={handleChange}
                             />
                         </div>
