@@ -133,7 +133,7 @@ function ShopsPage() {
                   {index + 1}
                 </td>
                 <td className="col-1">{shop._id}</td>
-                <td className="col-2">{shop.name}</td>
+                <td className="col-2">{shop.name} {shop.shortAddress}</td>
                 <td className="col-1">
                   <button
                     onClick={() => navigate(`/dashboard/menu/${shop._id}/products`)}
