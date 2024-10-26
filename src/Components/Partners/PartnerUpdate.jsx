@@ -124,7 +124,7 @@ const EditPartnerModal = ({ data, setShowEditModal }) => {
                     <div className="w-full flex inputRow gap-5 justify-between">
                         
                         <div className="inputContainer">
-                            <label className="form-label">Notification Distance</label>
+                            <label className="form-label">Notification Distance(metr)</label>
                             <input
                                 className="form-control"
                                 type="number"
