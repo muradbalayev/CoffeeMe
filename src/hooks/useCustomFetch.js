@@ -3,9 +3,8 @@ import { clearTokens, setTokens } from '../redux/slice/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 const useCustomFetch = () => {
-
     const { accessToken, refreshToken } = useSelector(state => state.auth);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     // console.log(accessToken)
     const navigate = useNavigate();
     const customFetch = async (url, options = {}) => {

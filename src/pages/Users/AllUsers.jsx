@@ -88,7 +88,7 @@ function AllUsers() {
               <th scope="col">Phone</th>
               <th scope="col">Email</th>
               <th scope="col">BirthDate</th>
-              <th scope="col">Most Going Coffee Shop</th>
+              <th scope="col" style={{ whiteSpace: "nowrap" }}>Most Going Coffee Shop</th>
               <th scope="col" className="w-full text-center">
                 <div className="flex justify-center items-center gap-1 w-full">
                   Streak <Flame size={20} color="orange" />
