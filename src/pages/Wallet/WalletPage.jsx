@@ -70,7 +70,7 @@ const WalletPage = () => {
           <Search className="search-icon" />
         </div>
       </div>
-      <div className="overflow-y-scroll overflow-x-auto w-full mt-4">
+      {/* <div className="overflow-y-scroll overflow-x-auto w-full mt-4">
         <table className="w-full rounded-t-xl overflow-hidden">
           <thead className="text-white bg-[#00704a]" >
             <tr>
@@ -121,7 +121,7 @@ const WalletPage = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
     </div>
   )
 }
