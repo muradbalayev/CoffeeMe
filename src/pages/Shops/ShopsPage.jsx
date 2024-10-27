@@ -24,7 +24,6 @@ import { useDeleteShopMutation, useGetShopQuery } from "../../redux/services/sho
 function ShopsPage() {
   const navigate = useNavigate();
 
-
   const { data, isLoading, isError, isSuccess, error } = useGetShopQuery(undefined, {
     pollingInterval: 10000, // ReFetch every 5 seconds
   });

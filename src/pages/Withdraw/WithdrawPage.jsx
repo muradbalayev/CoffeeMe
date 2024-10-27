@@ -1,24 +1,28 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { Check, Coffee, Search, X } from "lucide-react";
 // import Swal from "sweetalert2";
 // import AddWithdrawModal from "../../Components/Withdraw/WthCreate";
-import { useGetShopQuery } from "../../redux/services/shopApi";
+import { useGetWithdrawQuery, useUpdateWithdrawMutation } from "../../redux/services/withdrawApi";
+import RejectWithdrawModal from "../../Components/Withdraw/RejectWithdraw";
+import Swal from "sweetalert2";
 
 
 
 const WithdrawPage = () => {
-    const { data, isLoading, isError, isSuccess, error } = useGetShopQuery(undefined, {
+    const { data, isLoading, isError, isSuccess, error } = useGetWithdrawQuery(undefined, {
         pollingInterval: 10000, // ReFetch every 5 seconds
     });
+    const [updateWithdraw] = useUpdateWithdrawMutation();
+
+
     console.log(data)
+    console.log(error)
 
-
+    const [editedItem, setEditedItem] = useState(null);
 
 
     // const queryClient = useQueryClient();
     const [searchQuery, setSearchQuery] = useState("");
-
-
 
     if (isLoading)
         return (
@@ -31,12 +35,59 @@ const WithdrawPage = () => {
     if (isError) return <div>An error occurred: {error.message}</div>;
 
 
-    const filteredShops = data.shops.filter((shop) =>
-        shop.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // const filteredWithdraws = data.withdraws.filter((withdraw) =>
+    //     withdraw.name.toLowerCase().includes(searchQuery.toLowerCase())
+    // );
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        if (isNaN(date)) {
+            console.error("Invalid date:", dateString);
+            return "Invalid Date"; // Fallback in case of an error
+        }
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        };
+        return date.toLocaleString('en-US', options).replace(',', '');
+    };
+
+    const handleCompleteWithdraw = async (withdrawId) => {
+        // Show SweetAlert2 confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You are about to complete this withdrawal!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, complete it!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    // Call the mutation to update the withdraw status
+                    const formData = new FormData();
+                    formData.append("withdrawId", withdrawId); // Append the withdrawId
+                    formData.append("status", "completed"); // Set status to 'completed'
+                    await updateWithdraw(formData).unwrap();
+                    Swal.fire('Completed!', 'The withdrawal has been completed.', 'success');
+                } catch (error) {
+                    Swal.fire('Error!', 'Failed to complete the withdrawal.', { error });
+                }
+            }
+        });
+    };
+
 
     if (isSuccess) return (
         <div className="wrapper">
+            {editedItem && (
+                <RejectWithdrawModal withdrawId={editedItem} setShowEditModal={setEditedItem} />
+            )}
             <div className="withdraw-header flex items-center">
                 <div className='relative p-2'>
                     <h1 className="title md:text-4xl text-2xl">
@@ -58,60 +109,62 @@ const WithdrawPage = () => {
                         <Search className="search-icon" />
                     </div>
                 </div>
-             
+
             </div>
             <div className="overflow-y-scroll overflow-x-auto w-full mt-4">
-        <table className="w-full rounded-t-xl overflow-hidden">
-          <thead className="text-white bg-[#00704a]" >
-            <tr>
-              <th className="id" scope="col">
-                #
-              </th>
-              <th scope="col">Id</th>
-              <th scope="col">User</th>
-              <th scope="col">Date and Time</th>
-              <th scope="col">Price</th>
-              <th scope="col">Coffee Shop Name</th>
+                <table className="w-full rounded-t-xl overflow-hidden">
+                    <thead className="text-white bg-[#00704a]" >
+                        <tr>
+                            <th className="id" scope="col">
+                                #
+                            </th>
+                            <th scope="col">Id</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Date and Time</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Status</th>
 
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="w-full">
-            {filteredShops.map((shop, index) => (
-              <tr key={index}>
-                <td scope="row" className="col-1 border-b border-gray-300 id">
-                  {index + 1}
-                </td>
-                <td className="col-1">{shop._id}</td>
-                <td className="col-2">{shop.name} {shop.shortAddress}</td>
-                <td className="col-1">
-                  aksmdaslmf
-                </td>
-                <td className="col-1">
-                  {shop.name} {shop.shortAddress}
-                </td>
-                <td className="col-1">
-                  {shop.name} {shop.shortAddress}
-                </td>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="w-full">
+                        {data.withdraws.map((withdraw, index) => (
+                            <tr key={index}>
+                                <td scope="row" className="col-1 border-b border-gray-300 id">
+                                    {index + 1}
+                                </td>
+                                <td className="col-1">  {withdraw.partner.username}
+                                </td>
+                                <td className="col-2">{formatDate(withdraw.createdData)} </td>
+                                <td className="col-1">
+                                    safsfaa
+                                </td>
+                                <td className="col-1">
+                                    {withdraw.amount}
+                                </td>
+                                <td className="col-1">
+                                    {withdraw.status}
+                                </td>
 
-                <td className="col-2 min-w-44  ">
-                  <button
-                    className=" px-3 py-2 bg-blue-600 text-white rounded-md"
-                  >
-                    <Check size={18} />
-                  </button>
-                  <button
-                    // onClick={() => handleDelete(shop._id)}
-                    className="px-3 ms-2 py-2 bg-red-600 text-white rounded-md"
-                  >
-                    <X size={18} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                                <td className="col-2 min-w-44  ">
+                                    <button
+                                        onClick={() => handleCompleteWithdraw(withdraw._id)}
+                                        className=" px-3 py-2 bg-blue-600 text-white rounded-md"
+                                    >
+                                        <Check size={18} />
+                                    </button>
+                                    <button
+                                        onClick={() => setEditedItem(withdraw._id)}
+                                        className="px-3 ms-2 py-2 bg-red-600 text-white rounded-md"
+                                    >
+                                        <X size={18} />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }
