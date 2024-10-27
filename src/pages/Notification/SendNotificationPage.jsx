@@ -1,11 +1,9 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "react-query";
-import useCustomFetch from "../../hooks/useCustomFetch";
+// import toast from "react-hot-toast";
+
 
 const SendNotification = () => {
-    const customFetch = useCustomFetch();
-    const queryClient = useQueryClient();
+
     const [data, setData] = useState({
         title: "",
         category: "",
@@ -20,46 +18,6 @@ const SendNotification = () => {
             [name]: value,
         });
     };
-
-    const mutation = useMutation(
-        async (data) => {
-            const response = await customFetch(
-                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/notifications`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                }
-            )
-
-            return await response.json();
-        },
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries("notifications");
-                console.log("Notification sended successfully:", data);
-            },
-            onError: (error) => {
-                console.error("Error sending notification:", error);
-            },
-        }
-    )
-
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        if (!data.title || !data.category || !data.message) {
-            toast.error("Fill all the fields");
-            return;
-        }
-
-        mutation.mutate(data)
-
-        toast.success("Notification sent successfully");
-    }
 
 
     const notificationData = [
@@ -79,7 +37,9 @@ const SendNotification = () => {
 
             </div>
 
-            <form onSubmit={handleSubmit} className='notification-form w-full p-3 mt-6 flex flex-col items-center gap-6'>
+            <form
+                // onSubmit={handleSubmit}
+                className='notification-form w-full p-3 mt-6 flex flex-col items-center gap-6'>
                 <div className='flex flex-col gap-1 w-full'>
                     <label className='font-bold'>Title</label>
                     <input onChange={handleChange}
@@ -91,11 +51,11 @@ const SendNotification = () => {
                 </div>
                 <div className='flex flex-col gap-1 w-full'>
                     <label className='font-bold'>Category</label>
-                    <select 
-                    name="category"
-                    onChange={handleChange}
-                    value={data.category}
-                    className='w-full outline-none border-4 rounded-lg md:text-base text-sm md:p-3 p-2 border-green-800'>
+                    <select
+                        name="category"
+                        onChange={handleChange}
+                        value={data.category}
+                        className='w-full outline-none border-4 rounded-lg md:text-base text-sm md:p-3 p-2 border-green-800'>
                         <option value='' disabled defaultValue={""}>
                             Category
                         </option>
@@ -119,7 +79,7 @@ const SendNotification = () => {
                         name="message"
                         onChange={handleChange}
                         value={data.message}
-                        type='text' 
+                        type='text'
                         placeholder='Message'
                         className='w-full outline-none border-4 rounded-lg md:text-base text-sm  md:p-3 p-2 border-green-800 ' />
                 </div>

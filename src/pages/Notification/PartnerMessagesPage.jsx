@@ -2,65 +2,16 @@
 import DataTable from "react-data-table-component"
 import { Coffee, Pencil, Search, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import EditProductModal from "../../Components/Menu/ProductUpdate";
 import { useState } from "react";
-
-const deletePartnerMessage = async (id) => {
-    try {
-        const res = await fetch(
-            `${import.meta.env.VITE_API_GLOBAL_URL}/api/partner-messages/${id}`,
-            {
-                method: "DELETE",
-            }
-        );
-        console.log(res);
-    } catch (error) {
-        console.error(error);
-    }
-};
 
 
 
 const PartnerMessages = () => {
 
     const [editedItem, setEditedItem] = useState(null);
-    const queryClient = useQueryClient();
 
-
-
-    const fetchMessages = async () => {
-        const res = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/notification/partner-messages`);
-        if (!res.ok) {
-            throw new Error("Network response was not ok");
-        }
-        return res.json();
-    };
-
-
-    const deleteMutation = useMutation({
-        mutationFn: deletePartnerMessage,
-        onSuccess: () => {
-            queryClient.invalidateQueries(["partner-messages"]);
-            console.log("Product deleted successfully");
-        },
-        onError: (error) => {
-            console.error("Error deleting message:", error);
-        },
-    });
-
-    const { isLoading, isError, isSuccess, data } = useQuery(
-        "partner-messages",
-        fetchMessages
-    );
-
-    // const [message, setMessage] = useState(null)
-    // const [modalShow, setModalShow] = useState(false);
-
-
-
-    //Photo Preview
 
 
     const columns = [
@@ -109,41 +60,41 @@ const PartnerMessages = () => {
     ]
 
 
-    const handleDelete = async (notificationId) => {
-        const result = await Swal.fire({
-            title: "Are you sure?",
-            text: "This action cannot be undone!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!",
-        });
+    // const handleDelete = async (notificationId) => {
+    //     const result = await Swal.fire({
+    //         title: "Are you sure?",
+    //         text: "This action cannot be undone!",
+    //         icon: "warning",
+    //         showCancelButton: true,
+    //         confirmButtonColor: "#3085d6",
+    //         cancelButtonColor: "#d33",
+    //         confirmButtonText: "Yes, delete it!",
+    //     });
 
-        if (result.isConfirmed) {
-            deleteMutation.mutate(notificationId);
-            Swal.fire("Deleted!", "Your product has been deleted.", "success");
-        }
-    };
-
-
-    if (isLoading)
-        return (
-            <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
-                <Coffee size={30} stroke="#214440" />
-                <h1 className="title text-2xl">Loading...</h1>
-            </div>
-        );
-
-    if (isError) return (
-        <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
-            <h1 className="title text-2xl">Error</h1>
-        </div>
-    );
+    //     if (result.isConfirmed) {
+    //         deleteMutation.mutate(notificationId);
+    //         Swal.fire("Deleted!", "Your product has been deleted.", "success");
+    //     }
+    // };
 
 
+    // if (isLoading)
+    //     return (
+    //         <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
+    //             <Coffee size={30} stroke="#214440" />
+    //             <h1 className="title text-2xl">Loading...</h1>
+    //         </div>
+    //     );
 
-    if (isSuccess)
+    // if (isError) return (
+    //     <div className="mx-auto h-screen w-full flex items-center justify-center gap-2">
+    //         <h1 className="title text-2xl">Error</h1>
+    //     </div>
+    // );
+
+
+
+    // if (isSuccess)
         return (
             <div className="wrapper">
                 {editedItem && (
@@ -173,7 +124,7 @@ const PartnerMessages = () => {
                 <div className='mt-4'>
                     <DataTable
                         columns={columns}
-                        data={data.notifications}
+                        // data={data.notifications}
                         highlightOnHover
                         responsive
                     >
