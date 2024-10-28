@@ -9,28 +9,31 @@ import { productApi } from "./services/productApi";
 import { userApi } from "./services/userApi";
 import { premiumUserApi } from "./services/premiumUserApi";
 import { withdrawApi } from "./services/withdrawApi";
+import { notificationApi } from "./services/notificationApi";
 
 export const store = configureStore({
-    reducer: {
-        auth: authReducer,
-        user: userReducer,
-        [menuApi.reducerPath]: menuApi.reducer,
-        [partnerApi.reducerPath]: partnerApi.reducer,
-        [shopApi.reducerPath]: shopApi.reducer,
-        [productApi.reducerPath]: productApi.reducer,
-        [userApi.reducerPath]: userApi.reducer,
-        [premiumUserApi.reducerPath]: premiumUserApi.reducer,
-        [withdrawApi.reducerPath]: withdrawApi.reducer
-    },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware()
-    .concat(menuApi.middleware)
-    .concat(partnerApi.middleware)
-    .concat(shopApi.middleware)
-    .concat(productApi.middleware)
-    .concat(userApi.middleware)
-    .concat(premiumUserApi.middleware)
-    .concat(withdrawApi.middleware),
-})
+  reducer: {
+    auth: authReducer,
+    user: userReducer,
+    [menuApi.reducerPath]: menuApi.reducer,
+    [partnerApi.reducerPath]: partnerApi.reducer,
+    [shopApi.reducerPath]: shopApi.reducer,
+    [productApi.reducerPath]: productApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
+    [premiumUserApi.reducerPath]: premiumUserApi.reducer,
+    [withdrawApi.reducerPath]: withdrawApi.reducer,
+    [notificationApi.reducerPath]: notificationApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware()
+      .concat(menuApi.middleware)
+      .concat(partnerApi.middleware)
+      .concat(shopApi.middleware)
+      .concat(productApi.middleware)
+      .concat(userApi.middleware)
+      .concat(premiumUserApi.middleware)
+      .concat(withdrawApi.middleware)
+      .concat(notificationApi.middleware),
+});
 
-setupListeners(store.dispatch)
+setupListeners(store.dispatch);
