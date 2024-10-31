@@ -5,19 +5,50 @@ import "../Shops/ShopPage.css";
 import { Check, Coffee, Pencil, Search } from "lucide-react";
 // import Swal from "sweetalert2";
 import EditNotification from "../../Components/Notification/NotificationEdit";
-import { useGetPartnerNotificationQuery } from "../../redux/services/notificationApi";
+import {
+  useGetPartnerNotificationQuery,
+  useUpdatePartnerNotificationMutation,
+} from "../../redux/services/notificationApi";
 
 function ShopsPage() {
-  const { data, isLoading, isError, isSuccess, error } =
-    useGetPartnerNotificationQuery();
-  
+  const {
+    data,
+    isLoading: isGetPartnerNotificationsLoading,
+    isError,
+    isSuccess,
+    error,
+  } = useGetPartnerNotificationQuery();
 
-  // console.log({data,error});
-  console.log(error);
-  // const queryClient = useQueryClient();
+  const [
+    updatePartnerNotification,
+    { isLoading: isUpdatePartnerNotificationsLoading },
+  ] = useUpdatePartnerNotificationMutation();
+
+  const isLoading =
+    isGetPartnerNotificationsLoading || isUpdatePartnerNotificationsLoading;
+
   const [searchQuery, setSearchQuery] = useState("");
-
   const [editedItem, setEditedItem] = useState(null);
+
+  const handleConfirm = async (data, status) => {
+    
+    if (!isLoading) {
+      const temp = {
+        notificationId: data._id,
+        title: data.title,
+        message: data.message,
+        status,
+        category: data.category,
+        rejectionReason: "Yoxdu Heleki Test Ucundur",
+      };
+      console.log(temp);
+      try {
+        await updatePartnerNotification(temp);
+      } catch (error) { 
+        console.log(error);
+      }
+    }
+  };
 
   if (isLoading)
     return (
@@ -64,37 +95,36 @@ function ShopsPage() {
                 <th className="id" scope="col">
                   #
                 </th>
+                <th scope="col">Username</th>
                 <th scope="col">Title</th>
                 <th scope="col">Category</th>
                 <th scope="col">Message</th>
                 <th scope="col">Date</th>
+                <th scope="col">Status</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody className="w-full">
-              {/* {filteredShops.map((shop, index) => (
+              {data.notifications.map((notification, index) => (
                 <tr key={index}>
                   <td scope="row" className="col-1 border-b border-gray-300 id">
                     {index + 1}
                   </td>
-                  <td className="col-1">{shop._id}</td>
-                  <td className="col-2">
-                    {shop.name} {shop.shortAddress}
-                  </td>
-                  <td className="min-w-72">
-                    {shop.name} {shop.shortAddress}
-                  </td>
                   <td className="col-1">
-                    {parseInt(shop.location.coordinates[0]) +
-                      "," +
-                      parseInt(shop.location.coordinates[1])}
+                    {notification.sender.role === "partner"
+                      ? notification.sender.username
+                      : "Admin"}
                   </td>
-
+                  <td className="col-1">{notification.title}</td>
+                  <td className="col-2">{notification.category}</td>
+                  <td className="min-w-72">{notification.message}</td>
+                  <td className="min-w-72">{notification.date}</td>
+                  <td className="min-w-36">{notification.status}</td>
                   <td className="col-2 ">
                     <div className="flex justify-center items-center gap-2">
                       <button
                         className="px-3 py-2 flex items-center gap-2 bg-green-600 text-white rounded-md"
-                        // onClick={() => handleDelete(row._id)}
+                        onClick={() => handleConfirm(notification, "published")}
                       >
                         <Check size={18} />
                       </button>
@@ -107,7 +137,7 @@ function ShopsPage() {
                     </div>
                   </td>
                 </tr>
-              ))} */}
+              ))}
             </tbody>
           </table>
         </div>
