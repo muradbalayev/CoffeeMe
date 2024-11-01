@@ -4,7 +4,7 @@ import { clearUser } from "./slice/userSlice";
 
 export const baseQueryWithReauth = async (args, api, extraOptions) => {
     let result = await fetchBaseQuery({
-        baseUrl: `${import.meta.env.VITE_API_LOCAL_URL}`,
+        baseUrl: `${import.meta.env.VITE_API_GLOBAL_URL}`,
         prepareHeaders: (headers, { getState }) => {
             const { accessToken } = getState().auth;
             if (accessToken) {
@@ -18,7 +18,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
         const refreshToken = api.getState().auth.refreshToken;
 
         if (refreshToken) {
-            const refreshResponse = await fetch(`${import.meta.env.VITE_API_LOCAL_URL}/admin/auth/refresh-token`, {
+            const refreshResponse = await fetch(`${import.meta.env.VITE_API_GLOBAL_URL}/admin/auth/refresh-token`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: refreshToken }),
@@ -29,7 +29,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
                 api.dispatch(setTokens({ accessToken: newAccessToken }));
 
                 result = await fetchBaseQuery({
-                    baseUrl: `${import.meta.env.VITE_API_LOCAL_URL}`,
+                    baseUrl: `${import.meta.env.VITE_API_GLOBAL_URL}`,
                     prepareHeaders: (headers) => {
                         headers.set('Authorization', `Bearer ${newAccessToken}`);
                         return headers;
