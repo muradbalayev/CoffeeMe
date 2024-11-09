@@ -20,6 +20,8 @@ const AddShopModal = ({ setShowAddModal }) => {
     latitude: "",
     photo: null,
     logo: null,
+    open: "",
+    close: "",
   });
 
   const handleChange = (e) => {
@@ -71,12 +73,14 @@ const AddShopModal = ({ setShowAddModal }) => {
       !data.address ||
       !data.longitude ||
       !data.latitude ||
+      !data.open || 
+      !data.close || 
       !photoFileName ||
       !logoFileName ||
       photoFileName === "Choose File" ||
       logoFileName === "Choose File"
     ) {
-      toast.error('Fill all the inputs');
+      toast.error("Fill all the inputs");
       return;
     }
 
@@ -107,10 +111,7 @@ const AddShopModal = ({ setShowAddModal }) => {
       }}
       className="addModalContainer"
     >
-      <form
-        className="addModalForm "
-        onSubmit={handleSubmit}
-      >
+      <form className="addModalForm " onSubmit={handleSubmit}>
         <X
           color="red"
           size={30}
@@ -146,7 +147,7 @@ const AddShopModal = ({ setShowAddModal }) => {
             </div>
           </div>
           <div className="w-full flex inputRow gap-5 justify-between">
-          <div className="inputContainer">
+            <div className="inputContainer">
               <label className="form-label">Address</label>
               <input
                 className="form-control"
@@ -178,6 +179,30 @@ const AddShopModal = ({ setShowAddModal }) => {
                 name="latitude"
                 placeholder="Latitude"
                 value={data.latitude}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
+              <label className="form-label">Open time</label>
+              <input
+                className="form-control"
+                type="number"
+                name="open"
+                placeholder="Open time"
+                value={data.open}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label">Close time</label>
+              <input
+                className="form-control"
+                type="number"
+                name="close"
+                placeholder="Close time"
+                value={data.close}
                 onChange={handleChange}
               />
             </div>
@@ -266,4 +291,4 @@ const AddShopModal = ({ setShowAddModal }) => {
   );
 };
 
-export default AddShopModal
+export default AddShopModal;

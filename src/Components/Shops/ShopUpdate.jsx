@@ -6,18 +6,23 @@ import Lightbox from "yet-another-react-lightbox";
 import { useEditShopMutation } from "../../redux/services/shopApi";
 
 const EditShopModal = ({ data, setShowEditModal }) => {
-
   const LogoFileRef = useRef(null);
   const PhotoFileRef = useRef(null);
 
-  const [editedData, setEditedData] = useState(data);
+  const [editedData, setEditedData] = useState({
+    ...data,
+    open: data.openHours.open,
+    close: data.openHours.close,
+  });
 
+  console.log({editedData});
+  
+  
   const [editShop] = useEditShopMutation();
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     if (name === "longitude" || name === "latitude") {
       const newCoordinates = [...editedData.location.coordinates];
       if (name === "longitude") {
@@ -78,7 +83,6 @@ const EditShopModal = ({ data, setShowEditModal }) => {
     if (name === "photo") {
       setPhotoPreview(null);
       setPhotoFileName("");
-  
 
       setPhotoPreview(fileURL);
       setPhotoFileName(file && file.name);
@@ -90,10 +94,10 @@ const EditShopModal = ({ data, setShowEditModal }) => {
       setLogoPreview(fileURL);
     }
 
-     setEditedData((prevState) => ({
-    ...prevState,
-    [name]: file,
-  }));
+    setEditedData((prevState) => ({
+      ...prevState,
+      [name]: file,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -105,23 +109,25 @@ const EditShopModal = ({ data, setShowEditModal }) => {
       !editedData.address ||
       !editedData.location.coordinates[0] ||
       !editedData.location.coordinates[1] ||
+      !editedData.open ||
+      !editedData.close ||
       !photoFileName ||
       !logoFileName
     ) {
-      toast.error('Fill all inputs!');
+      toast.error("Fill all inputs!");
       return;
     }
-  
+
     // Append all the edited data to the formData
     Object.keys(editedData).forEach((key) => {
-      if (key === 'location') {
-        formData.append('longitude', editedData.location.coordinates[0]);
-        formData.append('latitude', editedData.location.coordinates[1]);
+      if (key === "location") {
+        formData.append("longitude", editedData.location.coordinates[0]);
+        formData.append("latitude", editedData.location.coordinates[1]);
       } else if (editedData[key] !== undefined && editedData[key] !== null) {
         formData.append(key, editedData[key]);
       }
     });
-  
+
     try {
       await editShop({ id: editedData._id, formData }).unwrap();
       setShowEditModal(false);
@@ -129,14 +135,12 @@ const EditShopModal = ({ data, setShowEditModal }) => {
     } catch (error) {
       toast.error("Failed to edit the shop!", error);
     }
-
   };
 
   const handleEyeClick = (image) => {
     setLightboxImage(image);
     setIsLightboxOpen(true);
   };
-
 
   return (
     <div
@@ -146,10 +150,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
       }}
       className="addModalContainer "
     >
-      <form
-        className="addModalForm"
-        onSubmit={handleSubmit}
-      >
+      <form className="addModalForm" onSubmit={handleSubmit}>
         <X
           color="red"
           size={30}
@@ -185,7 +186,6 @@ const EditShopModal = ({ data, setShowEditModal }) => {
             </div>
           </div>
           <div className="w-full flex inputRow gap-5 justify-between">
-        
             <div className="inputContainer">
               <label className="form-label">Address</label>
               <input
@@ -218,6 +218,30 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 name="latitude"
                 placeholder="Latitude"
                 value={editedData.location.coordinates[1]}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="w-full flex inputRow gap-5 justify-between">
+            <div className="inputContainer">
+              <label className="form-label">Open time</label>
+              <input
+                className="form-control"
+                type="number"
+                name="open"
+                placeholder="Open time"
+                value={editedData.open}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label">Close time</label>
+              <input
+                className="form-control"
+                type="number"
+                name="close"
+                placeholder="Close time"
+                value={editedData.close}
                 onChange={handleChange}
               />
             </div>
