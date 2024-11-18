@@ -10,6 +10,7 @@ import { userApi } from "./services/userApi";
 import { premiumUserApi } from "./services/premiumUserApi";
 import { withdrawApi } from "./services/withdrawApi";
 import { notificationApi } from "./services/notificationApi";
+import { extraApi } from "./services/extraApi";
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ export const store = configureStore({
     [premiumUserApi.reducerPath]: premiumUserApi.reducer,
     [withdrawApi.reducerPath]: withdrawApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
+    [extraApi.reducerPath]: extraApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -33,7 +35,8 @@ export const store = configureStore({
       .concat(userApi.middleware)
       .concat(premiumUserApi.middleware)
       .concat(withdrawApi.middleware)
-      .concat(notificationApi.middleware),
+      .concat(notificationApi.middleware)
+      .concat(extraApi.middleware),
 });
 
 setupListeners(store.dispatch);

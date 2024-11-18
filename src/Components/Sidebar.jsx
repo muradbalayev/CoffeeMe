@@ -437,6 +437,26 @@ function Sidebar() {
           </AnimatePresence>
         </NavLink>
         <NavLink
+          to='/dashboard/fingertips'
+          className="lg:text-sm text-xs px-6 py-2"
+          end
+        >
+          <ChartBarIncreasing size={20} style={{ minWidth: "20px" }} />
+          <AnimatePresence>
+            {isSidebarOpen && (
+              <motion.span
+                className="whitespace-nowrap"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.1, delay: 0.2 }}
+              >
+                FingerTips
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </NavLink>
+        <NavLink
           to='/dashboard/withdraw'
           className="lg:text-sm text-xs px-6 py-2"
           end

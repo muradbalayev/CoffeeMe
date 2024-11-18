@@ -1,4 +1,3 @@
-
 import { Route, Routes } from "react-router-dom";
 import PartnerPage from "./Partner/PartnerPage";
 import SalesReport from "./SalesReport/SalesReportPage";
@@ -16,46 +15,46 @@ import StockPage from "./Stock/StockPage";
 import SubscribersPage from "./Subscribers/SubscribersPage";
 import AllUsers from "./Users/AllUsers";
 import PremiumUsers from "./Users/PremiumUsers";
+import FingerTipsPage from "./FingerTips/FingerTipsPage";
 function DashboardPage() {
-
   return (
     <div className="flex h-screen w-full overflow-hidden max-w-[1920px] mx-auto">
-        <Sidebar />
-        <div className="w-full overflow-y-scroll">
-          <Routes>
-            <Route path="/" element={<SalesReport />} />
+      <Sidebar />
+      <div className="w-full overflow-y-scroll">
+        <Routes>
+          <Route path="/" element={<SalesReport />} />
 
-            <Route path="/wallet" element={<WalletPage />} />
+          <Route path="/wallet" element={<WalletPage />} />
 
-            <Route path="/sales" element={<SalesPage />} />
+          <Route path="/sales" element={<SalesPage />} />
 
-            <Route path="/withdraw" element={<WithdrawPage />} />
+          <Route path="/withdraw" element={<WithdrawPage />} />
+          <Route path="/fingertips" element={<FingerTipsPage />} />
 
+          <Route path="/users" element={<AllUsers />} />
+          <Route path="/premiumusers" element={<PremiumUsers />} />
 
-            <Route path="/users" element={<AllUsers />} />
-            <Route path="/premiumusers" element={<PremiumUsers />} />
+          <Route path="/partners" element={<PartnerPage />} />
+          <Route path="/subscribers" element={<SubscribersPage />} />
+          {/* <Route path="/partner/update/:partnerid" element={<PartnerUpdate />} /> */}
 
+          <Route path="/shops" element={<ShopsPage />} />
 
-            <Route path="/partners" element={<PartnerPage />} />
-            <Route path="/subscribers" element={<SubscribersPage />} />
-            {/* <Route path="/partner/update/:partnerid" element={<PartnerUpdate />} /> */}
+          <Route path="/menu" element={<MenuPage />} />
+          <Route path="/stock" element={<StockPage />} />
 
-            <Route path="/shops" element={<ShopsPage />} />
+          <Route path="/menu/:shopId/products" element={<ProductPage />} />
+          {/* <Route path="/menu/:shopId/products/create" element={<ProductCreate />} /> */}
+          {/* <Route path="/menu/:shopId/products/update/:productid" element={<ProductUpdate />} /> */}
 
-            <Route path="/menu" element={<MenuPage />} />
-            <Route path="/stock" element={<StockPage/>} />
-
-            <Route path="/menu/:shopId/products" element={<ProductPage />} />
-            {/* <Route path="/menu/:shopId/products/create" element={<ProductCreate />} /> */}
-            {/* <Route path="/menu/:shopId/products/update/:productid" element={<ProductUpdate />} /> */}
-
-            <Route path="/send-notification" element={<SendNotification />} />
-            <Route path="/partner-messages" element={<PartnerMessages />} />
-            <Route path="/auto-notifications" element={<AutoNotificationPage />} />
-
-
-          </Routes>
-        </div>
+          <Route path="/send-notification" element={<SendNotification />} />
+          <Route path="/partner-messages" element={<PartnerMessages />} />
+          <Route
+            path="/auto-notifications"
+            element={<AutoNotificationPage />}
+          />
+        </Routes>
+      </div>
     </div>
   );
 }
