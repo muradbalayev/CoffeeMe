@@ -148,7 +148,7 @@ const AddShopModal = ({ setShowAddModal }) => {
               />
             </div>
           </div>
-          <div className="w-full flex inputRow gap-5 justify-between">
+          <div className="w-full flex-col flex inputRow gap-5 justify-between">
             <div className="inputContainer">
               <label className="form-label">Address</label>
               <input

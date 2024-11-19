@@ -4,7 +4,22 @@ import toast from "react-hot-toast";
 import Lightbox from "yet-another-react-lightbox";
 import { useAddProductMutation } from "../../redux/services/productApi";
 import * as XLSX from "xlsx";
+import imageCompression from "browser-image-compression";
 
+
+async function compressImage(file) {
+  const options = {
+    maxSizeMB: 1, // Target size (e.g., 1MB)
+    maxWidthOrHeight: 1920, // Max dimensions
+    useWebWorker: true,
+  };
+  try {
+    return await imageCompression(file, options);
+  } catch (error) {
+    console.error("Error compressing image:", error);
+    return file; // Return original file if compression fails
+  }
+}
 
 const AddProductModal = ({ shopId, setShowAddModal }) => {
   const [addProduct] = useAddProductMutation();
@@ -244,9 +259,9 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
   // Import Excel
   // const handleExcelUpload = async (event) => {
   //   const file = event.target.files[0];
-  
+
   //   if (!file) return;
-  
+
   //   try {
   //     // Read the file
   //     const data = await file.arrayBuffer();
@@ -254,17 +269,17 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
   //     const sheetName = workbook.SheetNames[0];
   //     const sheet = workbook.Sheets[sheetName];
   //     const parsedData = XLSX.utils.sheet_to_json(sheet);
-  
+
   //     console.log("Parsed Excel Data:", parsedData);
-  
+
   //     // Create a FormData object if the backend requires it
   //     const formData = new FormData();
   //     formData.append("shopId", shopId);
   //     formData.append("excelData", JSON.stringify(parsedData));
-  
+
   //     // Send POST request with parsed data
   //     await addProduct({ shopId, formData }).unwrap();
-  
+
   //     toast.success("Products added successfully!");
   //     setShowAddModal(false); // Close modal
   //   } catch (error) {
@@ -273,11 +288,25 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
   //   }
   // };
 
+  async function compressImage(file) {
+    const options = {
+      maxSizeMB: 1, // Target size (e.g., 1MB)
+      maxWidthOrHeight: 1920, // Max dimensions
+      useWebWorker: true,
+    };
+    try {
+      return await imageCompression(file, options);
+    } catch (error) {
+      console.error("Error compressing image:", error);
+      return file; // Return original file if compression fails
+    }
+  }
+
   const handleExcelUpload = async (event) => {
     const file = event.target.files[0];
-  
+
     if (!file) return;
-  
+
     try {
       // Read and parse Excel file
       const data = await file.arrayBuffer();
@@ -285,47 +314,104 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const parsedData = XLSX.utils.sheet_to_json(sheet);
-  
-      console.log("Parsed Excel Data:", parsedData);
-  
+
+      // console.log("Parsed Excel Data:", parsedData);
+
       // Transform parsed data into the format expected by backend
-      const products = parsedData.map((item) => ({
-        additions: {
-          extras: [
-            {
-              name: item.Name || "N/A",
-              price: parseFloat(item.Price) || 0,
-              discount: parseFloat(item.Discount.replace("%", "")) || 0,
+      const products = await Promise.all(
+        parsedData.map(async (item) => {
+          let imageFile = null;
+
+          if (item.Image) {
+            try {
+              const response = await fetch(item.Image);
+              const blob = await response.blob();
+              const originalFile = new File([blob], item.Image.split("/").pop(), { type: blob.type });
+              imageFile = await compressImage(originalFile); // Compress before uploading
+            } catch (error) {
+              console.warn(`Failed to fetch or compress image from ${item.Image}`, error);
+            }
+          }
+
+          const extras = Object.keys(item)
+            .filter((key) => key.startsWith("Extra_"))
+            .reduce((acc, key) => {
+              const [_, index, field] = key.split("_"); // Example: Extra_1_Name
+              const idx = parseInt(index) - 1;
+
+              if (!acc[idx]) acc[idx] = { name: "N/A", price: 0, discount: 0 };
+
+              if (field === "Name") acc[idx].name = item[key] || "N/A";
+              if (field === "Price") acc[idx].price = parseFloat(item[key]) || 0;
+              if (field === "Discount") acc[idx].discount = parseFloat(item[key]?.replace("%", "")) || 0;
+
+              return acc;
+            }, []);
+
+          const syrups = Object.keys(item)
+            .filter((key) => key.startsWith("Syrup_"))
+            .reduce((acc, key) => {
+              const [_, index, field] = key.split("_"); // Example: Syrup_1_Name
+              const idx = parseInt(index) - 1;
+
+              if (!acc[idx]) acc[idx] = { name: "N/A", price: 0, discount: 0 };
+
+              if (field === "Name") acc[idx].name = item[key] || "N/A";
+              if (field === "Price") acc[idx].price = parseFloat(item[key]) || 0;
+              if (field === "Discount") acc[idx].discount = parseFloat(item[key]?.replace("%", "")) || 0;
+
+              return acc;
+            }, []);
+
+          // Populate sizes array based on Excel data
+          const sizes = ["s", "m", "l"].map((size) => {
+            const priceKey = `Size_${size.toUpperCase()}_Price`;
+            const discountKey = `Size_${size.toUpperCase()}_Discount`;
+          
+            const price = item[priceKey] || '';  
+            const discount = item[discountKey] || '';
+          
+            return {
+              size,
+              price,
+              discount,
+            };
+          }) // Keep sizes if at least one value is available
+          
+          console.log("Final Sizes Array:", sizes);
+          return {
+            additions: {
+              extras,
+              syrups,
             },
-          ],
-          syrups: [
-            {
-              name: item.Name || "N/A",
-              price: parseFloat(item.Price) || 0,
-              discount: parseFloat(item.Discount.replace("%", "")) || 0,
-            },
-          ], 
-        },
-        name: item.Name || "",
-        sizes: [
-          {
-            size: "s", // Replace with actual size if available
-            price: parseFloat(item.Price) || 0,
-            discount: parseFloat(item.Discount.replace("%", "")) || 0,
-          },
-        ],
-        category: item.Category || "default",
-        type: "all", // Replace with actual type if available
-        description: item.Description || "",
-        photo: item.Image || "default.jpg", // Placeholder; replace with actual data
-        discountType: item.Discount_Type || "STANDARD_DISCOUNT",
-      }));
-  
+            name: item.Name || "",
+            sizes: sizes, // Dynamic sizes array
+            category: item.Category || "default",
+            type: item.Type,
+            description: item.Description || "",
+            photo: imageFile, // File object instead of URL
+            discountType: item.Discount_Type || "STANDARD_DISCOUNT",
+          };
+        })
+      );
+
       console.log("Transformed Products Data:", products);
-  
+
       // Send the transformed data to the backend
-      await addProduct({ shopId, products }).unwrap();
-  
+      const formData = new FormData();
+
+      products.forEach((product, index) => {
+        formData.append(`products[${index}]`, JSON.stringify(product));
+
+        if (product.photo) {
+          formData.append(`products[${index}][photo]`, product.photo);
+        }
+      });
+
+      await addProduct({ shopId, formData }).unwrap(); // Adjust backend to handle FormData
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
       toast.success("Products uploaded successfully!");
       setShowAddModal(false); // Close modal
     } catch (error) {
@@ -333,7 +419,6 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       console.error("Error processing Excel file:", error);
     }
   };
-  
 
 
   return (
