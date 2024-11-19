@@ -3,6 +3,8 @@ import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Lightbox from "yet-another-react-lightbox";
 import { useAddProductMutation } from "../../redux/services/productApi";
+import * as XLSX from "xlsx";
+
 
 const AddProductModal = ({ shopId, setShowAddModal }) => {
   const [addProduct] = useAddProductMutation();
@@ -238,7 +240,105 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       console.error("Error adding product:", error);
     }
   };
-  console.log(data);
+
+  // Import Excel
+  // const handleExcelUpload = async (event) => {
+  //   const file = event.target.files[0];
+  
+  //   if (!file) return;
+  
+  //   try {
+  //     // Read the file
+  //     const data = await file.arrayBuffer();
+  //     const workbook = XLSX.read(data, { type: "array" });
+  //     const sheetName = workbook.SheetNames[0];
+  //     const sheet = workbook.Sheets[sheetName];
+  //     const parsedData = XLSX.utils.sheet_to_json(sheet);
+  
+  //     console.log("Parsed Excel Data:", parsedData);
+  
+  //     // Create a FormData object if the backend requires it
+  //     const formData = new FormData();
+  //     formData.append("shopId", shopId);
+  //     formData.append("excelData", JSON.stringify(parsedData));
+  
+  //     // Send POST request with parsed data
+  //     await addProduct({ shopId, formData }).unwrap();
+  
+  //     toast.success("Products added successfully!");
+  //     setShowAddModal(false); // Close modal
+  //   } catch (error) {
+  //     toast.error("Failed to upload Excel file. Please try again.");
+  //     console.error("Error processing Excel file:", error);
+  //   }
+  // };
+
+  const handleExcelUpload = async (event) => {
+    const file = event.target.files[0];
+  
+    if (!file) return;
+  
+    try {
+      // Read and parse Excel file
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const parsedData = XLSX.utils.sheet_to_json(sheet);
+  
+      console.log("Parsed Excel Data:", parsedData);
+  
+      // Transform parsed data into the format expected by backend
+      const products = parsedData.map((item) => ({
+        additions: {
+          extras: [
+            {
+              name: item.Extras || "N/A",
+              price: parseFloat(item.Price) || 0,
+              discount: parseFloat(item.Discount.replace("%", "")) || 0,
+              discountedPrice:
+                parseFloat(item.Discounted_Price.replace("֏", "")) || 0,
+              _id: item.ID || "",
+            },
+          ],
+          syrups: [], // Add logic for syrups if available in Excel
+        },
+        _id: item.ID || "",
+        name: item.Name || "",
+        sizes: [
+          {
+            size: "s", // Replace with actual size if available
+            price: parseFloat(item.Price) || 0,
+            discount: parseFloat(item.Discount.replace("%", "")) || 0,
+            discountedPrice:
+              parseFloat(item.Discounted_Price.replace("֏", "")) || 0,
+          },
+        ],
+        category: item.Category || "default",
+        type: "all", // Replace with actual type if available
+        shop: shopId, // Use shopId from context or props
+        description: item.Description || "",
+        photo: "default.jpg", // Placeholder; replace with actual data
+        discountType: item.Discount_Type || "STANDARD_DISCOUNT",
+        rating: 4.0, // Replace with actual rating if available
+        ratingCount: 0, // Replace with actual count if available
+        stock: true, // Replace with stock status if available
+      }));
+  
+      console.log("Transformed Products Data:", products);
+  
+      // Send the transformed data to the backend
+      await addProduct({ shopId, products }).unwrap();
+  
+      toast.success("Products uploaded successfully!");
+      setShowAddModal(false); // Close modal
+    } catch (error) {
+      toast.error("Failed to upload Excel file. Please try again.");
+      console.error("Error processing Excel file:", error);
+    }
+  };
+  
+
 
   return (
     <div
@@ -261,7 +361,20 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
         <h2 className="text-black text-center title text-3xl p-3 mb-5">
           Add Product
         </h2>
-        <div className="w-full gap-3 flex flex-col">
+        <label
+          htmlFor="excelUpload"
+          className="px-3 py-2 bg-green-500 text-white rounded-md my-2 cursor-pointer"
+        >
+          Import Excel File
+        </label>
+        <input
+          id="excelUpload"
+          type="file"
+          accept=".xlsx, .xls"
+          className="hidden"
+          onChange={handleExcelUpload}
+        />
+        <div className="w-full mt-2 gap-3 flex flex-col">
           <div className="w-full flex inputRow gap-5 justify-between">
             <div className="inputContainer">
               <label className="form-label">Name</label>
@@ -384,13 +497,13 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
             </div>
 
             <div className="relative min-w-6">
-            <Plus
-              size={30}
-              color="blue"
-              className="cursor-pointer absolute top-[70%] -translate-y-1/2 right-0"
-              onClick={handleAddExtra}
+              <Plus
+                size={30}
+                color="blue"
+                className="cursor-pointer absolute top-[70%] -translate-y-1/2 right-0"
+                onClick={handleAddExtra}
               />
-              </div>
+            </div>
           </div>
           {data.additions.extras.length > 0 && (
             <div className="min-h-28 p-2 gap-2 border border-gray-400 rounded flex flex-wrap justify-start items-start">
@@ -407,7 +520,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
               ))}
             </div>
           )}
-             <div className="w-full flex inputRow gap-3 justify-between relative">
+          <div className="w-full flex inputRow gap-3 justify-between relative">
             <div className="inputContainer">
               <label className="form-label">Syrup&apos;s Name</label>
               <input
@@ -443,13 +556,13 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
             </div>
 
             <div className="relative min-w-6">
-            <Plus
-              size={30}
-              color="blue"
-              className="cursor-pointer absolute top-[70%] -translate-y-1/2 right-0"
-              onClick={handleAddSyrup}
+              <Plus
+                size={30}
+                color="blue"
+                className="cursor-pointer absolute top-[70%] -translate-y-1/2 right-0"
+                onClick={handleAddSyrup}
               />
-              </div>
+            </div>
           </div>
           {data.additions.syrups.length > 0 && (
             <div className="min-h-28 p-2 gap-2 border border-gray-400 rounded flex flex-wrap justify-start items-start">

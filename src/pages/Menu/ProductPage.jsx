@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Coffee, Eye, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
+import { Coffee, Eye, File, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import ProductModal from "../../Components/Menu/ProductModal";
 import AddProductModal from "../../Components/Menu/ProductCreate";
@@ -10,6 +10,8 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 import EditProductModal from "../../Components/Menu/ProductUpdate";
 import Swal from "sweetalert2";
 import { useDeleteProductMutation, useGetProductQuery } from "../../redux/services/productApi";
+
+import * as XLSX from "xlsx";
 
 
 
@@ -76,6 +78,36 @@ const ProductPage = () => {
         setModalShow(true)
     }
 
+    const products = Array.isArray(data?.products) ? data?.products : [];
+
+
+    const handleExportToExcel = () => {
+        // Transform data to export format
+        const exportData = products.map((product) => ({
+            ID: product._id,
+            Name: product.name,
+            Price: `${product.sizes[0]?.price || "N/A"} ₼`,
+            Category: product.category || "N/A",
+            Discounted_Price: `${product.sizes[0]?.discountedPrice || "N/A"} ₼`,
+            Discount: `${product.sizes[0]?.discount || "N/A"}%`,
+            Discount_Type: discountTypeMap[product.discountType] || "Unknown Discount Type",
+            Description: product.description || "N/A",
+            Extras: product.additions.extras?.map(extra => `${extra.name} (${extra.price} ₼, ${extra.discount}%)`).join(", ") || "N/A",
+            Syrups: product.additions.syrups?.map(syrup => `${syrup.name} (${syrup.price} ₼, ${syrup.discount}%)`).join(", ") || "N/A",
+            Status: product.status || "N/A"
+        }));
+    
+        // Create a worksheet
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+    
+        // Create a workbook
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
+    
+        // Export to Excel file
+        XLSX.writeFile(workbook, "Products.xlsx");
+    };
+    
 
     if (isLoading)
         return (
@@ -91,7 +123,6 @@ const ProductPage = () => {
         </div>
     );
 
-    const products = Array.isArray(data.products) ? data.products : [];
 
 
     const filteredProducts = products.filter((product) =>
@@ -117,6 +148,12 @@ const ProductPage = () => {
                         />
                         <Search className="search-icon" />
                     </div>
+                    {/* <button>
+                        <File size={35} />
+                    </button> */}
+                    <button onClick={handleExportToExcel} className="px-3 py-2 bg-green-500 text-white rounded-md">
+                        Export to Excel
+                    </button>
                     <button onClick={() => setShowAddModal(true)}>
                         <SquarePlus size={40} />
                     </button>
@@ -146,86 +183,86 @@ const ProductPage = () => {
                     </thead>
                     <tbody className="w-full">
                         {filteredProducts
-                        .slice()
-                        .reverse()
-                        .map((product, index) => (
-                            <tr key={index}>
-                                <td scope="row" className="col-1 border-b border-gray-300 id">
-                                    {index + 1}
-                                </td>
-                                <td className="col-1">{product._id}</td>
-                                <td className="col-2">{product.name} </td>
-                                <td className="col-2">{product.sizes[0].price} ₼</td>
+                            .slice()
+                            .reverse()
+                            .map((product, index) => (
+                                <tr key={index}>
+                                    <td scope="row" className="col-1 border-b border-gray-300 id">
+                                        {index + 1}
+                                    </td>
+                                    <td className="col-1">{product._id}</td>
+                                    <td className="col-2">{product.name} </td>
+                                    <td className="col-2">{product.sizes[0].price} ₼</td>
 
-                                <td className="col-1 min-w-32">
-                                    <button
-                                        className="px-1 py-1 border rounded max-w-16 my-1"
-                                        onClick={() => handlePhotoClick(product.photo)}
-                                    >
-                                        {product.photo && (
-                                            <img
-                                                src={`${imgUrl}/${product.photo}`}
-                                                alt="Product Photo"
-                                                className="object-contain h-14 w-14"
-                                            />
-                                        )}
-                                    </button>
-                                </td>
-                                <td className="col-2">{product.category} </td>
-                                <td className="col-2">{product.sizes[0].discountedPrice} ₼</td>
-                                <td className="col-2">{product.sizes[0].discount} %</td>
-                                <td className="col-2">{discountTypeMap[product.discountType] || 'Unknown Discount Type'}</td>
-
-                                <td className="col-2">{product.description} </td>
-                                <td className="col-2">
-                                    {product.additions.extras && product.additions.extras.length > 0 ? (
-                                        product.additions.extras.map((extra, index) => (
-                                            <div key={index} className="flex gap-2 items-center justify-center">
-                                                <span className="whitespace-nowrap">{extra.name}</span>
-                                                <span className="whitespace-nowrap">{extra.price} ₼</span>
-                                                <span className="whitespace-nowrap">{extra.discount}%</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <span>No Extras</span>
-                                    )}
-                                </td>
-                                <td className="col-2">
-                                    {product.additions.syrups && product.additions.syrups.length > 0 ? (
-                                        product.additions.syrups.map((syrup, index) => (
-                                            <div key={index} className="flex gap-2 items-center justify-center">
-                                                <span className="whitespace-nowrap">{syrup.name}</span>
-                                                <span className="whitespace-nowrap">{syrup.price} ₼</span>
-                                                <span className="whitespace-nowrap">{syrup.discount}%</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <span>No Syrups</span>
-                                    )}
-                                </td>
-                                <td className="col-2">{product.status}</td>
-
-                                <td className="col-2 min-w-44">
-                                    <div className='flex justify-start items-center gap-2'>
-                                        <button onClick={() => setEditedItem(product)}
-                                            className='px-3 py-2 bg-blue-800 text-white rounded-md'>
-                                            <Pencil size={18} />
-                                        </button>
+                                    <td className="col-1 min-w-32">
                                         <button
-                                            className="px-3 py-2 bg-red-600 text-white rounded-md"
-                                            onClick={() => handleDelete(product._id)}
+                                            className="px-1 py-1 border rounded max-w-16 my-1"
+                                            onClick={() => handlePhotoClick(product.photo)}
                                         >
-                                            <Trash2 size={18} />
+                                            {product.photo && (
+                                                <img
+                                                    src={`${imgUrl}/${product.photo}`}
+                                                    alt="Product Photo"
+                                                    className="object-contain h-14 w-14"
+                                                />
+                                            )}
                                         </button>
-                                        <button style={{ backgroundColor: '#214440' }}
-                                            className='px-2 py-1 text-white rounded-md'
-                                            onClick={() => handleModal(product)}>
-                                            <Eye />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
+                                    </td>
+                                    <td className="col-2">{product.category} </td>
+                                    <td className="col-2">{product.sizes[0].discountedPrice} ₼</td>
+                                    <td className="col-2">{product.sizes[0].discount} %</td>
+                                    <td className="col-2">{discountTypeMap[product.discountType] || 'Unknown Discount Type'}</td>
+
+                                    <td className="col-2">{product.description} </td>
+                                    <td className="col-2">
+                                        {product.additions.extras && product.additions.extras.length > 0 ? (
+                                            product.additions.extras.map((extra, index) => (
+                                                <div key={index} className="flex gap-2 items-center justify-center">
+                                                    <span className="whitespace-nowrap">{extra.name}</span>
+                                                    <span className="whitespace-nowrap">{extra.price} ₼</span>
+                                                    <span className="whitespace-nowrap">{extra.discount}%</span>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <span>No Extras</span>
+                                        )}
+                                    </td>
+                                    <td className="col-2">
+                                        {product.additions.syrups && product.additions.syrups.length > 0 ? (
+                                            product.additions.syrups.map((syrup, index) => (
+                                                <div key={index} className="flex gap-2 items-center justify-center">
+                                                    <span className="whitespace-nowrap">{syrup.name}</span>
+                                                    <span className="whitespace-nowrap">{syrup.price} ₼</span>
+                                                    <span className="whitespace-nowrap">{syrup.discount}%</span>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <span>No Syrups</span>
+                                        )}
+                                    </td>
+                                    <td className="col-2">{product.status}</td>
+
+                                    <td className="col-2 min-w-44">
+                                        <div className='flex justify-start items-center gap-2'>
+                                            <button onClick={() => setEditedItem(product)}
+                                                className='px-3 py-2 bg-blue-800 text-white rounded-md'>
+                                                <Pencil size={18} />
+                                            </button>
+                                            <button
+                                                className="px-3 py-2 bg-red-600 text-white rounded-md"
+                                                onClick={() => handleDelete(product._id)}
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
+                                            <button style={{ backgroundColor: '#214440' }}
+                                                className='px-2 py-1 text-white rounded-md'
+                                                onClick={() => handleModal(product)}>
+                                                <Eye />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>

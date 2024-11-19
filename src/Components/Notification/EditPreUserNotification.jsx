@@ -1,15 +1,11 @@
 import {  ShoppingCart, X } from "lucide-react";
 import {  useState } from "react";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "react-query";
-import useCustomFetch from "../../hooks/useCustomFetch";
 
 const EditPreUserNotification = ({  data, setShowEditModal }) => {
 
     const [editedData, setEditedData] = useState(data);
-    const customFetch = useCustomFetch();
 
-    const queryClient = useQueryClient();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -20,8 +16,8 @@ const EditPreUserNotification = ({  data, setShowEditModal }) => {
         });
     }
 
-
-    const handleSubmit = (e) => {
+// service Api yazilmalidi
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!editedData.name || !editedData.title || editedData.message) {
@@ -29,46 +25,24 @@ const EditPreUserNotification = ({  data, setShowEditModal }) => {
             return;
         }
 
-        const updateData = {
-            name: editedData.name,
-            title: editedData.title,
-            message: editedData.message,
-        };
-       console.log(updateData)
+         try {
+            const formData = {
+                name: editedData.name,
+                title: editedData.title,
+                message: editedData.message,
+            };
 
-        mutation.mutate(updateData);
-        toast.success("Notification Edited Successfully!");
+            // await editPartner({ id: editedData._id, formData }).unwrap();
+            toast.success("Partner Edited Successfully!");
+            setShowEditModal(false);
+        } catch (error) {
+            console.error("Error editing partner:", error);
+            toast.error("Error editing partner");
+        }
     };
 
 
-    const mutation = useMutation(
-        async (updateData) => {
-            const response = await customFetch(
 
-                `${import.meta.env.VITE_API_GLOBAL_URL}/api/admin/notification/premium-users/${editedData._id
-                }`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    method: "PUT",
-                    body: JSON.stringify(updateData),
-                }
-            );
-
-            return await response.json();
-        },
-        {
-            onSuccess: (data) => {
-                queryClient.invalidateQueries("notification");
-                setShowEditModal(false);
-                console.log("Notification edited successfully:", data);
-            },
-            onError: (error) => {
-                console.error("Error editing notification:", error);
-            },
-        }
-    );
 
     return (
         <div
@@ -89,7 +63,7 @@ const EditPreUserNotification = ({  data, setShowEditModal }) => {
                     onClick={() => setShowEditModal(false)}
                 />
                 <h2 className="text-dark display-5 title text-3xl p-3 mb-5">
-                    Edit Product
+                    Edit Notification
                 </h2>
                 <div className="w-full gap-3 flex flex-col">
                     <div className="w-full flex inputRow gap-5 justify-between">

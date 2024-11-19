@@ -4,13 +4,13 @@ import "yet-another-react-lightbox/styles.css";
 import "../Shops/ShopPage.css";
 import { Check, Coffee, Pencil, Search } from "lucide-react";
 // import Swal from "sweetalert2";
-import EditNotification from "../../Components/Notification/NotificationEdit";
 import {
   useGetPartnerNotificationQuery,
   useUpdatePartnerNotificationMutation,
 } from "../../redux/services/notificationApi";
+import EditPreUserNotification from "../../Components/Notification/EditPreUserNotification";
 
-function ShopsPage() {
+function PartnerMessages() {
   const {
     data,
     isLoading: isGetPartnerNotificationsLoading,
@@ -18,6 +18,8 @@ function ShopsPage() {
     isSuccess,
     error,
   } = useGetPartnerNotificationQuery();
+
+  console.log(data)
 
   const [
     updatePartnerNotification,
@@ -68,7 +70,7 @@ function ShopsPage() {
     return (
       <div className="wrapper relative flex flex-col items-center gap-5 ">
         {editedItem && (
-          <EditNotification
+          <EditPreUserNotification
             data={editedItem}
             setShowEditModal={setEditedItem}
           />
@@ -133,7 +135,7 @@ function ShopsPage() {
                       </button>
                       <button
                         className="px-3 py-2 flex items-center gap-2 bg-blue-600 text-white rounded-md"
-                        onClick={() => setEditedItem(shop)}
+                        onClick={() => setEditedItem(notification)}
                       >
                         <Pencil size={18} />
                       </button>
@@ -151,4 +153,4 @@ function ShopsPage() {
     );
 }
 
-export default ShopsPage;
+export default PartnerMessages;
