@@ -293,36 +293,32 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
         additions: {
           extras: [
             {
-              name: item.Extras || "N/A",
+              name: item.Name || "N/A",
               price: parseFloat(item.Price) || 0,
               discount: parseFloat(item.Discount.replace("%", "")) || 0,
-              discountedPrice:
-                parseFloat(item.Discounted_Price.replace("֏", "")) || 0,
-              _id: item.ID || "",
             },
           ],
-          syrups: [], // Add logic for syrups if available in Excel
+          syrups: [
+            {
+              name: item.Name || "N/A",
+              price: parseFloat(item.Price) || 0,
+              discount: parseFloat(item.Discount.replace("%", "")) || 0,
+            },
+          ], 
         },
-        _id: item.ID || "",
         name: item.Name || "",
         sizes: [
           {
             size: "s", // Replace with actual size if available
             price: parseFloat(item.Price) || 0,
             discount: parseFloat(item.Discount.replace("%", "")) || 0,
-            discountedPrice:
-              parseFloat(item.Discounted_Price.replace("֏", "")) || 0,
           },
         ],
         category: item.Category || "default",
         type: "all", // Replace with actual type if available
-        shop: shopId, // Use shopId from context or props
         description: item.Description || "",
-        photo: "default.jpg", // Placeholder; replace with actual data
+        photo: item.Image || "default.jpg", // Placeholder; replace with actual data
         discountType: item.Discount_Type || "STANDARD_DISCOUNT",
-        rating: 4.0, // Replace with actual rating if available
-        ratingCount: 0, // Replace with actual count if available
-        stock: true, // Replace with stock status if available
       }));
   
       console.log("Transformed Products Data:", products);

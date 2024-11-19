@@ -82,7 +82,7 @@ const ProductPage = () => {
 
 
     const handleExportToExcel = () => {
-        // Transform data to export format
+        // Transform data to export format, including image URLs
         const exportData = products.map((product) => ({
             ID: product._id,
             Name: product.name,
@@ -90,11 +90,12 @@ const ProductPage = () => {
             Category: product.category || "N/A",
             Discounted_Price: `${product.sizes[0]?.discountedPrice || "N/A"} ₼`,
             Discount: `${product.sizes[0]?.discount || "N/A"}%`,
-            Discount_Type: discountTypeMap[product.discountType] || "Unknown Discount Type",
+            Discount_Type: product.discountType || "Unknown Discount Type",
             Description: product.description || "N/A",
             Extras: product.additions.extras?.map(extra => `${extra.name} (${extra.price} ₼, ${extra.discount}%)`).join(", ") || "N/A",
             Syrups: product.additions.syrups?.map(syrup => `${syrup.name} (${syrup.price} ₼, ${syrup.discount}%)`).join(", ") || "N/A",
-            Status: product.status || "N/A"
+            Status: product.status || "N/A",
+            Image: `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/products/${shopId}/${product.photo || "default.jpg"}`
         }));
     
         // Create a worksheet
@@ -105,8 +106,9 @@ const ProductPage = () => {
         XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
     
         // Export to Excel file
-        XLSX.writeFile(workbook, "Products.xlsx");
+        XLSX.writeFile(workbook, "Products_with_Photos.xlsx");
     };
+    
     
 
     if (isLoading)
