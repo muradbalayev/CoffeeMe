@@ -15,9 +15,8 @@ const EditShopModal = ({ data, setShowEditModal }) => {
     close: data.openHours.close,
   });
 
-  console.log({editedData});
-  
-  
+  console.log({ editedData });
+
   const [editShop] = useEditShopMutation();
 
   const handleChange = (e) => {
@@ -106,6 +105,7 @@ const EditShopModal = ({ data, setShowEditModal }) => {
 
     if (
       !editedData.name ||
+      !editedData.discountPercentage ||
       !editedData.address ||
       !editedData.location.coordinates[0] ||
       !editedData.location.coordinates[1] ||
@@ -181,6 +181,17 @@ const EditShopModal = ({ data, setShowEditModal }) => {
                 name="shortAddress"
                 placeholder="Short Address"
                 value={editedData.shortAddress}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="inputContainer">
+              <label className="form-label">Discount Percentage</label>
+              <input
+                className="form-control"
+                type="text"
+                name="discountPercentage"
+                placeholder="Short Address"
+                value={editedData.discountPercentage}
                 onChange={handleChange}
               />
             </div>

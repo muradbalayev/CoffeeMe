@@ -20,6 +20,7 @@ const AddShopModal = ({ setShowAddModal }) => {
     latitude: "",
     photo: null,
     logo: null,
+    discountPercentage: "",
     open: "",
     close: "",
   });
@@ -70,11 +71,12 @@ const AddShopModal = ({ setShowAddModal }) => {
 
     if (
       !data.name ||
+      !data.discountPercentage ||
       !data.address ||
       !data.longitude ||
       !data.latitude ||
-      !data.open || 
-      !data.close || 
+      !data.open ||
+      !data.close ||
       !photoFileName ||
       !logoFileName ||
       photoFileName === "Choose File" ||
@@ -158,124 +160,137 @@ const AddShopModal = ({ setShowAddModal }) => {
                 onChange={handleChange}
               />
             </div>
-          </div>
-          <div className="w-full flex inputRow gap-5 justify-between">
-            <div className="inputContainer">
-              <label className="form-label">Longitude</label>
-              <input
-                className="form-control"
-                type="number"
-                name="longitude"
-                placeholder="Longitude"
-                value={data.longitude}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="inputContainer">
-              <label className="form-label">Latitude</label>
-              <input
-                className="form-control"
-                type="number"
-                name="latitude"
-                placeholder="Latitude"
-                value={data.latitude}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="w-full flex inputRow gap-5 justify-between">
-            <div className="inputContainer">
-              <label className="form-label">Open time</label>
-              <input
-                className="form-control"
-                type="number"
-                name="open"
-                placeholder="Open time"
-                value={data.open}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="inputContainer">
-              <label className="form-label">Close time</label>
-              <input
-                className="form-control"
-                type="number"
-                name="close"
-                placeholder="Close time"
-                value={data.close}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="w-full flex flex-wrap inputRow gap-5 justify-between">
-            <div className="inputContainer">
-              <label className="form-label">Photo</label>
-              <div
-                className="form-control cursor-pointer flex  justify-between items-center gap-2"
-                onClick={() => PhotoFileRef.current.click()}
-              >
-                <div className="flex items-center gap-2 overflow-hidden">
-                  <p className="select-none">{photoFileName}</p>
-                  <Image color="#214440" />
-                  <input
-                    type="file"
-                    name="photo"
-                    hidden
-                    ref={PhotoFileRef}
-                    onChange={handleFileChange}
-                  />
-                </div>
-                {photoPreview && (
-                  <Eye
-                    color="#214440"
-                    className="cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEyeClick(photoPreview);
-                    }}
-                  />
-                )}
+            <div className="w-full flex inputRow gap-5 justify-between">
+              <div className="inputContainer">
+                <label className="form-label">Discount Percentage</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="discountPercentage"
+                  placeholder="Address"
+                  value={data.discountPercentage}
+                  onChange={handleChange}
+                />
               </div>
             </div>
-            <div className="inputContainer">
-              <label className="form-label">Logo</label>
-              <div
-                className="form-control cursor-pointer flex justify-between items-center gap-2"
-                onClick={() => LogoFileRef.current.click()}
-              >
-                <div className="flex items-center gap-2 overflow-hidden">
-                  <p className="select-none">{logoFileName}</p>
-                  <Image color="#214440" />
-                  <input
-                    type="file"
-                    name="logo"
-                    hidden
-                    ref={LogoFileRef}
-                    onChange={handleFileChange}
-                  />
-                </div>
-                {logoPreview && (
-                  <Eye
-                    color="#214440"
-                    className="cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEyeClick(logoPreview);
-                    }}
-                  />
-                )}
+            <div className="w-full flex inputRow gap-5 justify-between">
+              <div className="inputContainer">
+                <label className="form-label">Longitude</label>
+                <input
+                  className="form-control"
+                  type="number"
+                  name="longitude"
+                  placeholder="Longitude"
+                  value={data.longitude}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="inputContainer">
+                <label className="form-label">Latitude</label>
+                <input
+                  className="form-control"
+                  type="number"
+                  name="latitude"
+                  placeholder="Latitude"
+                  value={data.latitude}
+                  onChange={handleChange}
+                />
               </div>
             </div>
-          </div>
-          <div className="flex mt-10 justify-center">
-            <div>
-              <button
-                style={{ backgroundColor: "#214440" }}
-                type="submit"
-                className="action-btn px-4 py-2 flex items-center rounded text-white font-bold gap-2"
-              >
-                Add Shop <ShoppingCart color="white" />
-              </button>
+            <div className="w-full flex inputRow gap-5 justify-between">
+              <div className="inputContainer">
+                <label className="form-label">Open time</label>
+                <input
+                  className="form-control"
+                  type="number"
+                  name="open"
+                  placeholder="Open time"
+                  value={data.open}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="inputContainer">
+                <label className="form-label">Close time</label>
+                <input
+                  className="form-control"
+                  type="number"
+                  name="close"
+                  placeholder="Close time"
+                  value={data.close}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            <div className="w-full flex flex-wrap inputRow gap-5 justify-between">
+              <div className="inputContainer">
+                <label className="form-label">Photo</label>
+                <div
+                  className="form-control cursor-pointer flex  justify-between items-center gap-2"
+                  onClick={() => PhotoFileRef.current.click()}
+                >
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <p className="select-none">{photoFileName}</p>
+                    <Image color="#214440" />
+                    <input
+                      type="file"
+                      name="photo"
+                      hidden
+                      ref={PhotoFileRef}
+                      onChange={handleFileChange}
+                    />
+                  </div>
+                  {photoPreview && (
+                    <Eye
+                      color="#214440"
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEyeClick(photoPreview);
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="inputContainer">
+                <label className="form-label">Logo</label>
+                <div
+                  className="form-control cursor-pointer flex justify-between items-center gap-2"
+                  onClick={() => LogoFileRef.current.click()}
+                >
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <p className="select-none">{logoFileName}</p>
+                    <Image color="#214440" />
+                    <input
+                      type="file"
+                      name="logo"
+                      hidden
+                      ref={LogoFileRef}
+                      onChange={handleFileChange}
+                    />
+                  </div>
+                  {logoPreview && (
+                    <Eye
+                      color="#214440"
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEyeClick(logoPreview);
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="flex mt-10 justify-center">
+              <div>
+                <button
+                  style={{ backgroundColor: "#214440" }}
+                  type="submit"
+                  className="action-btn px-4 py-2 flex items-center rounded text-white font-bold gap-2"
+                >
+                  Add Shop <ShoppingCart color="white" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
