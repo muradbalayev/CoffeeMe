@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import { BellElectricIcon, BellRing, BookOpen, ChartBarIncreasing, ChevronDown, ChevronUp, Crown, NotebookText, PackageSearch, ShoppingCart, UserRoundPlus, Wallet as WalletIcon } from "lucide-react";
+import { BellElectricIcon, BellRing, BookOpen, ChartBarIncreasing, ChevronDown, ChevronUp, Crown, NotebookText, ShoppingCart, UserRoundPlus, Wallet as WalletIcon } from "lucide-react";
 
 import {
   ChartLine,
@@ -23,8 +23,6 @@ function Sidebar() {
   const [dropdown, setDropDown] = useState(false);
   const dropdownRef = useRef(null);
 
-  const [menuDropdown, setMenuDropDown] = useState(false);
-  const menuDropdownRef = useRef(null);
 
   const [notificationDropdown, setNotificationDropDown] = useState(false);
   const notificationDropdownRef = useRef(null);
@@ -85,9 +83,9 @@ function Sidebar() {
     setNotificationDropDown(!notificationDropdown);
   };
 
-  const menuDropdownToggle = () => {
-    setMenuDropDown(!menuDropdown);
-  };
+  // const menuDropdownToggle = () => {
+  //   setMenuDropDown(!menuDropdown);
+  // };
 
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -97,9 +95,9 @@ function Sidebar() {
       setNotificationDropDown(false);
     }
 
-    if (menuDropdownRef.current && !menuDropdownRef.current.contains(event.target)) {
-      setMenuDropDown(false);
-    }
+    // if (menuDropdownRef.current && !menuDropdownRef.current.contains(event.target)) {
+    //   setMenuDropDown(false);
+    // }
 
   };
 
@@ -114,13 +112,12 @@ function Sidebar() {
     location.pathname.startsWith("/dashboard/users") ||
     location.pathname.startsWith("/dashboard/premiumusers");
 
-  const isMenuActive =
-    location.pathname.startsWith("/dashboard/menu") ||
-    location.pathname.startsWith("/dashboard/stock");
+  // const isMenuActive =
+  //   location.pathname.startsWith("/dashboard/menu") ||
+  //   location.pathname.startsWith("/dashboard/stock");
 
   const isNotificationActive =
     location.pathname.startsWith("/dashboard/send-notification") ||
-    location.pathname.startsWith("/dashboard/partner-messages") ||
     location.pathname.startsWith("/dashboard/messages");
 
 
@@ -317,85 +314,26 @@ function Sidebar() {
             )}
           </AnimatePresence>
         </NavLink>
-        <div ref={menuDropdownRef} onClick={menuDropdownToggle} end='true'
-          className={`lg:text-sm drop-link text-xs px-6 py-2 relative group ${isMenuActive ? "active" : ""}`}>
+        <NavLink
+          to='/dashboard/menu'
+          className="lg:text-sm text-xs px-6 py-2"
+          end
+        >
           <BookOpen size={20} style={{ minWidth: "20px" }} />
           <AnimatePresence>
             {isSidebarOpen && (
               <motion.span
-                className='whitespace-nowrap flex items-center justify-between'
+                className="whitespace-nowrap"
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: "auto" }}
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.1, delay: 0.2 }}
               >
                 Menu
-                {menuDropdown ?
-                  <ChevronUp
-                    className="dropdown group-hover:scale-110"
-                    style={{ position: "absolute", right: "10px" }}
-                  /> :
-                  <ChevronDown
-                    className="dropdown group-hover:scale-110"
-                    style={{ position: "absolute", right: "10px" }}
-                  />}
-
               </motion.span>
             )}
           </AnimatePresence>
-          <AnimatePresence>
-            {menuDropdown && (
-              //DropDown links
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className="absolute w-full left-0 top-[34px] border-b  rounded-b-xl border-slate-900 backdrop-blur-xl">
-                <Link
-                  to="/dashboard/menu"
-                  className="px-6 py-2 text-xs dropdown-link"
-                >
-                  <BookOpen size={20} style={{ minWidth: "20px" }} />
-                  <AnimatePresence>
-                    {isSidebarOpen && (
-                      <motion.span
-                        className="whitespace-nowrap"
-                        initial={{ opacity: 0, width: 0 }}
-                        animate={{ opacity: 1, width: "auto" }}
-                        exit={{ opacity: 0, width: 0 }}
-                        transition={{ duration: 0.1, delay: 0.2 }}
-                      >
-                        Menu
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </Link>
-                <Link
-                  to="/dashboard/stock"
-                  className=" px-6 py-2 text-xs rounded-b-lg dropdown-link"
-                >
-                <PackageSearch size={20} style={{ minWidth: "20px" }} />
-                  <AnimatePresence>
-                    {isSidebarOpen && (
-                      <motion.span
-                        className="whitespace-nowrap"
-                        initial={{ opacity: 0, width: 0 }}
-                        animate={{ opacity: 1, width: "auto" }}
-                        exit={{ opacity: 0, width: 0 }}
-                        transition={{ duration: 0.1, delay: 0.2 }}
-                      >
-                        Stock
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </Link>
-                <div className="absolute w-full h-full -z-10 opacity-50 bg-[#00704a] left-0 bottom-0 rounded-b-lg"></div>
-
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        </NavLink>
         <NavLink
           to='/dashboard/wallet'
           className="lg:text-sm text-xs px-6 py-2"
@@ -512,25 +450,7 @@ function Sidebar() {
                     )}
                   </AnimatePresence>
                 </Link>
-                <Link
-                  to="/dashboard/partner-messages"
-                  className=" px-6 py-2 text-xs dropdown-link"
-                >
-                  <Crown size={15} style={{ minWidth: "20px" }} />
-                  <AnimatePresence>
-                    {isSidebarOpen && (
-                      <motion.span
-                        className="md:whitespace-nowrap whitespace-normal text-center"
-                        initial={{ opacity: 0, width: 0 }}
-                        animate={{ opacity: 1, width: "auto" }}
-                        exit={{ opacity: 0, width: 0 }}
-                        transition={{ duration: 0.1, delay: 0.2 }}
-                      >
-                        Partner Messages
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </Link>
+              
                 <Link
                   to="/dashboard/auto-notifications"
                   className=" px-6 py-2 text-xs dropdown-link"
@@ -556,6 +476,26 @@ function Sidebar() {
             )}
           </AnimatePresence>
         </div>
+        <NavLink
+          to='/dashboard/partner-messages'
+          className="lg:text-sm text-xs px-6 py-2"
+          end
+        >
+          <Crown size={20} style={{ minWidth: "20px" }} />
+          <AnimatePresence>
+            {isSidebarOpen && (
+              <motion.span
+                className="whitespace-nowrap"
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.1, delay: 0.2 }}
+              >
+                Partner Messages
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </NavLink>
       </nav>
       <Link
         className="logout w-full px-6 min-h-10 py-2 mt-auto flex md:flex-row flex-col gap-2 items-center md:text-sm text-xs"

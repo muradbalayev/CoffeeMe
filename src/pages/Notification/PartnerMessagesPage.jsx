@@ -105,7 +105,10 @@ function ShopsPage() {
               </tr>
             </thead>
             <tbody className="w-full">
-              {data.notifications.map((notification, index) => (
+              {data.notifications
+              .slice()
+              .reverse()
+              .map((notification, index) => (
                 <tr key={index}>
                   <td scope="row" className="col-1 border-b border-gray-300 id">
                     {index + 1}

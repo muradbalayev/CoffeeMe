@@ -126,7 +126,10 @@ function ShopsPage() {
             </tr>
           </thead>
           <tbody className="w-full">
-            {filteredShops.map((shop, index) => (
+            {filteredShops
+            .slice()
+            .reverse()
+            .map((shop, index) => (
               <tr key={index}>
                 <td scope="row" className="col-1 border-b border-gray-300 id">
                   {index + 1}
@@ -157,7 +160,7 @@ function ShopsPage() {
                         alt="Shop Logo"
                         className="object-contain h-14 w-14"
                       />
-                    )}{" "}
+                    )}
                   </button>
                 </td>
                 <td className="col-1 min-w-32">
@@ -174,7 +177,7 @@ function ShopsPage() {
                     )}
                   </button>
                 </td>
-                <td className="col-2 min-w-44  ">
+                <td className="col-2 min-w-44">
                   <button
                     onClick={() => setEditedItem(shop)}
                     className=" px-3 py-2 bg-blue-600 text-white rounded-md"

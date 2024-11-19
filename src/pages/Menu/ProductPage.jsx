@@ -1,5 +1,4 @@
 import { useState } from "react";
-import DataTable from "react-data-table-component"
 import { Coffee, Eye, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import ProductModal from "../../Components/Menu/ProductModal";
@@ -14,39 +13,40 @@ import { useDeleteProductMutation, useGetProductQuery } from "../../redux/servic
 
 
 
-  
+
 
 const ProductPage = () => {
-    // const customFetch = useCustomFetch();
 
     const { shopId } = useParams();
-    const { data, isLoading, isError,isSuccess, error } = useGetProductQuery(shopId);
+    const { data, isLoading, isError, isSuccess, error } = useGetProductQuery(shopId);
     console.log(data)
     const [deleteProduct] = useDeleteProductMutation();
+    const [searchQuery, setSearchQuery] = useState("");
+
 
     const handleDelete = async (shopId) => {
         const result = await Swal.fire({
-          title: "Are you sure?",
-          text: "This action cannot be undone!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, delete it!",
+            title: "Are you sure?",
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
         });
-    
+
         if (result.isConfirmed) {
-          // Call the delete mutation
-          deleteProduct(shopId).then(() => {
-            Swal.fire("Deleted!", "Your shop has been deleted.", "success");
-          }).catch((error) => {
-            Swal.fire("Error!", "There was an issue deleting the shop.", {error});
-          });
+            // Call the delete mutation
+            deleteProduct(shopId).then(() => {
+                Swal.fire("Deleted!", "Your shop has been deleted.", "success");
+            }).catch((error) => {
+                Swal.fire("Error!", "There was an issue deleting the shop.", { error });
+            });
         }
-      };
-    
+    };
+
     const [editedItem, setEditedItem] = useState(null);
-    
+
 
     const [product, setProduct] = useState(null)
     const [modalShow, setModalShow] = useState(false);
@@ -70,124 +70,6 @@ const ProductPage = () => {
         SPECIAL_DISCOUNT: 'Special Discount',
     };
 
-    const columns = [
-        {
-            name: "Id",
-            selector: (row, index) => index + 1,
-            sortable: true
-        },
-        {
-            name: "Product Name",
-            selector: row => row.name
-        },
-        {
-            name: "Price",
-            selector: row => `${row.sizes[0].price} ₼`,
-        },
-        {
-            name: "Photo",
-            cell: (row) => (
-                <button
-                    className="px-1 py-1 border rounded max-w-16 my-1"
-                    onClick={() => handlePhotoClick(row.photo)}
-                >
-                    {row.photo && (
-                        <img
-                            src={`${imgUrl}/${row.photo}`}
-                            alt="Shop Photo"
-                            className="object-contain h-14 w-14"
-                        />
-                    )}{" "}
-                </button>
-            )
-        },
-        {
-            name: "Category",
-            selector: row => row.category,
-        },
-        {
-            name: "Discounted Price",
-            selector: row => `${row.sizes[0].discountedPrice} ₼`,
-            sortable: true
-        },
-        {
-            name: "Discount",
-            selector: row => `${row.sizes[0].discount} %`,
-            sortable: true
-        },
-        {
-            name: "Discount Type",
-            selector: row => discountTypeMap[row.discountType] || 'Unknown Discount Type',
-            sortable: true
-        },
-        {
-            name: "Description",
-            selector: row => row.description,
-            sortable: true
-        },
-        {
-            name: "Extras",
-            cell: (row) => (
-                <div>
-                    {row.additions.extras && row.additions.extras.length > 0 ? (
-                        row.additions.extras.map((extra, index) => (
-                            <div key={index} className="flex gap-2 items-center">
-                                <span>{extra.name}</span>
-                                <span>{extra.price} ₼</span>
-                                <span>{extra.discount}%</span>
-                            </div>
-                        ))
-                    ) : (
-                        <span>No Extras</span>
-                    )}
-                </div>
-            ),
-            sortable: false
-        },
-        {
-            name: "Syrups",
-            cell: (row) => (
-                <div>
-                    {row.additions.syrups && row.additions.syrups.length > 0 ? (
-                        row.additions.syrups.map((syrup, index) => (
-                            <div key={index} className="flex gap-2 items-center">
-                                <span>{syrup.name}</span>
-                                <span>{syrup.price} ₼</span>
-                                <span>{syrup.discount}%</span>
-                            </div>
-                        ))
-                    ) : (
-                        <span>No Syrups</span>
-                    )}
-                </div>
-            ),
-            sortable: false
-        },
-        {
-            name: "Actions",
-            cell: (row) => (
-                <div className='flex justify-start items-center gap-2'>
-                    <button onClick={() => setEditedItem(row)}
-                        className='px-3 py-2 bg-blue-800 text-white rounded-md'>
-                        <Pencil size={18} />
-                    </button>
-                    <button
-                        className="px-3 py-2 bg-red-600 text-white rounded-md"
-                    onClick={() => handleDelete(row._id)}
-                    >
-                        <Trash2 size={18} />
-                    </button>
-                    <button style={{ backgroundColor: '#214440' }}
-                        className='px-2 py-1 text-white rounded-md'
-                        onClick={() => handleModal(row)}>
-                        <Eye />
-                    </button>
-                </div>
-            )
-        }
-
-    ]
-
 
     function handleModal(row) {
         setProduct(row)
@@ -209,50 +91,147 @@ const ProductPage = () => {
         </div>
     );
 
+    const products = Array.isArray(data.products) ? data.products : [];
 
+
+    const filteredProducts = products.filter((product) =>
+        product?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     if (isSuccess) return (
-        <div className="wrapper">
+        <div className="wrapper relative flex flex-col items-center gap-5 ">
             {showAddModal && <AddProductModal shopId={shopId} setShowAddModal={setShowAddModal} />}
             {editedItem && (
                 <EditProductModal shopId={shopId} data={editedItem} setShowEditModal={setEditedItem} />
             )}
-            <div className="sales-header flex items-center justify-between">
-                <div className='relative p-2'>
-                    <h1 className="title md:text-4xl text-2xl">
-                        Products
-                    </h1>
-                </div>
-                <div className='flex gap-3 mb-1 p-3 border-green-900'>
-                    <div className="flex relative gap-3 items-center">
-                        <div className="flex relative">
-                            <input
-                                className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
-                                placeholder="Search"
-                            // value={search}
-                            // onChange={(event) => setSearch(event.target.value)}
-                            />
-                            <Search className="search-icon" />
-                        </div>
-                        <button
-                            onClick={() => setShowAddModal(true)}
-                            className="text-green"
-                            style={{ borderRadius: "25%" }}
-                        >
-                            <SquarePlus size={40} />
-                        </button>
+
+            <div className="flex justify-between w-full items-center p-2">
+                <h1 className="title lg:text-4xl text-3xl">Products</h1>
+                <div className="gap-3 flex items-center">
+                    <div className="flex relative">
+                        <input
+                            className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
+                            placeholder="Search"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <Search className="search-icon" />
                     </div>
+                    <button onClick={() => setShowAddModal(true)}>
+                        <SquarePlus size={40} />
+                    </button>
                 </div>
             </div>
-            <div className='mt-4'>
-                <DataTable
-                    columns={columns}
-                    data={data.products}
-                    highlightOnHover
-                    responsive
-                >
-                </DataTable>
+            <div className="overflow-y-scroll overflow-x-auto w-full">
+                <table className="w-full rounded-t-xl overflow-hidden">
+                    <thead className="text-white bg-[#00704a]" >
+                        <tr>
+                            <th className="id" scope="col">
+                                #
+                            </th>
+                            <th scope="col">Id</th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Photo</th>
+                            <th scope="col">Caregory</th>
+                            <th scope="col">Discounted Price</th>
+                            <th scope="col">Discount</th>
+                            <th scope="col">Discount Type</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Extras</th>
+                            <th scope="col">Syrups</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="w-full">
+                        {filteredProducts
+                        .slice()
+                        .reverse()
+                        .map((product, index) => (
+                            <tr key={index}>
+                                <td scope="row" className="col-1 border-b border-gray-300 id">
+                                    {index + 1}
+                                </td>
+                                <td className="col-1">{product._id}</td>
+                                <td className="col-2">{product.name} </td>
+                                <td className="col-2">{product.sizes[0].price} ₼</td>
+
+                                <td className="col-1 min-w-32">
+                                    <button
+                                        className="px-1 py-1 border rounded max-w-16 my-1"
+                                        onClick={() => handlePhotoClick(product.photo)}
+                                    >
+                                        {product.photo && (
+                                            <img
+                                                src={`${imgUrl}/${product.photo}`}
+                                                alt="Product Photo"
+                                                className="object-contain h-14 w-14"
+                                            />
+                                        )}
+                                    </button>
+                                </td>
+                                <td className="col-2">{product.category} </td>
+                                <td className="col-2">{product.sizes[0].discountedPrice} ₼</td>
+                                <td className="col-2">{product.sizes[0].discount} %</td>
+                                <td className="col-2">{discountTypeMap[product.discountType] || 'Unknown Discount Type'}</td>
+
+                                <td className="col-2">{product.description} </td>
+                                <td className="col-2">
+                                    {product.additions.extras && product.additions.extras.length > 0 ? (
+                                        product.additions.extras.map((extra, index) => (
+                                            <div key={index} className="flex gap-2 items-center justify-center">
+                                                <span className="whitespace-nowrap">{extra.name}</span>
+                                                <span className="whitespace-nowrap">{extra.price} ₼</span>
+                                                <span className="whitespace-nowrap">{extra.discount}%</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <span>No Extras</span>
+                                    )}
+                                </td>
+                                <td className="col-2">
+                                    {product.additions.syrups && product.additions.syrups.length > 0 ? (
+                                        product.additions.syrups.map((syrup, index) => (
+                                            <div key={index} className="flex gap-2 items-center justify-center">
+                                                <span className="whitespace-nowrap">{syrup.name}</span>
+                                                <span className="whitespace-nowrap">{syrup.price} ₼</span>
+                                                <span className="whitespace-nowrap">{syrup.discount}%</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <span>No Syrups</span>
+                                    )}
+                                </td>
+                                <td className="col-2">{product.status}</td>
+
+                                <td className="col-2 min-w-44">
+                                    <div className='flex justify-start items-center gap-2'>
+                                        <button onClick={() => setEditedItem(product)}
+                                            className='px-3 py-2 bg-blue-800 text-white rounded-md'>
+                                            <Pencil size={18} />
+                                        </button>
+                                        <button
+                                            className="px-3 py-2 bg-red-600 text-white rounded-md"
+                                            onClick={() => handleDelete(product._id)}
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                        <button style={{ backgroundColor: '#214440' }}
+                                            className='px-2 py-1 text-white rounded-md'
+                                            onClick={() => handleModal(product)}>
+                                            <Eye />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
+            {/* <div className="w-full mx-auto flex items-center justify-center">
+      <button className="px-4 py-3" style={{ backgroundColor: "#214440", color: "white"}}>Load More</button>
+    </div> */}
             <ProductModal
                 product={product}
                 isOpen={modalShow}
@@ -265,8 +244,9 @@ const ProductPage = () => {
                 plugins={[Thumbnails][Fullscreen]}
             />
         </div>
+    );
 
-    )
+
 }
 
 export default ProductPage

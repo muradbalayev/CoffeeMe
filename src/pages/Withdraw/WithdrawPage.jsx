@@ -40,22 +40,22 @@ const WithdrawPage = () => {
   //     withdraw.name.toLowerCase().includes(searchQuery.toLowerCase())
   // );
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    if (isNaN(date)) {
-      console.error("Invalid date:", dateString);
-      return "Invalid Date"; // Fallback in case of an error
-    }
-    const options = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    };
-    return date.toLocaleString("en-US", options).replace(",", "");
-  };
+//   const formatDate = (dateString) => {
+//     const date = new Date(dateString);
+//     if (isNaN(date)) {
+//       console.error("Invalid date:", dateString);
+//       return "Invalid Date"; // Fallback in case of an error
+//     }
+//     const options = {
+//       year: "numeric",
+//       month: "2-digit",
+//       day: "2-digit",
+//       hour: "2-digit",
+//       minute: "2-digit",
+//       hour12: false,
+//     };
+//     return date.toLocaleString("en-US", options).replace(",", "");
+//   };
 
   const handleCompleteWithdraw = async (withdrawId) => {
     // Show SweetAlert2 confirmation dialog

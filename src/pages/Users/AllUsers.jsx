@@ -98,7 +98,10 @@ function AllUsers() {
             </tr>
           </thead>
           <tbody className="w-full">
-            {users.map((user, index) => (
+            {users
+            .slice()
+            .reverse()
+            .map((user, index) => (
               <tr key={user._id}>
                 <td scope="row" className="col-1 border-b border-gray-300 id">
                   {index + 1}
