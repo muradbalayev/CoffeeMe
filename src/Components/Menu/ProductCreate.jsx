@@ -234,6 +234,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
     }
 
     const formData = new FormData();
+
     Object.keys(data).forEach((key) => {
       if (data[key] !== undefined && data[key] !== null) {
         if (key === "sizes") {
@@ -290,7 +291,7 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
 
   async function compressImage(file) {
     const options = {
-      maxSizeMB: 1, // Target size (e.g., 1MB)
+      maxSizeMB: 2, // Target size (e.g., 1MB)
       maxWidthOrHeight: 1920, // Max dimensions
       useWebWorker: true,
     };
@@ -378,13 +379,12 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
             };
           }) // Keep sizes if at least one value is available
           
-          console.log("Final Sizes Array:", sizes);
           return {
+            name: item.Name || "",
             additions: {
               extras,
               syrups,
             },
-            name: item.Name || "",
             sizes: sizes, // Dynamic sizes array
             category: item.Category || "default",
             type: item.Type,
@@ -400,11 +400,12 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
       // Send the transformed data to the backend
       const formData = new FormData();
 
-      products.forEach((product, index) => {
-        formData.append(`products[${index}]`, JSON.stringify(product));
-
+      products.forEach((product) => {
+        // Append the product as an individual object
+        formData.append("products", JSON.stringify(product));
+  
         if (product.photo) {
-          formData.append(`products[${index}][photo]`, product.photo);
+          formData.append("photo", product.photo);
         }
       });
 
