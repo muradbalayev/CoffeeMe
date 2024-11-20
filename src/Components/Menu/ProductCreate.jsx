@@ -7,19 +7,6 @@ import * as XLSX from "xlsx";
 import imageCompression from "browser-image-compression";
 
 
-async function compressImage(file) {
-  const options = {
-    maxSizeMB: 1, // Target size (e.g., 1MB)
-    maxWidthOrHeight: 1920, // Max dimensions
-    useWebWorker: true,
-  };
-  try {
-    return await imageCompression(file, options);
-  } catch (error) {
-    console.error("Error compressing image:", error);
-    return file; // Return original file if compression fails
-  }
-}
 
 const AddProductModal = ({ shopId, setShowAddModal }) => {
   const [addProduct] = useAddProductMutation();
@@ -309,117 +296,105 @@ const AddProductModal = ({ shopId, setShowAddModal }) => {
     if (!file) return;
 
     try {
-      // Read and parse Excel file
-      const data = await file.arrayBuffer();
-      const workbook = XLSX.read(data, { type: "array" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const parsedData = XLSX.utils.sheet_to_json(sheet);
+        // Read and parse Excel file
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const parsedData = XLSX.utils.sheet_to_json(sheet);
 
-      // console.log("Parsed Excel Data:", parsedData);
+        // Transform parsed data into the format expected by backend
+        const products = await Promise.all(
+            parsedData.map(async (item) => {
+                let imageFile = null;
 
-      // Transform parsed data into the format expected by backend
-      const products = await Promise.all(
-        parsedData.map(async (item) => {
-          let imageFile = null;
+                if (item.Image) {
+                    try {
+                        const response = await fetch(item.Image);
+                        const blob = await response.blob();
+                        const originalFile = new File([blob], item.Image.split("/").pop(), { type: blob.type });
+                        imageFile = await compressImage(originalFile); // Compress before uploading
+                    } catch (error) {
+                        console.warn(`Failed to fetch or compress image from ${item.Image}`, error);
+                    }
+                }
 
-          if (item.Image) {
-            try {
-              const response = await fetch(item.Image);
-              const blob = await response.blob();
-              const originalFile = new File([blob], item.Image.split("/").pop(), { type: blob.type });
-              imageFile = await compressImage(originalFile); // Compress before uploading
-            } catch (error) {
-              console.warn(`Failed to fetch or compress image from ${item.Image}`, error);
-            }
-          }
+                // Parse extras from combined fields (e.g., Extra_1: "Vanilla, 10 ₼, 10%")
+                const extras = Object.keys(item)
+                    .filter((key) => key.startsWith("Extra_"))
+                    .map((key) => {
+                        const [name, price, discount] = (item[key] || "").split(", ").map((part) => part.trim());
+                        return {
+                            name: name || "N/A",
+                            price: parseFloat(price?.replace("₼", "") || 0),
+                            discount: parseFloat(discount?.replace("%", "") || 0),
+                        };
+                    });
 
-          const extras = Object.keys(item)
-            .filter((key) => key.startsWith("Extra_"))
-            .reduce((acc, key) => {
-              const [_, index, field] = key.split("_"); // Example: Extra_1_Name
-              const idx = parseInt(index) - 1;
+                // Parse syrups from combined fields (e.g., Syrup_1: "Hazelnut, 5 ₼, 0%")
+                const syrups = Object.keys(item)
+                    .filter((key) => key.startsWith("Syrup_"))
+                    .map((key) => {
+                        const [name, price, discount] = (item[key] || "").split(", ").map((part) => part.trim());
+                        return {
+                            name: name || "N/A",
+                            price: parseFloat(price?.replace("₼", "") || 0),
+                            discount: parseFloat(discount?.replace("%", "") || 0),
+                        };
+                    });
 
-              if (!acc[idx]) acc[idx] = { name: "N/A", price: 0, discount: 0 };
+                // Populate sizes array based on Excel data
+                const sizes = ["s", "m", "l"].map((size) => {
+                  const sizeKey = `Size_${size.toUpperCase()}`; // Combined key, e.g., "Size_S"
+                  const sizeValue = item[sizeKey] || ""; // Get the value from the Excel column, e.g., "10 ₼, 20%"
+              
+                  // Split the value into price and discount
+                  const [price, discount] = sizeValue.split(",").map((part) => part.trim());
+              
+                  return {
+                      size,
+                      price: parseFloat(price?.replace("₼", "").trim()) || 0, // Parse and remove currency symbol
+                      discount: parseFloat(discount?.replace("%", "").trim()) || 0, // Parse and remove % symbol
+                  };
+              });
 
-              if (field === "Name") acc[idx].name = item[key] || "N/A";
-              if (field === "Price") acc[idx].price = parseFloat(item[key]) || 0;
-              if (field === "Discount") acc[idx].discount = parseFloat(item[key]?.replace("%", "")) || 0;
+                return {
+                    name: item.Name || "",
+                    additions: {
+                        extras,
+                        syrups,
+                    },
+                    sizes: sizes.filter((size) => size.price || size.discount), // Filter out empty sizes
+                    category: item.Category || "default",
+                    type: item.Type,
+                    description: item.Description || "",
+                    photo: imageFile, // File object instead of URL
+                    discountType: item.Discount_Type || "STANDARD_DISCOUNT",
+                };
+            })
+        );
 
-              return acc;
-            }, []);
+        console.log("Transformed Products Data:", products);
 
-          const syrups = Object.keys(item)
-            .filter((key) => key.startsWith("Syrup_"))
-            .reduce((acc, key) => {
-              const [_, index, field] = key.split("_"); // Example: Syrup_1_Name
-              const idx = parseInt(index) - 1;
+        // Send the transformed data to the backend
+        const formData = new FormData();
 
-              if (!acc[idx]) acc[idx] = { name: "N/A", price: 0, discount: 0 };
+        products.forEach((product) => {
+            // Append the product as an individual object
+            formData.append("products", JSON.stringify(product));
+        });
 
-              if (field === "Name") acc[idx].name = item[key] || "N/A";
-              if (field === "Price") acc[idx].price = parseFloat(item[key]) || 0;
-              if (field === "Discount") acc[idx].discount = parseFloat(item[key]?.replace("%", "")) || 0;
-
-              return acc;
-            }, []);
-
-          // Populate sizes array based on Excel data
-          const sizes = ["s", "m", "l"].map((size) => {
-            const priceKey = `Size_${size.toUpperCase()}_Price`;
-            const discountKey = `Size_${size.toUpperCase()}_Discount`;
-          
-            const price = item[priceKey] || '';  
-            const discount = item[discountKey] || '';
-          
-            return {
-              size,
-              price,
-              discount,
-            };
-          }) // Keep sizes if at least one value is available
-          
-          return {
-            name: item.Name || "",
-            additions: {
-              extras,
-              syrups,
-            },
-            sizes: sizes, // Dynamic sizes array
-            category: item.Category || "default",
-            type: item.Type,
-            description: item.Description || "",
-            photo: imageFile, // File object instead of URL
-            discountType: item.Discount_Type || "STANDARD_DISCOUNT",
-          };
-        })
-      );
-
-      console.log("Transformed Products Data:", products);
-
-      // Send the transformed data to the backend
-      const formData = new FormData();
-
-      products.forEach((product) => {
-        // Append the product as an individual object
-        formData.append("products", JSON.stringify(product));
-  
-        if (product.photo) {
-          formData.append("photo", product.photo);
+        await addProduct({ shopId, formData }).unwrap(); // Adjust backend to handle FormData
+        for (const [key, value] of formData.entries()) {
+            console.log(key, value);
         }
-      });
-
-      await addProduct({ shopId, formData }).unwrap(); // Adjust backend to handle FormData
-      for (const [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
-      toast.success("Products uploaded successfully!");
-      setShowAddModal(false); // Close modal
+        toast.success("Products uploaded successfully!");
+        setShowAddModal(false); // Close modal
     } catch (error) {
-      toast.error("Failed to upload Excel file. Please try again.");
-      console.error("Error processing Excel file:", error);
+        toast.error("Failed to upload Excel file. Please try again.");
+        console.error("Error processing Excel file:", error);
     }
-  };
+};
 
 
   return (

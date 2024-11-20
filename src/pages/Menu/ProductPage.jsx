@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Coffee, Eye, File, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
+import { Coffee, Eye, Pencil, Search, SquarePlus, Trash2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import ProductModal from "../../Components/Menu/ProductModal";
 import AddProductModal from "../../Components/Menu/ProductCreate";
@@ -82,58 +82,44 @@ const ProductPage = () => {
 
 
     const handleExportToExcel = () => {
-        // Transform data to export format, including image URLs
         const exportData = products.map((product) => {
             const extras = product.additions.extras || [];
             const syrups = product.additions.syrups || [];
             const sizes = product.sizes || [];
-
-        
-            // Flatten the extras into separate columns
-            const extraColumns = extras.reduce((acc, extra, index) => ({
-                ...acc,
-                [`Extra_${index + 1}_Name`]: extra.name || "N/A",
-                [`Extra_${index + 1}_Price`]: `${extra.price || "N/A"} ₼`,
-                [`Extra_${index + 1}_Discount`]: `${extra.discount || "N/A"}%`,
-            }), {});
-        
-            // Flatten the syrups into separate columns if needed
-            const syrupColumns = syrups.reduce((acc, syrup, index) => ({
-                ...acc,
-                [`Syrup_${index + 1}_Name`]: syrup.name || "N/A",
-                [`Syrup_${index + 1}_Price`]: `${syrup.price || "N/A"} ₼`,
-                [`Syrup_${index + 1}_Discount`]: `${syrup.discount || "N/A"}%`,
-            }), {});
-
-            const sizeColumns = sizes.reduce((acc, size, index) => {
-                const sizeLabel = ["S", "M", "L"][index]; // Mapping index to size name (S, M, L)
-                return {
-                    ...acc,
-                    [`Size_${sizeLabel}_Name`]: size.size || "N/A",
-                    [`Size_${sizeLabel}_Price`]: size.price || "N/A",
-                    [`Size_${sizeLabel}_Discount`]: size.discount || "N/A",
-                };
+    
+            // Combine extras into separate columns
+            const extraColumns = extras.reduce((acc, extra, index) => {
+                acc[`Extra_${index + 1}`] = `${extra.name || "N/A"}, ${extra.price || "N/A"} ₼, ${extra.discount || "N/A"}%`;
+                return acc;
             }, {});
-        
+    
+            // Combine syrups into separate columns
+            const syrupColumns = syrups.reduce((acc, syrup, index) => {
+                acc[`Syrup_${index + 1}`] = `${syrup.name || "N/A"}, ${syrup.price || "N/A"} ₼, ${syrup.discount || "N/A"}%`;
+                return acc;
+            }, {});
+    
+            // Generate columns for sizes
+            const sizeColumns = sizes.reduce((acc, size, index) => {
+                const sizeLabel = ["S", "M", "L"][index]; // Map index to size labels
+                acc[`Size_${sizeLabel}`] = `${size.price || "N/A"} ₼, ${size.discount || "N/A"}%`;
+                return acc;
+            }, {});
+    
             return {
                 ID: product._id,
                 Name: product.name,
                 ...extraColumns,
                 ...syrupColumns,
                 ...sizeColumns,
-                // Price: `${product.sizes[0]?.price || "N/A"} ₼`,
                 Category: product.category || "N/A",
-                Discount: `${product.sizes[0]?.discount || "N/A"}%`,
                 Discount_Type: product.discountType || "Unknown Discount Type",
                 Description: product.description || "N/A",
                 Type: product.type || "N/A",
                 Status: product.status || "N/A",
                 Image: `${import.meta.env.VITE_API_GLOBAL_URL}/public/uploads/products/${shopId}/${product.photo || "default.jpg"}`,
-  
-
             };
         });
-        
     
         // Create a worksheet
         const worksheet = XLSX.utils.json_to_sheet(exportData);
@@ -145,6 +131,8 @@ const ProductPage = () => {
         // Export to Excel file
         XLSX.writeFile(workbook, "Products_with_Photos.xlsx");
     };
+    
+    
     
     
 
