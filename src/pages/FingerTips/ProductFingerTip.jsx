@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, Coffee, Search, X } from "lucide-react";
+import { Check, Coffee, Search, SquarePlus, X } from "lucide-react";
 // import Swal from "sweetalert2";
 // import AddWithdrawModal from "../../Components/Withdraw/WthCreate";
 // import {
@@ -8,6 +8,7 @@ import { Check, Coffee, Search, X } from "lucide-react";
 import RejectWithdrawModal from "../../Components/Withdraw/RejectWithdraw";
 import Swal from "sweetalert2";
 import { useGetFingerTipsQuery } from "../../redux/services/extraApi";
+import AddShopModal from "../../Components/Shops/ShopCreate";
 
 const ProductFingerTip = () => {
   const { data, isLoading, isError, isSuccess, error } = useGetFingerTipsQuery();
@@ -15,6 +16,7 @@ const ProductFingerTip = () => {
 //     useUpdateWithdrawMutation();
 
 //   console.log(mutationError);
+const [showAddModal, setShowAddModal] = useState(false);
 
   const [editedItem, setEditedItem] = useState(null);
 
@@ -31,11 +33,11 @@ const ProductFingerTip = () => {
 
   if (isError) return <div>An error occurred: {error.message}</div>;
 
-
-
   if (isSuccess)
     return (
       <div className="wrapper">
+              {showAddModal && <AddShopModal setShowAddModal={setShowAddModal} />}
+
         {editedItem && (
           <RejectWithdrawModal
             withdrawId={editedItem}
@@ -49,17 +51,20 @@ const ProductFingerTip = () => {
         </div>
         <div className="w-full flex justify-between items-center mt-4">
           {/* <h1 className="title text-xl">Request&apos;s table</h1> */}
-          <div className="gap-3 flex items-center mt-2">
-            <div className="flex relative">
-              <input
-                className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
-                placeholder="Search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Search className="search-icon" />
-            </div>
+          <div className="gap-3 flex items-center">
+          <div className="flex relative">
+            <input
+              className="form-control font-semibold text-green md:w-80 sm:w-40 w-32 p-2 border outline-none rounded-md"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Search className="search-icon" />
           </div>
+          <button onClick={() => setShowAddModal(true)}>
+            <SquarePlus size={40} />
+          </button>
+        </div>
         </div>
         <div className="overflow-y-scroll overflow-x-auto w-full mt-4">
           <table className="w-full rounded-t-xl overflow-hidden">
