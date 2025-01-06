@@ -122,6 +122,7 @@ function ShopsPage() {
               <th scope="col">Location</th>
               <th scope="col">Logo</th>
               <th scope="col">Photo</th>
+              <th scope="col">Discount Percentage</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -177,6 +178,8 @@ function ShopsPage() {
                     )}
                   </button>
                 </td>
+                <td className="col-1">{shop.discountPercentage} %</td>
+
                 <td className="col-2 min-w-44">
                   <button
                     onClick={() => setEditedItem(shop)}

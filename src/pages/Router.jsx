@@ -16,6 +16,8 @@ import SubscribersPage from "./Subscribers/SubscribersPage";
 import AllUsers from "./Users/AllUsers";
 import PremiumUsers from "./Users/PremiumUsers";
 import FingerTipsPage from "./FingerTips/FingerTipsPage";
+import ProductFingerTip from "./FingerTips/ProductFingerTip";
+import ShopFingerTip from "./FingerTips/ShopFingertip";
 function DashboardPage() {
   return (
     <div className="flex h-screen w-full overflow-hidden max-w-[1920px] mx-auto">
@@ -29,7 +31,10 @@ function DashboardPage() {
           <Route path="/sales" element={<SalesPage />} />
 
           <Route path="/withdraw" element={<WithdrawPage />} />
+
           <Route path="/fingertips" element={<FingerTipsPage />} />
+          <Route path="/fingertips/products" element={<ProductFingerTip />} />
+          <Route path="/fingertips/shops" element={<ShopFingerTip />} />
 
           <Route path="/users" element={<AllUsers />} />
           <Route path="/premiumusers" element={<PremiumUsers />} />
